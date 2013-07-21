@@ -1,0 +1,82 @@
+@import "_utils/utils";
+
+.app-header {
+	@include clearfix;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left:0;
+	margin: 0;
+	padding: 0.4em 0;
+	background-color: $green;
+	text-align: center;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+	.app-header a, .app-title {
+		font-weight: bold;
+		font-size: 1.1rem;
+		color: darken($green, 10%);
+		text-shadow: -0.5px -1px 0 rgba(0, 0, 0, 0.3), 0.5px 1px 0 rgba(255, 255, 255, 0.25);
+	}
+	.app-header a:hover {
+		color: darken($green, 14%);
+	}
+	.app-header-btn {
+		position: absolute;
+		top: 50%;
+		left: 0.8rem;
+		margin-top: -0.6em;
+		font-size: 1.1rem;
+	}
+	.app-header-btn:last-child {
+		right: 0.8rem;
+		left: auto;
+	}
+
+.content {
+	padding: 3em 0.8em;
+}
+	.content a {
+		text-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.6);
+	}
+	.content-inner {
+		background-color: lighten($background_color, 5%);
+		border-radius: 4px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 1.5px rgba(255, 255, 255, 0.2);
+	}
+
+.app-footer {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left:0;
+	text-align: center;
+	background-color: lighten($background_color, 2%);
+	font-size: 0.8em;
+	box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.3);
+}
+	.app-footer ul {
+		display: inline-block;
+		border-right: 1px solid darken($background_color, 3%);
+		background-color: darken($background_color, 3%);
+	}
+		.app-footer li {
+			display: inline-block;
+		}
+			.app-footer-btn {
+				display: inline-block;
+				margin-left: 1px;
+				padding: 0.8em 1.2em;
+				border-bottom: 0;
+				text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+				box-shadow: inset -1px 1px 3px rgba(255, 255, 255, 0.1);
+				@include gradient-range(lighten($background_color, 8%), lighten($background_color, 4%));
+			}
+
+			.app-footer.subways .app-footer-btn.subways,
+			.app-footer.buses .app-footer-btn.buses,
+			.app-footer.trolleys .app-footer-btn.trolleys,
+			.app-footer.trains .app-footer-btn.trains {
+				box-shadow: inset -1px 1px 4px rgba(0, 0, 0, 0.1);
+				@include gradient-range(lighten($background_color, 4%), lighten($background_color, 8%));
+			}

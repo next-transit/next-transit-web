@@ -1,0 +1,15 @@
+<div class="directions">
+	<div class="content-inner">
+		<nav class="simple-nav">
+			<ul>
+				{{#directions}}
+				<li>
+					<a href="/{{../route_type.slug}}/{{../route.route_short_name}}/{{direction_id}}">
+						<strong>{{direction_name}}</strong> <span>to</span> {{direction_long_name}}
+					</a>
+				</li>
+				{{/directions}}
+			</ul>
+		</nav>
+	</div>
+</div>

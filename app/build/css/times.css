@@ -1,0 +1,44 @@
+.times-header {
+  *zoom: 1;
+  margin: 0 0 0.8em;
+  padding: 0.6em 1.0em;
+  background-color: #2f3d49;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: rgba(250, 250, 250, 0.5);
+}
+.times-header:before, .times-header:after {
+  display: table;
+  content: "";
+}
+.times-header:after {
+  clear: both;
+}
+
+.times-header-from-stop {
+  float: left;
+}
+
+.times-header-to-stop {
+  float: right;
+}
+
+.times-header .icon-map-marker, .stops .icon-map-marker {
+  margin-right: 0.6em;
+}
+
+.stop-time {
+  position: relative;
+}
+
+.stop-time-from {
+  float: left;
+}
+
+.stop-time .icon-time {
+  margin-right: 0.4em;
+}
+
+.stop-time-to {
+  float: right;
+}

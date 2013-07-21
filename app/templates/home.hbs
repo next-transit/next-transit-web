@@ -1,0 +1,15 @@
+<div class="home">
+	<div class="home-search">
+		<input type="text" /> <button class="btn btn-mini">Go</button>
+	</div>
+
+	<div class="content-inner">
+		<nav class="simple-nav">
+			<ul>
+				{{#route_types}}
+				<li class="home-route-type home-route-type-{{id}}"><a href="{{path}}">{{label}}</a></li>
+				{{/route_types}}
+			</ul>
+		</nav>
+	</div>
+</div>

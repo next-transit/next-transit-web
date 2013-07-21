@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/images/nxs-logo.png" />
+	<link rel="stylesheet" type="text/css" href="/css/vendor/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/typography.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/core.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/buttons.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/forms.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/layout.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/components.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/home.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/stops.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/trips.css" />
+</head>
+<body>
+	<div class="container">
+		<header class="app-header">
+			{{#if back_path}}
+			<a href="{{back_path}}" class="app-header-btn"><i class="icon-chevron-sign-left"></i></a>
+			{{/if}}
+			<span class="app-title">{{title}}</span>
+			<a href="/info" class="app-header-btn"><i class="icon-info-sign"></i></a>
+		</header>
+		<div class="content" data-type="{{route_type}}" data-route="{{route_id}}" data-direction="{{direction_id}}" data-from="{{from.stop_id}}" data-to="{{stop_id}}">
+			{{{body}}}
+		</div>
+		{{#if route_type}}
+		<footer class="app-footer {{route_type.slug}}">
+			<ul>
+				<li class="">
+					<a href="/" class="app-footer-btn"><i class="icon-home"></i></a>
+				</li><li class="app-footer-subways">
+					<a href="/subways" class="app-footer-btn subways">Subways</a>
+				</li><li class="app-footer-buses">
+					<a href="/buses" class="app-footer-btn buses">Buses</a>
+				</li><li class="app-footer-trolleys">
+					<a href="/trolleys" class="app-footer-btn trolleys">Trolleys</a>
+				</li><li class="app-footer-trains">
+					<a href="/trains" class="app-footer-btn trains">Trains</a>
+				</li>
+			</ul>
+		</footer>
+		{{/if}}
+	</div>
+</body>
+</html>

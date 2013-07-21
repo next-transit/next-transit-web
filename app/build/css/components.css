@@ -1,0 +1,85 @@
+/* Routes QuickNav */
+.quicknav {
+  overflow: hidden;
+  font-size: 0.9em;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.quicknav ul {
+  display: table;
+  width: 100%;
+}
+
+.quicknav li {
+  display: table-cell;
+  text-align: center;
+}
+
+.quicknav a {
+  display: inline-block;
+  padding: 0.6em 0.3em;
+}
+
+.quicknav-anchor {
+  padding: 0 !important;
+}
+
+/* Simple Nav */
+.simple-nav li {
+  border-top: 1px solid #363636;
+  border-bottom: 1px solid #252525;
+}
+
+.simple-nav li:first-child {
+  border-top: 0;
+}
+
+.simple-nav li:first-child a {
+  border-radius: 4px 4px 0 0;
+}
+
+.simple-nav li:last-child {
+  border-bottom: 0;
+}
+
+.simple-nav li:last-child a {
+  border-radius: 0 0 4px 4px;
+}
+
+.simple-nav a, .simple-nav-item {
+  display: block;
+  padding: 0.6em 0.8em;
+  font-size: 1.4em;
+  font-weight: 100;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.simple-nav a:hover, .simple-nav a:focus {
+  background-color: rgba(255, 255, 255, 0.075);
+  -webkit-transition: "background-color" "1s" linear;
+  -moz-transition: "background-color" "1s" linear;
+  -ms-transition: "background-color" "1s" linear;
+  -o-transition: "background-color" "1s" linear;
+  transition: "background-color" "1s" linear;
+}
+
+.simple-nav a [class^="icon-"], .simple-nav-item [class^="icon-"] {
+  font-size: 0.8em;
+}
+
+.simple-nav strong {
+  display: inline-block;
+  margin-right: 0.4em;
+  padding: 0 0.4em;
+  min-width: 2em;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  font-size: 1.4em;
+  font-weight: normal;
+  border-radius: 3px;
+}

@@ -1,0 +1,65 @@
+body {
+  color: #f9f9f9;
+  font: 14px "Helvetica Neue", Helvetica, Arial, Verdana, Sans-serif;
+}
+
+h1, .h1, h2, .h2, h3, .h3, .no-results, h4, .h4, h5, .h5, h6, .h6 {
+  font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, Verdana, Sans-serif;
+}
+
+h1, .h1 {
+  font-size: 2em;
+  margin: 0 0 0.67em;
+}
+
+h2, .h2 {
+  font-size: 1.5em;
+  margin: 0 0 0.83em;
+}
+
+h3, .h3, .no-results {
+  font-size: 1.17em;
+  margin: 0 0 1em;
+}
+
+h4, .h4 {
+  font-size: 1em;
+  margin: 0 0 1.33em;
+}
+
+h5, .h5 {
+  font-size: 0.83em;
+  margin: 0 0 1.67em;
+}
+
+h6, .h6 {
+  font-size: 0.67em;
+  margin: 0 0 2.33em;
+}
+
+a {
+  color: #f9f9f9;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #fff;
+}
+
+.sans {
+  font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, Verdana, Sans-serif;
+}
+
+.serif {
+  font-family: "Meta", Serif;
+}
+
+.monospace {
+  font-family: "Courier New", monospace;
+}
+
+.highlight {
+  /* background-color: $yellow; */
+  color: #fff;
+  text-shadow: none;
+}

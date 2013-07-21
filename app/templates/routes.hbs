@@ -1,0 +1,21 @@
+<div class="routes">
+	<nav class="quicknav">
+		<ul>
+			{{#shortcuts}}
+			<li><a href="{{path}}">{{label}}</a></li>
+			{{/shortcuts}}
+		</ul>
+	</nav>
+	<div class="content-inner">
+		<nav class="simple-nav">
+			<ul>
+				{{#routes}}
+				<li>
+					{{#if shortcuts}}<a name="{{route_short_name}}" class="quicknav-anchor" />{{/if}}
+					<a href="/{{../path}}/{{route_short_name}}"><strong>{{route_short_name}}</strong> {{route_long_name}}</a>
+				</li>
+				{{/routes}}
+			</ul>
+		</nav>
+	</div>
+</div>

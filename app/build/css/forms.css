@@ -1,0 +1,15 @@
+input[type="text"] {
+  display: inline-block;
+  padding: 0.4rem;
+  vertical-align: middle;
+  border: 1px solid #3c3c3c;
+  background-color: #2c2c2c;
+  font-size: 0.8rem;
+  color: #f9f9f9;
+  border-radius: 2px;
+}
+
+input[type="text"]:focus {
+  border-color: #484848;
+  background-color: #313131;
+}

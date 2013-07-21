@@ -1,0 +1,56 @@
+@import "_colors";
+@import "_fonts";
+
+@mixin clearfix {
+	*zoom: 1;
+	&:before,
+	&:after {
+		display: table;
+		content: "";
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+@mixin ellipsis {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+@mixin text-mask {
+	overflow: hidden;
+	text-indent: -9999px;
+}
+
+@mixin border-box {
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+@mixin gradient-range($top, $bottom) {
+	background-color: $bottom;
+	background-image:   -moz-linear-gradient(top, $top 0%, $bottom 100%); /* FF3.6+ */
+	background-image:       -webkit-gradient(linear, left top, left bottom, color-stop(0%, $top), color-stop(100%, $bottom)); /* Chrome,Safari4+ */
+	background-image:-webkit-linear-gradient(top, $top 0%, $bottom 100%); /* Chrome10+,Safari5.1+ */
+	background-image:     -o-linear-gradient(top, $top 0%, $bottom 100%); /* Opera 11.10+ */
+	background-image:    -ms-linear-gradient(top, $top 0%, $bottom 100%); /* IE10+ */
+	background-image:        linear-gradient(to bottom, $top 0%, $bottom 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$top', endColorstr='$bottom',GradientType=0 ); /* IE6-9 */
+}
+
+@mixin gradient($color, $amount: 5%) {
+	$top: lighten($color, $amount);
+	$bottom: darken($color, $amount);
+	@include gradient-range($top, $bottom);
+}
+
+@mixin transition($type, $duration, $easing: linear) {
+	-webkit-transition: $type $duration $easing;
+	   -moz-transition: $type $duration $easing;
+		-ms-transition: $type $duration $easing;
+		 -o-transition: $type $duration $easing;
+			transition: $type $duration $easing;
+}

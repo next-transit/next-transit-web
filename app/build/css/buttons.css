@@ -1,0 +1,189 @@
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  display: inline-block;
+  padding: 5px 12px;
+  vertical-align: middle;
+  line-height: normal;
+  background-repeat: no-repeat;
+  border: 1px solid #bababa;
+  font-size: 1rem;
+  color: #424242;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  background-color: #e3e3e3;
+  background-image: -moz-linear-gradient(top, #f9f9f9 0%, #e3e3e3 100%);
+  /* FF3.6+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e3e3e3));
+  /* Chrome,Safari4+ */
+  background-image: -webkit-linear-gradient(top, #f9f9f9 0%, #e3e3e3 100%);
+  /* Chrome10+,Safari5.1+ */
+  background-image: -o-linear-gradient(top, #f9f9f9 0%, #e3e3e3 100%);
+  /* Opera 11.10+ */
+  background-image: -ms-linear-gradient(top, #f9f9f9 0%, #e3e3e3 100%);
+  /* IE10+ */
+  background-image: linear-gradient(to bottom, #f9f9f9 0%, #e3e3e3 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$top', endColorstr='$bottom',GradientType=0 );
+  /* IE6-9 */
+  @inclide transition(background, .15s);
+}
+
+a.btn {
+  color: #424242;
+}
+
+.btn:hover {
+  background-position: 0 -12px;
+}
+
+.btn.selected {
+  background-color: #d0d0d0;
+  background-image: -moz-linear-gradient(top, #cacaca 0%, #d0d0d0 100%);
+  /* FF3.6+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cacaca), color-stop(100%, #d0d0d0));
+  /* Chrome,Safari4+ */
+  background-image: -webkit-linear-gradient(top, #cacaca 0%, #d0d0d0 100%);
+  /* Chrome10+,Safari5.1+ */
+  background-image: -o-linear-gradient(top, #cacaca 0%, #d0d0d0 100%);
+  /* Opera 11.10+ */
+  background-image: -ms-linear-gradient(top, #cacaca 0%, #d0d0d0 100%);
+  /* IE10+ */
+  background-image: linear-gradient(to bottom, #cacaca 0%, #d0d0d0 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$top', endColorstr='$bottom',GradientType=0 );
+  /* IE6-9 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn-selected:hover {
+  background-position: 0 0;
+}
+
+.btn.disabled, .btn[disabled] {
+  background-image: none;
+  outline: 0;
+  opacity: 0.7;
+  cursor: default;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+/* Sizes */
+.btn-huge {
+  padding: 12px 22px;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.btn-large {
+  padding: 8px 16px;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 0.9rem;
+}
+
+.btn-mini {
+  padding: 4px 5px 3px;
+  font-size: 0.7rem;
+}
+
+/* Styles */
+/*.btn-primary {
+	border-color: darken($blue, 20%);
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 1px 0 rgba(245, 245, 232, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+	@include gradient($blue);
+}
+.btn-primary, .btn-primary:hover, a.btn-primary {
+	color: #fff;
+}
+
+.btn-success {
+	border-color: #566441;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 1px 0 rgba(245, 255, 235, 0.5), 0 1px 2px rgba(0, 0, 0, 0.2);
+	@include gradient($green);
+}
+.btn-success, .btn-success:hover, a.btn-success {
+	color: #fff;
+}
+
+.btn-danger {
+	border-color: darken($error, 20%);
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 1px 0 rgba(255, 225, 235, 0.5), 0 1px 2px rgba(0, 0, 0, 0.2);
+	@include gradient($error);
+}
+.btn-danger, .btn-danger:hover, a.btn-danger {
+	color: #fff;
+}
+
+.btn-dark {
+	border-color: darken($dark_gray, 20%);
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+	@include gradient($dark_gray);
+}
+.btn-dark, .btn-dark:hover, a.btn-dark {
+	color: #fff;
+}*/
+/* Button Groups */
+.btn-group {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0;
+  /* hack for after inline-block element spacing */
+}
+
+.btn-group > .btn {
+  border-radius: 0;
+}
+
+.btn-group > .btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.btn-group > .btn:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.btn-group > .btn + .btn {
+  margin-left: -1px;
+}
+
+/* Right-aligned Button */
+.btn-right {
+  float: right;
+  margin-top: -0.5em;
+}
+
+/* Icons */
+.btn [class^="icon-"] {
+  padding-bottom: 1px;
+  vertical-align: middle;
+  font-size: 0.7em;
+}
+
+.btn-large [class^="icon-"]:first-child {
+  margin-right: 0.3em;
+}
+
+.btn-large [class*="icon-"]:last-child {
+  margin-left: 0.3em;
+}
+
+.btn-huge [class^="icon-"]:first-child {
+  margin-right: 0.5em;
+}
+
+.btn-huge [class*="icon-"]:last-child {
+  margin-left: 0.5em;
+}

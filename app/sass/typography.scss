@@ -1,0 +1,62 @@
+@import "_utils/utils";
+
+body {
+	color: $default_color;
+	font:14px $default_font;
+}
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+	font-family: $sans;
+}
+
+h1, .h1 {
+	font-size: 2em;
+	margin: 0 0 0.67em;
+}
+h2, .h2 {
+	font-size: 1.5em;
+	margin: 0 0 0.83em;
+}
+h3, .h3 {
+	font-size: 1.17em;
+	margin: 0 0 1em;
+}
+h4, .h4 {
+	font-size: 1em;
+	margin: 0 0 1.33em;
+}
+h5, .h5 {
+	font-size: 0.83em;
+	margin: 0 0 1.67em;
+}
+h6, .h6 {
+	font-size: 0.67em;
+	margin: 0 0 2.33em;
+}
+
+a {
+	color: $default_color;
+	text-decoration: none;
+}
+a:hover {
+	color: #fff;
+}
+
+.sans {
+	font-family: $sans;
+}
+.serif {
+	font-family: $serif;
+}
+.monospace {
+	font-family: $monospace;
+}
+.no-results {
+	@extend .h3;
+}
+
+.highlight {
+	/* background-color: $yellow; */
+	color: #fff;
+	text-shadow: none;
+}

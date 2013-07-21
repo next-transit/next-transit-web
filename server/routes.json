@@ -1,0 +1,9 @@
+{
+	"/:route_type/:route_id/:direction_id/:from_id/choose": "stops:to",
+	"/:route_type/:route_id/:direction_id/:from_id/:to_id": "trips",
+	"/:route_type/:route_id/:direction_id/:from_id": "trips",
+	"/:route_type/:route_id/:direction_id": "stops:from",
+	"/:route_type/:route_id": "directions",
+	"/:route_type": "routes",
+	"/": "home"
+}

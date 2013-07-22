@@ -5,6 +5,8 @@ var route_types = require('../models/route_types'),
 	app = {};
 
 function getToStop(req, success, not_found) {
+	app.locals.to_stop = null;
+
 	if(req.params.to_id) {
 		var route_id = req.route.route_id,
 			direction_id = req.direction.direction_id,
@@ -26,6 +28,8 @@ function getToStop(req, success, not_found) {
 }
 
 function getFromStop(req, success, not_found) {
+	app.locals.from_stop = null;
+
 	if(req.params.from_id) {
 		var route_id = req.route.route_id,
 			direction_id = req.direction.direction_id,
@@ -46,6 +50,9 @@ function getFromStop(req, success, not_found) {
 }
 
 function getDirection(req, success, not_found) {
+	app.locals.direction_id = '';
+	app.locals.direction = null;
+
 	if(req.params.direction_id) {
 		var direction_id = req.params.direction_id;
 		directions.where('route_id = ? AND direction_id = ?', [req.route.route_id, direction_id]).first(function(direction) {
@@ -64,6 +71,9 @@ function getDirection(req, success, not_found) {
 }
 
 function getRoute(req, success, not_found) {
+	app.locals.route_id = '';
+	app.locals.route = null;
+
 	if(req.params.route_id) {
 		var route_id = req.params.route_id.toLowerCase();
 		routes.where('route_id = ? OR lower(route_short_name) = ?', [route_id, route_id]).first(function(route) {
@@ -82,6 +92,10 @@ function getRoute(req, success, not_found) {
 }
 
 function getRouteType(req, success, not_found) {
+	app.locals.back_path = '';
+	app.locals.route_type_slug = '';
+	app.locals.route_type = null;
+
 	if(req.params.route_type) {
 		var route_type_param = req.route_type = req.params.route_type.toLowerCase(),
 			route_type = route_types[route_type_param];
@@ -101,6 +115,12 @@ function getRouteType(req, success, not_found) {
 }
 
 function before(req, res, next) {
+	app.locals.title = 'NEXT|Septa';
+	if(req.query.layout === 'null' || req.query.layout === 'false') {
+		app.locals.layout = null;
+	} else if(typeof app.locals.layout !== 'undefined') {
+		delete app.locals.layout;
+	}
 	getRouteType(req, next, function() {
 		res.send('404');
 	});

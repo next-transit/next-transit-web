@@ -2,6 +2,7 @@
 
 .trips-header {
 	@include clearfix;
+	position: relative;
 	margin: 0 0 0.8em;
 	padding: 0.6em 1.4em;
 	background-color: #2f3d49;
@@ -26,6 +27,17 @@
 			margin-right: 0;
 			margin-left: 0.6em;
 		}
+	.trips-header-reverse {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		display: none;
+		margin-top: -0.6em;
+		margin-left: -0.9em;
+	}
+	.trips.has-to .trips-header-reverse {
+		display: block;
+	}
 
 .trips-subheader {
 	@include clearfix;
@@ -45,66 +57,111 @@
 	}
 	.trips-subheader-to {
 		float: right;
+		display: none;
+	}
+	.trips.has-to .trips-subheader-to {
+		display: block;
 	}
 
-.trip {
-	position: relative;
+.trips-list {
+	overflow: hidden;
 }
-.trip:before {
-	content: "→";
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-top: -7px;
-	margin-left: -10px;
-	font-size: 0.6em;
-}
-	.trip-stop {
+
+	.trip {
 		position: relative;
 	}
+	.trip:before {
+		content: "→";
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		display: none;
+		margin-top: -7px;
+		margin-left: -10px;
+		font-size: 0.6em;
+	}
+	.trip.gone {
+		opacity: 0.33;
+		background-color: #1c1c1c;
+	}
+	.trips.has-to .trip:before {
+		display: block;
+	}
+		.trip-stop {
+			position: relative;
+		}
 
-	.trip-from {
+		.trip-from {
+			float: left;
+		}
+			.trip .icon-time {
+				position: absolute;
+				top: 50%;
+				left: 0;
+				margin-top: -0.5em;
+				font-size: 0.8em;
+				color: darken(#fff, 20%);
+			}
+				.trip-from .trip-label {
+					margin-left: 1.3em;
+				}
+				.trip-from-now {
+					font-size: 0.6em;
+					font-weight: 200;
+					color: darken(#fff, 30%);
+				}
+		.trip-to {
+			float: right;
+			display: none;
+		}
+		.trips.has-to .trip-to {
+			display: block;
+		}
+			.trip-to .trip-stop-footer {
+				right: 0;
+			}
+
+		.trip-coverage {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			height: 4px;
+			overflow: hidden;
+			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4);
+		}
+			.trip-coverage-active {
+				margin: 0 auto;
+				height: 4px;
+				background-color: rgba(40, 60, 100, 0.2);
+				border-radius: 2px;
+				box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15);
+			}
+			.trip:hover .trip-coverage-active {
+				background-color: rgba(40, 60, 100, 0.4);
+			}
+
+.trips-paging {
+	@include clearfix;
+	margin-top: 0.4em;
+}
+	.trips-paging-btn {
+		display: inline-block;
+		padding: 0.2em 0.8em;
+		background-color: rgba(255, 255, 255, 0.1);
+		box-shadow:0 1px 3px rgba(0, 0, 0, 0.5), 0 0 1.5px rgba(255, 255, 255, 0.2) inset;
+		border-radius: 3px;
+	}
+	.trips-paging-btn:hover {
+		background-color: rgba(255, 255, 255, 0.15);
+	}
+	.trips-paging-btn:active {
+		background-color: rgba(255, 255, 255, 0.05);
+		box-shadow:0 1px 3px rgba(0, 0, 0, 0.6), 0 0 1.5px rgba(255, 255, 255, 0.1) inset;
+	}
+	.trips-paging-prev {
 		float: left;
 	}
-		.trip .icon-time {
-			position: absolute;
-			top: 50%;
-			left: 0;
-			margin-top: -0.5em;
-			font-size: 0.8em;
-			color: darken(#fff, 20%);
-		}
-			.trip-from .trip-label {
-				margin-left: 1.3em;
-			}
-			.trip-from-now {
-				font-size: 0.6em;
-				font-weight: 200;
-				color: darken(#fff, 30%);
-			}
-	.trip-to {
+	.trips-paging-next {
 		float: right;
 	}
-		.trip-to .trip-stop-footer {
-			right: 0;
-		}
-
-	.trip-coverage {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		height: 4px;
-		overflow: hidden;
-		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4);
-	}
-		.trip-coverage-active {
-			margin: 0 auto;
-			height: 4px;
-			background-color: rgba(40, 60, 100, 0.2);
-			border-radius: 2px;
-			box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15);
-		}
-		.trip:hover .trip-coverage-active {
-			background-color: rgba(40, 60, 100, 0.4);
-		}

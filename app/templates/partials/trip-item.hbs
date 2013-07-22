@@ -1,0 +1,19 @@
+				{{#trips}}
+				<li class="simple-nav-item trip{{#if gone}} gone{{/if}}">
+					<div class="trip-stop trip-from">
+						<i class="icon-time"></i> 
+						<div class="trip-label">
+							{{departure_time_formatted}} 
+							<span class="trip-from-now">({{from_now}})</span>
+						</div>
+					</div>
+					<div class="trip-stop trip-to">
+						{{arrival_time_formatted}}
+					</div>
+					{{#unless coverage.full}}
+					<div class="trip-coverage">
+						<div class="trip-coverage-active" style="margin-left:{{coverage.left}}px;margin-right:{{coverage.right}}px;"></div>
+					</div>
+					{{/unless}}
+				</li>
+				{{/trips}}

@@ -1,0 +1,96 @@
+(function(global) {
+	var nextsepta = global.nextsepta,
+		_modules = {};
+
+	function Module(name, dependencies) {
+		var _self = this,
+			_config = nextsepta.noop,
+			_controllers = {},
+			_services = {},
+			$module;
+
+		_self.CLASS = 'Module';
+		_self.name = name;
+		_self.dependencies = dependencies;
+		_self.loaded = false;
+		
+		_self.config = function(callback) {
+			if(typeof callback === 'function') {
+				_config = callback;
+			}
+			return _self;
+		};
+
+		_self.dependency = function(depName) {
+			var dep;
+			if(depName in _services) {
+				dep = _services[depName];
+			} else {
+				_self.dependencies.some(function(modDep) {
+					dep = _modules[modDep].dependency(depName);
+					return !!dep;
+				});
+			}
+			return dep;
+		};
+
+		_self.run = function() {
+			if(!_self.loaded) {
+				_self.config();
+				_self.dependencies.forEach(function(depName) {
+					if(!(depName in _modules)) {
+						throw new Error('Module ' + depName + ' doesn\'t exist.');
+					}
+					_modules[depName].run();
+				});
+				_self.loaded = true;
+				$(function() {
+					_self.$elem = $('[module=' + _self.name + ']');
+					_self.eval('body');
+				});
+			}
+		};
+
+		_self.service = function(name, dependencies) {
+			if(name in _services) {
+				throw new Error('A dependency named ' + name + ' already exists.')
+			}
+
+			var service_def = nextsepta.__service(name, dependencies),
+				args = [];
+
+			service_def.dependencies.forEach(function(depName) {
+				args.push(_self.dependency(depName));
+			});
+
+			_services[name] = service_def.constructor.apply(service_def, args);
+
+			return _self;
+		};
+
+		_self.controller = function(name, dependencies) {
+			if(dependencies) {
+				nextsepta.__controller(name, dependencies, _controllers);
+				return _self;	
+			} else {
+				return _controllers[name];
+			}
+		};
+
+		_self.eval = function(selector) {
+			nextsepta.__eval(_self, selector);
+		};
+	}
+
+	nextsepta.module = function module(name, dependencies) {
+		if(dependencies) {
+			if(name in _modules) {
+				throw new Error('module ' + name + ' already exists.');
+			}
+
+			_modules[name] = new Module(name, dependencies);
+		}
+
+		return _modules[name];
+	};
+})(window);

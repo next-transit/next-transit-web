@@ -1,7 +1,10 @@
-<div class="trips">
+<div class="trips{{#if to_stop}} has-to{{/if}}" ctrl="trips">
 	<div class="content-inner trips-header">
 		<span class="trips-header-from-stop">
 			<a href="/{{route_type_slug}}/{{route_id}}/{{direction_id}}"><i class="icon-map-marker"></i> {{from_stop.stop_name}}</a>
+		</span>
+		<span class="trips-header-reverse">
+			<a href="/{{route_type_slug}}/{{route_id}}/{{direction_id_rev}}/{{to_stop.stop_id}}/{{from_stop.stop_id}}"><i class="icon-exchange"></i></a>
 		</span>
 		<span class="trips-header-to-stop">
 			{{#if to_stop}}
@@ -17,27 +20,13 @@
 	</div>
 	<div class="content-inner">
 		<nav class="simple-nav">
-			<ul>
-				{{#trips}}
-				<li class="simple-nav-item trip">
-					<div class="trip-stop trip-from">
-						<i class="icon-time"></i> 
-						<div class="trip-label">
-							{{departure_time_formatted}} 
-							<span class="trip-from-now">({{from_now}})</span>
-						</div>
-					</div>
-					{{#if arrival_stop_time}}
-					<div class="trip-stop trip-to">
-						{{arrival_time_formatted}}
-					</div>
-					{{/if}}
-					<div class="trip-coverage">
-						<div class="trip-coverage-active" style="margin-left:{{coverage.left}}px;margin-right:{{coverage.right}}px;"></div>
-					</div>
-				</li>
-				{{/trips}}
+			<ul class="trips-list js-trips-list">
+				{{> trip_item}}
 			</ul>
 		</nav>
+	</div>
+	<div class="trips-paging">
+		<a href="?offset={{offset_prev}}" class="trips-paging-btn trips-paging-prev js-trips-prev"><i class="icon-long-arrow-left"></i></a>
+		<a href="?offset={{offset_next}}" class="trips-paging-btn trips-paging-next js-trips-next"><i class="icon-long-arrow-right"></i></a>
 	</div>
 </div>

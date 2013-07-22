@@ -40,6 +40,7 @@
 		text-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.6);
 	}
 	.content-inner {
+		overflow: hidden;
 		background-color: lighten($background_color, 5%);
 		border-radius: 4px;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 1.5px rgba(255, 255, 255, 0.2);

@@ -12,9 +12,10 @@ function DisplayTrip(stop_time) {
 	this.arrival_stop_time = null;
 	this.arrival_time_formatted = '';
 	this.from_now = '';
+	this.gone = false;
 	this.coverage = {
 		left: ((stop_time.first_stop_sequence - 1) / stop_time.stop_count) * 100,
-		right: (1 - (stop_time.last_stop_sequence / stop_time.stop_count)) *100
+		right: (1 - (stop_time.last_stop_sequence / stop_time.stop_count)) * 100
 	};
 
 	if(this.coverage.left < 0) {
@@ -23,6 +24,8 @@ function DisplayTrip(stop_time) {
 	if(this.coverage.right < 0) {
 		this.coverage.right = 0;
 	}
+
+	this.coverage.full = !this.coverage.left && !this.coverage.right;
 }
 
 function addToStopTime(now, trip, to_stop) {
@@ -48,6 +51,7 @@ function convert(now, stop_time, to_stop) {
 
 	trip.departure_time_formatted = departure_datetime.toFormat(time_format);
 	trip.from_now = now.time_period(diff);
+	trip.gone = trip.from_now === 'GONE';
 
 	return addToStopTime(now, trip, to_stop);
 }

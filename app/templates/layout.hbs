@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html module="nextsepta">
 <head>
 	<title>{{title}}</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
@@ -17,15 +17,26 @@
 	<link rel="stylesheet" type="text/css" href="/build/css/home.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/stops.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/trips.css" />
+
+	<script src="/js/vendor/jquery-1.9.1.min.js"></script>
+	<script src="/js/vendor/jquery.scrollTo-1.4.3.1.js"></script>
+	<script src="/js/core/core.js"></script>
+	<script src="/js/core/eval.js"></script>
+	<script src="/js/core/controller.js"></script>
+	<script src="/js/core/service.js"></script>
+	<script src="/js/core/module.js"></script>
+	<script src="/js/core/templates.js"></script>
+	<script src="/js/controllers/app.js"></script>
+	<script src="/js/controllers/trips.js"></script>
 </head>
-<body>
+<body ctrl="app">
 	<div class="container">
 		<header class="app-header">
 			{{#if back_path}}
 			<a href="{{back_path}}" class="app-header-btn"><i class="icon-chevron-sign-left"></i></a>
 			{{/if}}
 			<span class="app-title">{{title}}</span>
-			<a href="/info" class="app-header-btn"><i class="icon-info-sign"></i></a>
+			<a href="/info" class="app-header-btn"><i class="icon-reorder"></i></a>
 		</header>
 		<div class="content" data-type="{{route_type}}" data-route="{{route_id}}" data-direction="{{direction_id}}" data-from="{{from.stop_id}}" data-to="{{stop_id}}">
 			{{{body}}}

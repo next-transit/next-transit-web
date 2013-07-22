@@ -22,7 +22,6 @@ stop_times.get_by_time = function(is_rail, route_id, direction_id, from_id, offs
 	// handles "backwards" paging
 	// if a negative offset is detected, we reverse the time comparison, reverse the sort order, and then reverse the results
 	if(offset) {
-		offset = parseInt(offset, 10);
 		if(offset < 0) {
 			offset += 5; // this is because an offset of -5 actually means reverse order and start from 0
 			sort_dir = 'desc';
@@ -38,7 +37,11 @@ stop_times.get_by_time = function(is_rail, route_id, direction_id, from_id, offs
 		.params([route_id, from_id, direction_id, service_id, compare_time])
 		.orders('departure_time ' + sort_dir)
 		.limit(5)
+		.offset(Math.abs(offset))
 		.done(function(times) {
+			if(sort_dir === 'desc') {
+				times.reverse();
+			}
 			success(times);
 		});
 };

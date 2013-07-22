@@ -1,5 +1,6 @@
 .trips-header {
   *zoom: 1;
+  position: relative;
   margin: 0 0 0.8em;
   padding: 0.6em 1.4em;
   background-color: #2f3d49;
@@ -38,6 +39,19 @@
   margin-left: 0.6em;
 }
 
+.trips-header-reverse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: none;
+  margin-top: -0.6em;
+  margin-left: -0.9em;
+}
+
+.trips.has-to .trips-header-reverse {
+  display: block;
+}
+
 .trips-subheader {
   *zoom: 1;
   margin: 0.3em 0 0.1em;
@@ -66,6 +80,15 @@
 
 .trips-subheader-to {
   float: right;
+  display: none;
+}
+
+.trips.has-to .trips-subheader-to {
+  display: block;
+}
+
+.trips-list {
+  overflow: hidden;
 }
 
 .trip {
@@ -77,9 +100,19 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  display: none;
   margin-top: -7px;
   margin-left: -10px;
   font-size: 0.6em;
+}
+
+.trip.gone {
+  opacity: 0.33;
+  background-color: #1c1c1c;
+}
+
+.trips.has-to .trip:before {
+  display: block;
 }
 
 .trip-stop {
@@ -111,6 +144,11 @@
 
 .trip-to {
   float: right;
+  display: none;
+}
+
+.trips.has-to .trip-to {
+  display: block;
 }
 
 .trip-to .trip-stop-footer {
@@ -137,4 +175,41 @@
 
 .trip:hover .trip-coverage-active {
   background-color: rgba(40, 60, 100, 0.4);
+}
+
+.trips-paging {
+  *zoom: 1;
+  margin-top: 0.4em;
+}
+.trips-paging:before, .trips-paging:after {
+  display: table;
+  content: "";
+}
+.trips-paging:after {
+  clear: both;
+}
+
+.trips-paging-btn {
+  display: inline-block;
+  padding: 0.2em 0.8em;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 1.5px rgba(255, 255, 255, 0.2) inset;
+  border-radius: 3px;
+}
+
+.trips-paging-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.trips-paging-btn:active {
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 1.5px rgba(255, 255, 255, 0.1) inset;
+}
+
+.trips-paging-prev {
+  float: left;
+}
+
+.trips-paging-next {
+  float: right;
 }

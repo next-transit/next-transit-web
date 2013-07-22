@@ -6,7 +6,7 @@ function Model(table) {
 	this.table = table;
 }
 
-function generate_sql(table, select, joins, where, params, orders, limit, success, error) {
+function generate_sql(table, select, joins, where, params, orders, limit, offset) {
 	var sql = 'SELECT ' + (select || '*') + ' FROM ' + table;
 
 	if(joins) {
@@ -39,15 +39,20 @@ function generate_sql(table, select, joins, where, params, orders, limit, succes
 		sql += ' LIMIT ' + limit;
 	}
 
+	if(typeof offset === 'number') {
+		sql += ' OFFSET ' + offset;
+	}
+
 	sql += ';';
 
 	return sql;
 }
 
-Model.prototype.select = function(select, joins, where, params, orders, limit, success, error) {
+Model.prototype.select = function(select, joins, where, params, orders, limit, offset, success, error) {
 	if(typeof joins === 'function') {
 		error = where;
 		success = joins;
+		offset = null;
 		limit = null;
 		orders = null;
 		params = null;
@@ -56,6 +61,7 @@ Model.prototype.select = function(select, joins, where, params, orders, limit, s
 	} else if(typeof where === 'function') {
 		error = params;
 		success = where;
+		offset = null;
 		limit = null;
 		orders = null;
 		params = null;
@@ -63,21 +69,28 @@ Model.prototype.select = function(select, joins, where, params, orders, limit, s
 	} else if(typeof params === 'function') {
 		error = orders;
 		success = params;
+		offset = null;
 		limit = null;
 		orders = null;
 		params = null;
 	} else if(typeof orders === 'function') {
 		error = limit;
 		success = orders;
+		offset = null;
 		limit = null;
 		orders = null;
 	} else if(typeof limit === 'function') {
-		error = success;
+		error = offset;
 		success = limit;
+		offset = null;
 		limit = null;
+	} else if(typeof offset === 'function') {
+		error = success;
+		success = offset;
+		offset = null;
 	}
 
-	var sql = generate_sql(this.table, select, joins, where, params, orders, limit);
+	var sql = generate_sql(this.table, select, joins, where, params, orders, limit, offset);
 
 	db.query(sql, params, function(result) {
 		if(typeof success === 'function') {
@@ -113,6 +126,7 @@ Model.prototype.query = function() {
 	query.orders = fn('orders');
 	query.limit = fn('limit');
 	query.error = fn('error');
+	query.offset = fn('offset');
 	query.where = function(where, params) {
 		q.where = where;
 		if(params) {
@@ -127,7 +141,7 @@ Model.prototype.query = function() {
 	};
 
 	query.done = function(callback) {
-		model.select(q.select, q.joins, q.where, q.params, q.orders, q.limit, callback, q.error);
+		model.select(q.select, q.joins, q.where, q.params, q.orders, q.limit, q.offset, callback, q.error);
 	};
 
 	query.first = function(callback) {

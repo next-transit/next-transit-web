@@ -8,32 +8,29 @@ $btn_color: #333;
 
 .btn {
 	display: inline-block;
-	padding: 5px 12px;
+	padding: 0.5em 1.2em;
 	vertical-align: middle;
 	line-height: normal;
+	border: 0;
+	background-color: rgba(255, 255, 255, 0.1);
 	background-repeat: no-repeat;
-	border: 1px solid #bababa;
-	font-size: 1rem;
-	color: lighten($btn_color, 6%);
+	font-size: 0.8rem;
 	cursor: pointer;
-	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);
-	border-radius: 4px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-	@include gradient-range(#f9f9f9, #e3e3e3);
+	text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.3);
+	box-shadow:0 1px 3px rgba(0, 0, 0, 0.5), 0 0 1.5px rgba(255, 255, 255, 0.2) inset;
+	border-radius: 3px;
+	color: #f0f0f0;
 	@inclide transition(background, .15s);
 }
 a.btn {
-	color: lighten($btn_color, 6%);
+	color: #f0f0f0;
 }
 .btn:hover {
-	background-position: 0 -12px;
+	background-color: rgba(255, 255, 255, 0.15);
 }
-.btn.selected {
-	@include gradient-range(#cacaca, #d0d0d0);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 2px rgba(0, 0, 0, 0.1);
-}
-.btn-selected:hover {
-	background-position: 0 0;
+.btn:active {
+	background-color: rgba(255, 255, 255, 0.05);
+	box-shadow:0 1px 3px rgba(0, 0, 0, 0.6), 0 0 1.5px rgba(255, 255, 255, 0.1) inset;
 }
 .btn.disabled, .btn[disabled] {
 	background-image: none;
@@ -46,64 +43,54 @@ a.btn {
 
 /* Sizes */
 .btn-huge {
-	padding: 12px 22px;
+	/*padding: 12px 22px;*/
+	padding: 0.4em 1.4em;
 	font-weight: bold;
 	font-size: 1.5rem;
 }
 .btn-large {
-	padding: 8px 16px;
+	/*padding: 8px 16px;*/
 	font-weight: bold;
 	font-size: 1.25rem;
 }
 .btn-small {
-	padding: 4px 8px;
-	font-size: 0.9rem;
-}
-.btn-mini {
-	padding: 4px 5px 3px;
+	padding: 0.3em 0.8em;
 	font-size: 0.7rem;
 }
-
-/* Styles */
-/*.btn-primary {
-	border-color: darken($blue, 20%);
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 0 rgba(245, 245, 232, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
-	@include gradient($blue);
+.btn-mini {
+	padding: 0.3em 0.5em 0.25em;
+	font-size: 0.6rem;
 }
-.btn-primary, .btn-primary:hover, a.btn-primary {
-	color: #fff;
+.btn-full {
+	display: block;
+	text-align: center;
 }
 
-.btn-success {
-	border-color: #566441;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 0 rgba(245, 255, 235, 0.5), 0 1px 2px rgba(0, 0, 0, 0.2);
-	@include gradient($green);
+.btn-add {
+	background-color: $background_add;
 }
-.btn-success, .btn-success:hover, a.btn-success {
-	color: #fff;
+.btn-add, a.btn-add, a.btn-add:hover, a.btn-add:active {
+	color: $color_add;
+}
+.btn-add:hover {
+	background-color: $background_add_hover;
+}
+.btn-add:active {
+	background-color: $background_add_active;
 }
 
 .btn-danger {
-	border-color: darken($error, 20%);
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 0 rgba(255, 225, 235, 0.5), 0 1px 2px rgba(0, 0, 0, 0.2);
-	@include gradient($error);
+	background-color: rgba($red, 0.4);
 }
-.btn-danger, .btn-danger:hover, a.btn-danger {
-	color: #fff;
+.btn-danger, a.btn-danger, a.btn-danger:hover, a.btn-danger:active {
+	color: lighten($red, 35%);
 }
-
-.btn-dark {
-	border-color: darken($dark_gray, 20%);
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
-	@include gradient($dark_gray);
+.btn-danger:hover {
+	background-color: rgba($red, 0.5);
 }
-.btn-dark, .btn-dark:hover, a.btn-dark {
-	color: #fff;
-}*/
+.btn-danger:active {
+	background-color: rgba($red, 0.3);
+}
 
 /* Button Groups */
 .btn-group {

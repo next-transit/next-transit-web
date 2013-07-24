@@ -83,11 +83,9 @@
 	}
 
 	nextsepta.module = function module(name, dependencies) {
-		if(dependencies) {
-			if(name in _modules) {
-				throw new Error('module ' + name + ' already exists.');
-			}
+		dependencies = dependencies || [];
 
+		if(!(name in _modules)) {
 			_modules[name] = new Module(name, dependencies);
 		}
 

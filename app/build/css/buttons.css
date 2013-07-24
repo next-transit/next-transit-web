@@ -3,64 +3,32 @@
    ========================================================================== */
 .btn {
   display: inline-block;
-  padding: 5px 12px;
+  padding: 0.5em 1.2em;
   vertical-align: middle;
   line-height: normal;
+  border: 0;
+  background-color: rgba(255, 255, 255, 0.1);
   background-repeat: no-repeat;
-  border: 1px solid #bababa;
-  font-size: 1rem;
-  color: #424242;
+  font-size: 0.8rem;
   cursor: pointer;
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);
-  border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-  background-color: #e3e3e3;
-  background-image: -moz-linear-gradient(top, #f9f9f9 0%, #e3e3e3 100%);
-  /* FF3.6+ */
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e3e3e3));
-  /* Chrome,Safari4+ */
-  background-image: -webkit-linear-gradient(top, #f9f9f9 0%, #e3e3e3 100%);
-  /* Chrome10+,Safari5.1+ */
-  background-image: -o-linear-gradient(top, #f9f9f9 0%, #e3e3e3 100%);
-  /* Opera 11.10+ */
-  background-image: -ms-linear-gradient(top, #f9f9f9 0%, #e3e3e3 100%);
-  /* IE10+ */
-  background-image: linear-gradient(to bottom, #f9f9f9 0%, #e3e3e3 100%);
-  /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$top', endColorstr='$bottom',GradientType=0 );
-  /* IE6-9 */
+  text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 1.5px rgba(255, 255, 255, 0.2) inset;
+  border-radius: 3px;
+  color: #f0f0f0;
   @inclide transition(background, .15s);
 }
 
 a.btn {
-  color: #424242;
+  color: #f0f0f0;
 }
 
 .btn:hover {
-  background-position: 0 -12px;
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
-.btn.selected {
-  background-color: #d0d0d0;
-  background-image: -moz-linear-gradient(top, #cacaca 0%, #d0d0d0 100%);
-  /* FF3.6+ */
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cacaca), color-stop(100%, #d0d0d0));
-  /* Chrome,Safari4+ */
-  background-image: -webkit-linear-gradient(top, #cacaca 0%, #d0d0d0 100%);
-  /* Chrome10+,Safari5.1+ */
-  background-image: -o-linear-gradient(top, #cacaca 0%, #d0d0d0 100%);
-  /* Opera 11.10+ */
-  background-image: -ms-linear-gradient(top, #cacaca 0%, #d0d0d0 100%);
-  /* IE10+ */
-  background-image: linear-gradient(to bottom, #cacaca 0%, #d0d0d0 100%);
-  /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$top', endColorstr='$bottom',GradientType=0 );
-  /* IE6-9 */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 2px rgba(0, 0, 0, 0.1);
-}
-
-.btn-selected:hover {
-  background-position: 0 0;
+.btn:active {
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 1.5px rgba(255, 255, 255, 0.1) inset;
 }
 
 .btn.disabled, .btn[disabled] {
@@ -74,67 +42,65 @@ a.btn {
 
 /* Sizes */
 .btn-huge {
-  padding: 12px 22px;
+  /*padding: 12px 22px;*/
+  padding: 0.4em 1.4em;
   font-weight: bold;
   font-size: 1.5rem;
 }
 
 .btn-large {
-  padding: 8px 16px;
+  /*padding: 8px 16px;*/
   font-weight: bold;
   font-size: 1.25rem;
 }
 
 .btn-small {
-  padding: 4px 8px;
-  font-size: 0.9rem;
-}
-
-.btn-mini {
-  padding: 4px 5px 3px;
+  padding: 0.3em 0.8em;
   font-size: 0.7rem;
 }
 
-/* Styles */
-/*.btn-primary {
-	border-color: darken($blue, 20%);
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 0 rgba(245, 245, 232, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
-	@include gradient($blue);
-}
-.btn-primary, .btn-primary:hover, a.btn-primary {
-	color: #fff;
+.btn-mini {
+  padding: 0.3em 0.5em 0.25em;
+  font-size: 0.6rem;
 }
 
-.btn-success {
-	border-color: #566441;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 0 rgba(245, 255, 235, 0.5), 0 1px 2px rgba(0, 0, 0, 0.2);
-	@include gradient($green);
+.btn-full {
+  display: block;
+  text-align: center;
 }
-.btn-success, .btn-success:hover, a.btn-success {
-	color: #fff;
+
+.btn-add {
+  background-color: rgba(121, 166, 93, 0.4);
+}
+
+.btn-add, a.btn-add, a.btn-add:hover, a.btn-add:active {
+  color: #d8e5d0;
+}
+
+.btn-add:hover {
+  background-color: rgba(121, 166, 93, 0.5);
+}
+
+.btn-add:active {
+  background-color: rgba(121, 166, 93, 0.3);
 }
 
 .btn-danger {
-	border-color: darken($error, 20%);
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 0 rgba(255, 225, 235, 0.5), 0 1px 2px rgba(0, 0, 0, 0.2);
-	@include gradient($error);
-}
-.btn-danger, .btn-danger:hover, a.btn-danger {
-	color: #fff;
+  background-color: rgba(189, 80, 62, 0.4);
 }
 
-.btn-dark {
-	border-color: darken($dark_gray, 20%);
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
-	@include gradient($dark_gray);
+.btn-danger, a.btn-danger, a.btn-danger:hover, a.btn-danger:active {
+  color: #ebc8c2;
 }
-.btn-dark, .btn-dark:hover, a.btn-dark {
-	color: #fff;
-}*/
+
+.btn-danger:hover {
+  background-color: rgba(189, 80, 62, 0.5);
+}
+
+.btn-danger:active {
+  background-color: rgba(189, 80, 62, 0.3);
+}
+
 /* Button Groups */
 .btn-group {
   display: inline-block;

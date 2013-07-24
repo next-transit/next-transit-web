@@ -1,4 +1,4 @@
-var ctrl = require('./controller').create('direction'),
+var ctrl = require('./controller').create('stops'),
 	simplified_stops = require('../models/simplified_stops');
 
 ctrl.action('from', function(req, res, callback) {
@@ -8,7 +8,7 @@ ctrl.action('from', function(req, res, callback) {
 		stops.forEach(function(stop) {
 			stop.path = stop.stop_id;
 		});
-		callback('stops', { title:route.route_short_name + ' - ' + direction.direction_name, stops:stops });
+		callback({ title:route.route_short_name + ' - ' + direction.direction_name, stops:stops });
 	});
 });
 
@@ -19,7 +19,7 @@ ctrl.action('to', function(req, res, callback) {
 		stops.forEach(function(stop) {
 			stop.path = from.stop_id + '/' + stop.stop_id;
 		});
-		callback('stops', { title:route.route_short_name + ' - ' + direction.direction_name, from_stop:from, stops:stops });
+		callback({ title:route.route_short_name + ' - ' + direction.direction_name, from_stop:from, stops:stops });
 	});
 });
 

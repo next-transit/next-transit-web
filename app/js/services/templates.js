@@ -1,4 +1,4 @@
-nextsepta.module('templates', []).service('templates', [function() {
+nextsepta.module('nextsepta').service('templates', [function() {
 	function getTemplate(url, success) {
 		$.ajax({
 			url: url,

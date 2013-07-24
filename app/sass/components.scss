@@ -25,7 +25,11 @@
 
 /* Simple Nav */
 .simple-nav {}
+.content-inner > .simple-nav {
+	margin: -0.6em -1.4em;
+}
 	.simple-nav li {
+		position: relative;
 		border-top: 1px solid lighten($background_color, 8%);
 		border-bottom: 1px solid lighten($background_color, 1%);
 	}
@@ -52,6 +56,17 @@
 			background-color: rgba(255, 255, 255, 0.075);
 			@include transition('background-color', '1s');
 		}
+		.simple-nav-add, a.simple-nav-add {
+			background-color: $background_add;
+			color: $color_add;
+		}
+		.simple-nav-add:hover, a.simple-nav-add:hover {
+			background-color: $background_add_hover;
+		}
+		.simple-nav-add:active, a.simple-nav-add:active {
+			background-color: $background_add_active;
+		}
+
 			.simple-nav a [class^="icon-"], .simple-nav-item [class^="icon-"] {
 				font-size: 0.8em;
 			}

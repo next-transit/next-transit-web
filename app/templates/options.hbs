@@ -1,0 +1,69 @@
+<div class="options" ctrl="options">
+	<section class="content-section options-section js-options-saved-trips">
+		<header>
+			<h4>Saved Trips</h4>
+		</header>
+		<div class="content-inner">
+			<nav class="simple-nav">
+				<ul>
+					{{#if has_saved_trips}}
+					{{#saved_trips}}
+					<li data-trip-key="{{key}}">
+						<a href="{{path}}" class="options-trip">
+							<strong>{{route_name}}</strong>
+							<span class="options-trip-stops">
+									{{from_stop_name}} &rarr; {{to_stop_name}}
+									<span class="options-trip-direction">{{direction_name}}</span>
+							</span>
+						</a>
+						<input type="button" class="btn btn-small btn-danger btn-right js-options-delete-saved" value="Delete" />
+					</li>
+					{{/saved_trips}}
+					{{else}}
+					<li class="simple-nav-item js-options-saved-trips-none">No saved trips yet.</li>
+					{{/if}}
+				</ul>
+			</nav>
+		</div>
+	</section>
+
+	{{#if has_recent_trips}}
+	<section class="content-section options-section js-options-recent-trips">
+		<header>
+			<input type="button" class="btn btn-small btn-right js-options-clear-recent" value="Clear" />
+			<h4>Recent Trips</h4>
+		</header>
+		<div class="content-inner">
+			<nav class="simple-nav">
+				<ul>
+					{{#recent_trips}}
+					<li data-trip-key="{{key}}">
+						<a href="{{path}}" class="options-trip">
+							<strong>{{route_name}}</strong>
+							<span class="options-trip-stops">
+									{{from_stop_name}} &rarr; {{to_stop_name}}
+									<span class="options-trip-direction">{{direction_name}}</span>
+							</span>
+						</a>
+						{{#if saved}}
+						<input type="button" class="btn btn-small btn-right js-options-save-disabled disabled" disabled="disabled" value="Saved" />
+						{{else}}
+						<input type="button" class="btn btn-small btn-add btn-right js-options-save-recent" value="Save" />
+						{{/if}}
+					</li>
+					{{/recent_trips}}
+				</ul>
+			</nav>
+		</div>
+	</section>
+	{{/if}}
+
+	<section class="content-section options-section">
+		<header>
+			<h4>About</h4>
+		</header>
+		<div class="content-inner">
+			NEXT|Septa is a ...
+		</div>
+	</section>
+</div>

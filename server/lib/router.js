@@ -1,16 +1,25 @@
-var routes = require('../routes.json');
+var routes = require('../routes.json'),
+	app_cntl = require('./controllers/app'),
+	recent_trips = require('./models/recent_trips');
 
 function addRoutes(app) {
-	for(var path in routes) {
-		var appCntl = require('./controllers/app'),
-			ctrlName = routes[path],
+	for(var key in routes) {
+
+		var path = key,
+			options = routes[key],
+			ctrlName = options.action,
 			ctrlParts = ctrlName.split(':'),
 			cntl = require('./controllers/' + ctrlParts[0]),
-			action = cntl.getAction(ctrlParts[1] || 'index');
+			method = 'get',
+			action = cntl.getAction(ctrlParts[1] || 'index'),
+			method_matches = key.match(/^(get|post|put|delete) /i);
 
-		appCntl.app(app);
+		if(method_matches) {
+			path = key.replace(method_matches[0], '');
+			method = method_matches[1];
+		}
 
-		app.get(path, appCntl.before, action);
+		app[method](path, app_cntl.before, recent_trips.before, action);
 	}
 }
 

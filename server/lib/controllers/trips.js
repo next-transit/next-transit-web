@@ -1,4 +1,4 @@
-var ctrl = require('./controller').create('from'),
+var ctrl = require('./controller').create('trips'),
 	display_trips = require('../models/display_trips');
 
 ctrl.action('index', function(req, res, callback) {

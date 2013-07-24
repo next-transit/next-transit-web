@@ -1,9 +1,14 @@
 {
-	"/:route_type/:route_id/:direction_id/:from_id/choose": "stops:to",
-	"/:route_type/:route_id/:direction_id/:from_id/:to_id": "trips",
-	"/:route_type/:route_id/:direction_id/:from_id": "trips",
-	"/:route_type/:route_id/:direction_id": "stops:from",
-	"/:route_type/:route_id": "directions",
-	"/:route_type": "routes",
-	"/": "home"
+	"post /saved-trips/:key": { "action":"saved-trips:create" },
+	"delete /saved-trips/:key": { "action":"saved-trips:delete" },
+	"delete /recent-trips": { "action":"recent-trips:delete" },
+	"get /options": { "action":"options" },
+	"get /patterns": { "action":"patterns" },
+	"get /:route_type/:route_id/:direction_id/:from_id/choose": { "action":"stops:to" },
+	"get /:route_type/:route_id/:direction_id/:from_id/:to_id": { "action":"trips" },
+	"get /:route_type/:route_id/:direction_id/:from_id": { "action":"trips" },
+	"get /:route_type/:route_id/:direction_id": { "action":"stops:from" },
+	"get /:route_type/:route_id": { "action":"directions" },
+	"get /:route_type": { "action":"routes" },
+	"get /": { "action":"home" }
 }

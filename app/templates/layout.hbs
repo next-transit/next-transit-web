@@ -17,6 +17,8 @@
 	<link rel="stylesheet" type="text/css" href="/build/css/home.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/stops.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/trips.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/options.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/patterns.css" />
 
 	<script src="/js/vendor/jquery-1.9.1.min.js"></script>
 	<script src="/js/vendor/jquery.scrollTo-1.4.3.1.js"></script>
@@ -25,9 +27,11 @@
 	<script src="/js/core/controller.js"></script>
 	<script src="/js/core/service.js"></script>
 	<script src="/js/core/module.js"></script>
-	<script src="/js/core/templates.js"></script>
+	<script src="/js/services/cookie.js"></script>
+	<script src="/js/services/templates.js"></script>
 	<script src="/js/controllers/app.js"></script>
 	<script src="/js/controllers/trips.js"></script>
+	<script src="/js/controllers/options.js"></script>
 </head>
 <body ctrl="app">
 	<div class="container">
@@ -36,12 +40,12 @@
 			<a href="{{back_path}}" class="app-header-btn"><i class="icon-chevron-sign-left"></i></a>
 			{{/if}}
 			<span class="app-title">{{title}}</span>
-			<a href="/info" class="app-header-btn"><i class="icon-reorder"></i></a>
+			<a href="/options" class="app-header-btn"><i class="icon-reorder"></i></a>
 		</header>
 		<div class="content" data-type="{{route_type}}" data-route="{{route_id}}" data-direction="{{direction_id}}" data-from="{{from.stop_id}}" data-to="{{stop_id}}">
 			{{{body}}}
 		</div>
-		{{#if route_type}}
+		{{#if show_footer}}
 		<footer class="app-footer {{route_type.slug}}">
 			<ul>
 				<li class="">

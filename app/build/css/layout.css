@@ -50,9 +50,15 @@
   text-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.6);
 }
 
+.content-section {
+  margin-bottom: 1.4rem;
+}
+
 .content-inner {
+  padding: 0.6em 1.4em;
   overflow: hidden;
   background-color: #2f2f2f;
+  font-weight: 200;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 1.5px rgba(255, 255, 255, 0.2);
 }

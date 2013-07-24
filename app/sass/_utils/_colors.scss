@@ -2,6 +2,12 @@ $background_color: #222;
 $default_color: #f9f9f9;
 
 $green: #79a65d;
+$red: #bd503e;
+
+$background_add: rgba($green, 0.4);
+$background_add_hover: rgba($green, 0.5);
+$background_add_active: rgba($green, 0.3);
+$color_add: lighten($green, 35%);
 
 $background_buses: #41525c;
 $background_subways: #477997;

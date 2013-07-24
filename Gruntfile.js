@@ -21,7 +21,9 @@ module.exports = function(grunt) {
 					'<%=dirs.css_build %>/layout.css': ['<%=dirs.sass_src %>/layout.scss'],
 					'<%=dirs.css_build %>/home.css': ['<%=dirs.sass_src %>/home.scss'],
 					'<%=dirs.css_build %>/stops.css': ['<%=dirs.sass_src %>/stops.scss'],
-					'<%=dirs.css_build %>/trips.css': ['<%=dirs.sass_src %>/trips.scss']
+					'<%=dirs.css_build %>/trips.css': ['<%=dirs.sass_src %>/trips.scss'],
+					'<%=dirs.css_build %>/options.css': ['<%=dirs.sass_src %>/options.scss'],
+					'<%=dirs.css_build %>/patterns.css': ['<%=dirs.sass_src %>/patterns.scss']
 				}
 			}
 		},

@@ -2,6 +2,7 @@
 	"post /saved-trips/:key": { "action":"saved-trips:create" },
 	"delete /saved-trips/:key": { "action":"saved-trips:delete" },
 	"delete /recent-trips": { "action":"recent-trips:delete" },
+	"get /search": { "action":"search" },
 	"get /options": { "action":"options" },
 	"get /patterns": { "action":"patterns" },
 	"get /:route_type/:route_id/:direction_id/:from_id/choose": { "action":"stops:to" },

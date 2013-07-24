@@ -5,4 +5,16 @@ var route_types = {
 	buses: { id:'3', label:'Buses', slug:'buses' }
 };
 
+route_types.get_by_id = function(id) {
+	var route_type;
+
+	for(var type in route_types) {
+		if(route_types[type].id === id.toString()) {
+			route_type = route_types[type];
+		}
+	}
+
+	return route_type;
+};
+
 module.exports = route_types;

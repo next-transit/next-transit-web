@@ -15,7 +15,7 @@ function padLeft(str, size, char) {
 function processRoute(route) {
 	route.is_rail = route.route_type === 2;
 	route.has_realtime = route.route_type !== 1;
-	route.slug = route.is_rail ? route.route_id : route.route_short_name.toLowerCase();
+	route.slug = route.is_rail ? route.route_id.toLowerCase() : route.route_short_name.toLowerCase();
 	return route;
 }
 

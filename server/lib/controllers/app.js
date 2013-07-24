@@ -65,7 +65,7 @@ function getDirection(req, success, not_found) {
 function getRoute(req, success, not_found) {
 	if(req.params.route_id) {
 		var route_id = req.params.route_id.toLowerCase();
-		routes.where('route_id = ? OR lower(route_short_name) = ?', [route_id, route_id]).first(function(route) {
+		routes.where('lower(route_id) = ? OR lower(route_short_name) = ?', [route_id, route_id]).first(function(route) {
 			if(route) {
 				req.locals.route_id = req.route_id = route_id;
 				req.locals.route = req.route = route;

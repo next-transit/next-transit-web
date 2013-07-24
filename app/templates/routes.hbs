@@ -12,7 +12,11 @@
 				{{#routes}}
 				<li>
 					{{#if shortcuts}}<a name="{{route_short_name}}" class="quicknav-anchor" />{{/if}}
-					<a href="/{{../path}}/{{route_short_name}}"><strong>{{route_short_name}}</strong> {{route_long_name}}</a>
+					{{#if is_rail}}
+					<a href="{{../../route_type_slug}}/{{slug}}"><strong>{{route_id}}</strong> {{route_long_name}}</a>
+					{{else}}
+					<a href="{{../../route_type_slug}}/{{slug}}"><strong>{{route_short_name}}</strong> {{route_long_name}}</a>
+					{{/if}}
 				</li>
 				{{/routes}}
 			</ul>

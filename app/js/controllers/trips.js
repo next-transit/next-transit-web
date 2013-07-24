@@ -5,7 +5,7 @@ nextsepta.module('nextsepta').controller('trips', ['$elem', 'templates', functio
 			'0': $('li:first', $list)
 		};
 
-	$list.height($list.height());
+	$list.height($list.outerHeight());
 
 	function getScrollTo($link, forward, cacheKey, callback) {
 		if(cacheKey in cache) {

@@ -4,18 +4,21 @@ function before(req, res, next) {
 		last_trip;
 
 	if(req.route_type && req.direction && req.from_stop) {
-		var trip_key = req.route_type.slug + '-' + req.direction.direction_id + '-' + req.from_stop.stop_id,
-			path = '/' + req.route_type.slug + '/' + req.direction.direction_id + '/' + req.from_stop.stop_id;
+		var pieces = [req.route_type.slug, req.route.slug, req.direction.direction_id, req.from_stop.stop_id];
 
 		if(req.to_stop) {
-			trip_key += '-' + req.to_stop.stop_id;
-			path += '/' + req.to_stop.stop_id;
+			pieces.push(req.to_stop.stop_id);
 		}
+
+		var trip_key = pieces.join('-'),
+			path = '/' + pieces.join('/');
 
 		last_trip = {
 			key: trip_key,
 			path: path,
-			route_name: req.route.route_short_name,
+			slug: req.route.slug,
+			route_type: req.route_type.slug,
+			route_name: req.route.route_name,
 			direction_name: req.direction.direction_name,
 			from_stop_name: req.from_stop.stop_name,
 			to_stop_name: (req.to_stop || {}).stop_name,

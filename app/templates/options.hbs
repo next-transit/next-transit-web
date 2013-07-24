@@ -10,7 +10,7 @@
 					{{#saved_trips}}
 					<li data-trip-key="{{key}}">
 						<a href="{{path}}" class="options-trip">
-							<strong>{{route_name}}</strong>
+							<strong class="{{route_type}} {{slug}}">{{route_name}}</strong>
 							<span class="options-trip-stops">
 									{{from_stop_name}} &rarr; {{to_stop_name}}
 									<span class="options-trip-direction">{{direction_name}}</span>
@@ -39,7 +39,7 @@
 					{{#recent_trips}}
 					<li data-trip-key="{{key}}">
 						<a href="{{path}}" class="options-trip">
-							<strong>{{route_name}}</strong>
+							<strong class="{{route_type}} {{slug}}">{{route_name}}</strong>
 							<span class="options-trip-stops">
 									{{from_stop_name}} &rarr; {{to_stop_name}}
 									<span class="options-trip-direction">{{direction_name}}</span>

@@ -10,7 +10,9 @@
 			<ul>
 				{{#results}}
 				<li>
-					<a href="/{{route_type_name}}/{{route_short_name_lower}}"><strong>{{route_short_name}}</strong> {{route_long_name}}</a>
+					<a href="/{{route_type_name}}/{{route_short_name_lower}}">
+						<strong class="{{route_type_name}} {{slug}}">{{route_short_name}}</strong> {{route_long_name}}
+					</a>
 				</li>
 				{{/results}}
 			</ul>

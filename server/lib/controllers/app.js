@@ -67,10 +67,12 @@ function getRoute(req, success, not_found) {
 		var route_id = req.params.route_id.toLowerCase();
 		routes.where('lower(route_id) = ? OR lower(route_short_name) = ?', [route_id, route_id]).first(function(route) {
 			if(route) {
-				req.locals.route_id = req.route_id = route_id;
-				req.locals.route = req.route = route;
-				req.locals.back_path = '/' + req.route_type.slug;
-				getDirection(req, success, not_found);
+				routes.process(route, function(route) {
+					req.locals.route_id = req.route_id = route_id;
+					req.locals.route = req.route = route;
+					req.locals.back_path = '/' + req.route_type.slug;
+					getDirection(req, success, not_found);
+				});
 			} else {
 				not_found();
 			}

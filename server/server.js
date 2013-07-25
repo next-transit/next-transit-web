@@ -17,7 +17,10 @@ app.use(express.static('./app'));
 app.use(express.cookieParser());
 app.use(express.cookieSession({ secret:'bsl-mfl' }));
 
-router.routes(app);
+//router.routes(app);
+app.get('/', function(req, res) {
+	res.send('testing...');
+});
 
 app.listen(port);
 console.log('Server started on port', port);

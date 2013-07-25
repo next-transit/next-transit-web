@@ -5,7 +5,7 @@ var express = require('express'),
 	db = require('./lib/db'),
 	router = require('./lib/router'),
 	routes = require('./lib/models/routes'),
-	port = 5000;
+	port = process.env.PORT || 5000;
 
 hbs.registerPartials('./app/templates/partials', function() {});
 

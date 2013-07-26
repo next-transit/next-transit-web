@@ -1,3 +1,4 @@
+<!-- title: {{title}} -->
 <div class="routes">
 	<nav class="quicknav">
 		<ul>
@@ -12,7 +13,9 @@
 				{{#routes}}
 				<li>
 					{{#if shortcuts}}<a name="{{route_short_name}}" class="quicknav-anchor" />{{/if}}
-					<a href="{{../route_type_slug}}/{{slug}}"><strong class="{{../route_type_slug}} {{slug}}">{{route_name}}</strong> {{route_long_name}}</a>
+					<a href="{{../route_type_slug}}/{{slug}}" class="js-nav-link">
+						<strong class="{{../route_type_slug}} {{slug}}">{{route_name}}</strong> {{route_long_name}}
+					</a>
 				</li>
 				{{/routes}}
 			</ul>

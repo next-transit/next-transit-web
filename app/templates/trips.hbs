@@ -8,9 +8,9 @@
 		</span>
 		<span class="trips-header-to-stop">
 			{{#if to_stop}}
-			<a href="{{back_path}}">{{to_stop.stop_name}} <i class="icon-map-marker"></i></a>
+			<a href="{{back_path}}" class="js-nav-link">{{to_stop.stop_name}} <i class="icon-map-marker"></i></a>
 			{{else}}
-			<a href="{{back_path}}/{{from_stop.stop_id}}/choose">Choose Destination</a>
+			<a href="{{back_path}}/{{from_stop.stop_id}}/choose" class="js-nav-link">Choose Destination</a>
 			{{/if}}
 		</span>
 	</div>

@@ -1,3 +1,3 @@
-nextsepta.module('nextsepta', ['templates']).controller('app', [function() {
+nextsepta.module('nextsepta', ['templates', 'history']).controller('app', [function() {
 	// App Controller
 }]).run();

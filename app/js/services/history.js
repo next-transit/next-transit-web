@@ -71,7 +71,7 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 			if(resize.is_desktop()) {
 				$content.hide().html('<div class="content-panel">' + content + '</div>').fadeIn('fast');
 			} else {
-				animateContent(content);
+				animateContent(content, !push);
 			}
 			eval();
 		});
@@ -131,8 +131,6 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 			if(first_pop) { first_pop = false; return; }
 			getContent(window.location.pathname, renderContent);
 		});
-
-		console.log('resize service', resize.width(), resize.is_desktop());
 	});
 
 	return {

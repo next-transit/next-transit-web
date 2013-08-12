@@ -1,3 +1,5 @@
+var cookie_settings = { maxAge:31536000 };
+
 function save(req, res, callback) {
 	if(req.params.key) {
 		var recent_trips = req.cookies.recent_trips || [],
@@ -21,7 +23,7 @@ function save(req, res, callback) {
 				saved_trips.splice(existing_idx, 1);
 			}
 			saved_trips.unshift(trip);
-			res.cookie('saved_trips', saved_trips);
+			res.cookie('saved_trips', saved_trips, cookie_settings);
 			callback(trip);
 		} else {
 			callback();
@@ -48,7 +50,7 @@ function remove(req, res, callback) {
 
 		if(remove_idx > -1) {
 			saved_trips.splice(remove_idx, 1);
-			res.cookie('saved_trips', saved_trips);
+			res.cookie('saved_trips', saved_trips, cookie_settings);
 			callback(true);
 		} else {
 			callback();

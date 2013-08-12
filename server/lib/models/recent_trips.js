@@ -1,5 +1,6 @@
 function before(req, res, next) {
-	var recent_trips = req.cookies.recent_trips || [],
+	var cookie_settings = { maxAge:31536000 },
+		recent_trips = req.cookies.recent_trips || [],
 		saved_trips = req.cookies.saved_trips || [],
 		last_trip;
 
@@ -40,7 +41,7 @@ function before(req, res, next) {
 		recent_trips.unshift(last_trip);
 	}
 
-	res.cookie('recent_trips', recent_trips);
+	res.cookie('recent_trips', recent_trips, cookie_settings);
 
 	var top_trips = [];
 	recent_trips.forEach(function(recent_trip, idx) {
@@ -74,10 +75,10 @@ function remove(req, res, callback) {
 
 		if(remove_idx > -1) {
 			trips.splice(remove_idx, 0);
-			res.cookie('recent_trips', trips);
+			res.cookie('recent_trips', trips, cookie_settings);
 		}
 	} else {
-		res.cookie('recent_trips', []);	
+		res.cookie('recent_trips', []);
 	}
 
 	if(typeof callback === 'function') {

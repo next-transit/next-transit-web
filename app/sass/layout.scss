@@ -118,3 +118,29 @@
 				box-shadow: inset -1px 1px 4px rgba(0, 0, 0, 0.1);
 				@include gradient-range(lighten($background_color, 4%), lighten($background_color, 8%));
 			}
+
+
+@media (min-width:961px) {
+	html {
+		background: #aaa url('/images/grey_wash_wall.png');
+	}
+	body {
+		background: transparent;
+	}
+	html, body, .container {
+		height: 100%;
+	}
+
+	.app-header, .container, .app-footer {
+		margin: 0 auto;
+		width: 960px;
+	}
+
+	.container, .content {
+		background-color: #222;		
+	}
+
+		.container {
+			box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+		}
+}

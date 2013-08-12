@@ -87,8 +87,12 @@
   box-sizing: border-box;
 }
 
-.content-panel.current {
+.content-panel.current.going-left {
   right: 0;
+}
+
+.content-panel.current.going-right {
+  left: 0;
 }
 
 .content-panel.incoming.right {
@@ -165,4 +169,31 @@
   /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$top', endColorstr='$bottom',GradientType=0 );
   /* IE6-9 */
+}
+
+@media (min-width: 961px) {
+  html {
+    background: #aaaaaa url("/images/grey_wash_wall.png");
+  }
+
+  body {
+    background: transparent;
+  }
+
+  html, body, .container {
+    height: 100%;
+  }
+
+  .app-header, .container, .app-footer {
+    margin: 0 auto;
+    width: 960px;
+  }
+
+  .container, .content {
+    background-color: #222;
+  }
+
+  .container {
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+  }
 }

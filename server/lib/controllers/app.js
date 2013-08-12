@@ -118,7 +118,6 @@ function before(req, res, next) {
 		}
 	}
 
-	req.locals.title = 'NEXT|Septa';
 	if(req.query.layout === 'null' || req.query.layout === 'false') {
 		req.locals.layout = null;
 	}

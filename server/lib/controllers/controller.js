@@ -22,6 +22,11 @@ function Controller(name) {
 					res.send(data);
 				} else {
 					var view_data = extend({}, req.locals, data || {});
+					if(view_data.title) {
+						view_data.app_title = view_data.title + ' - NEXT|Septa';
+					} else {
+						view_data.app_title = 'NEXT|Septa';
+					}
 					res.render(view || _self.name, view_data, function(err, html) {
 						res.send(html);
 					});

@@ -9,6 +9,7 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 
 	function applyContentSettings(title, show_back, show_options) {
 		$('.js-title, .js-app-title').text(title || 'NEXT|Septa');
+		$('.js-title').text(title ? (title + ' - NEXT|Septa') : 'NEXT|Septa');
 		$back_btn[show_back ? 'addClass' : 'removeClass']('active');
 		$options_btn[show_options ? 'addClass' : 'removeClass']('active');
 	}

@@ -8,14 +8,14 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 		$content;
 
 	function applyContentSettings(title, show_back, show_options) {
-		$('.js-title, .js-app-title').text(title || 'NEXT|Septa');
+		$('.js-app-title').text(title || 'NEXT|Septa');
 		$('.js-title').text(title ? (title + ' - NEXT|Septa') : 'NEXT|Septa');
 		$back_btn[show_back ? 'addClass' : 'removeClass']('active');
 		$options_btn[show_options ? 'addClass' : 'removeClass']('active');
 	}
 
 	function parseContentSettings(content, callback) {
-		var title = 'NEXT|Septa', show_back = true, show_options = true,
+		var title = '', show_back = true, show_options = true,
 			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))? -->/i);
 
 		if(matches) {

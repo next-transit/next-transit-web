@@ -25,7 +25,7 @@ function Controller(name) {
 					if(view_data.title) {
 						view_data.app_title = view_data.title + ' - NEXT|Septa';
 					} else {
-						view_data.app_title = 'NEXT|Septa';
+						view_data.title = view_data.app_title = 'NEXT|Septa';
 					}
 					res.render(view || _self.name, view_data, function(err, html) {
 						res.send(html);

@@ -40,6 +40,7 @@ table {
 input, textarea, select {
     font-size: 1.1em;
     line-height: 1.1;
+    outline: 0;
 }
 
 /* HTML5 handling for older browsers */

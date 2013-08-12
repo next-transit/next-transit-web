@@ -28,6 +28,7 @@
 	<script src="/js/core/service.js"></script>
 	<script src="/js/core/module.js"></script>
 	<script src="/js/services/templates.js"></script>
+	<script src="/js/services/resize.js"></script>
 	<script src="/js/services/history.js"></script>
 	<script src="/js/controllers/app.js"></script>
 	<script src="/js/controllers/trips.js"></script>
@@ -40,8 +41,10 @@
 			<span class="app-title js-app-title">{{title}}</span>
 			<a href="/options" class="app-header-btn js-nav-link js-header-options-btn"><i class="icon-reorder"></i></a>
 		</header>
-		<div class="content" data-type="{{route_type_slug}}" data-route="{{route_id}}" data-direction="{{direction_id}}" data-from="{{from.stop_id}}" data-to="{{stop_id}}">
-			{{{body}}}
+		<div class="content" data-type="{{route_type_slug}}" data-route="{{route_id}}" data-direction="{{direction_id}}" data-from="{{from_stop.stop_id}}" data-to="{{to_stop.stop_id}}">
+			<div class="content-panel">
+				{{{body}}}
+			</div>
 		</div>
 		{{#if show_footer}}
 		<footer class="app-footer {{route_type.slug}}">

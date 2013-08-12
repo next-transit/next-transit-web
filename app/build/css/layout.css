@@ -76,6 +76,29 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 1.5px rgba(255, 255, 255, 0.2);
 }
 
+.content-panel.current, .content-panel.incoming {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 3.2em 0.8em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.content-panel.current {
+  right: 0;
+}
+
+.content-panel.incoming.right {
+  left: 100%;
+}
+
+.content-panel.incoming.left {
+  right: 100%;
+}
+
 .app-footer {
   position: fixed;
   right: 0;

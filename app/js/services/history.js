@@ -1,10 +1,11 @@
-nextsepta.module('nextsepta').service('history', [function() {
+nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 	if(!window.history) {
 		return {};
 	}
 
 	var $back_btn,
-		$options_btn;
+		$options_btn,
+		$content;
 
 	function applyContentSettings(title, show_back, show_options) {
 		$('.js-title, .js-app-title').text(title || 'NEXT|Septa');
@@ -14,7 +15,7 @@ nextsepta.module('nextsepta').service('history', [function() {
 
 	function parseContentSettings(content, callback) {
 		var title = 'NEXT|Septa', show_back = true, show_options = true,
-			matches = content.match(/<!-- (title: ([\w\|]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))? -->/i);
+			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))? -->/i);
 
 		if(matches) {
 			if(matches.length > 1) {
@@ -31,13 +32,48 @@ nextsepta.module('nextsepta').service('history', [function() {
 		callback(title, show_back, show_options);
 	}
 
+	function animateContent(content, slide_right) {
+		var going = 'going-left',
+			incoming_side = 'right',
+			incoming_direction = 'left',
+			animate_current = {},
+			animate_incoming = {},
+			animate_complete = {};
+
+		if(slide_right) {
+			going = 'going-right';
+			incoming_side = 'left';
+			incoming_direction = 'right';
+		}
+
+		animate_current[incoming_side] = '100%';
+		animate_incoming[incoming_direction] = 0;
+		animate_complete[incoming_direction] = 'auto';
+
+		var $current = $('.content-panel', $content).addClass(['current', going].join(' ')),
+			$next = $('<div class="content-panel"></div>').addClass(['incoming', incoming_side].join(' ')).append(content).appendTo($content);
+
+		$current.animate(animate_current, function() {
+			$current.remove();
+		});
+		$next.animate(animate_incoming, function() {
+			$next.removeClass('incoming right left').css(incoming_direction, 'auto');
+		});
+	}
+
 	function renderContent(content, path, push) {
 		parseContentSettings(content, function(title, show_back, show_options) {
 			if(push) {
 				history.pushState({ title:title, back:show_back, options:show_options }, '', path);
 			}
 			applyContentSettings(title, show_back, show_options);
-			$('.content').html(content);
+
+			if(resize.is_desktop()) {
+				$content.hide().html('<div class="content-panel">' + content + '</div>').fadeIn('fast');
+			} else {
+				animateContent(content);
+			}
+			eval();
 		});
 	}
 
@@ -55,6 +91,7 @@ nextsepta.module('nextsepta').service('history', [function() {
 		});
 	}
 
+	// Looks for ".js-nav-link" elements and binds an override to History
 	function attachEvents($context) {
 		$context = $context || $('body');
 		$('.js-nav-link', $context).click(function() {
@@ -66,20 +103,36 @@ nextsepta.module('nextsepta').service('history', [function() {
 		});
 	}
 
+	// Evaluates html for "directives" and attaches history event handlers
+	function eval($context) {
+		$context = $context || $content;
+		nextsepta.module('nextsepta').eval($context);
+		attachEvents($context);
+	} 
+
+	// Initial event binding for links and window.History
 	$(function() {
+		// Bind custom events for the "back" and "options" buttons
 		$back_btn = $('.js-nav-link-back').click(function() {
 			history.back();
 			return false;
 		});
 		$options_btn = $('.js-header-options-btn');
 
+		// Get persistent "content" wrapper element
+		$content = $('.content');
+
+		// Do initial event bindings for whatever we have to start with
 		attachEvents();
 
+		// Event listener for browser back button clicks
 		var first_pop = true;
 		$(window).bind('popstate', function(evt) {
 			if(first_pop) { first_pop = false; return; }
 			getContent(window.location.pathname, renderContent);
 		});
+
+		console.log('resize service', resize.width(), resize.is_desktop());
 	});
 
 	return {

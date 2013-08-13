@@ -32,6 +32,7 @@
 		position: relative;
 		border-top: 1px solid lighten($background_color, 8%);
 		border-bottom: 1px solid lighten($background_color, 1%);
+		-webkit-text-size-adjust: 75%;
 	}
 	.simple-nav li:first-child {
 		border-top: 0;

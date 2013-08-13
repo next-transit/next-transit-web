@@ -1,6 +1,7 @@
 body {
   color: #f9f9f9;
   font: 14px "Helvetica Neue", Helvetica, Arial, Verdana, Sans-serif;
+  -webkit-text-size-adjust: 100%;
 }
 
 h1, .h1, h2, .h2, h3, .h3, .no-results, h4, .h4, h5, .h5, h6, .h6 {

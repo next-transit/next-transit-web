@@ -6,9 +6,10 @@
   left: 0;
   z-index: 100;
   margin: 0;
-  padding: 0.5em 0;
+  padding: 0.3em 0;
   background-color: #79a65d;
   text-align: center;
+  font-size: 1.1rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 .app-header:before, .app-header:after {
@@ -31,7 +32,7 @@
 }
 
 .app-title {
-  font-size: 1.2rem;
+  font-size: 1.1em;
 }
 
 .app-header-btn {
@@ -39,7 +40,6 @@
   top: 50%;
   left: 0.8rem;
   margin-top: -0.6em;
-  font-size: 1.1rem;
 }
 
 .app-header-btn:last-child {
@@ -128,7 +128,7 @@
 .app-footer-btn {
   display: inline-block;
   margin-left: 1px;
-  padding: 0.8em 1.2em;
+  padding: 0.6em 0.8em;
   border-bottom: 0;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
   box-shadow: inset -1px 1px 3px rgba(255, 255, 255, 0.1);
@@ -171,6 +171,11 @@
   /* IE6-9 */
 }
 
+@media (min-width: 480px) {
+  .app-footer-btn {
+    padding: 0.8em 1.2em;
+  }
+}
 @media (min-width: 961px) {
   html {
     background: #aaaaaa url("/images/grey_wash_wall.png");

@@ -36,6 +36,7 @@
   position: relative;
   border-top: 1px solid #363636;
   border-bottom: 1px solid #252525;
+  -webkit-text-size-adjust: 75%;
 }
 
 .simple-nav li:first-child {

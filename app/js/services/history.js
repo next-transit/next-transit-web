@@ -5,18 +5,20 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 
 	var $back_btn,
 		$options_btn,
-		$content;
+		$content,
+		$footer;
 
-	function applyContentSettings(title, show_back, show_options) {
+	function applyContentSettings(title, show_back, show_options, show_footer) {
 		$('.js-app-title').text(title || 'NEXT|Septa');
 		$('.js-title').text(title ? (title + ' - NEXT|Septa') : 'NEXT|Septa');
 		$back_btn[show_back ? 'addClass' : 'removeClass']('active');
 		$options_btn[show_options ? 'addClass' : 'removeClass']('active');
+		$footer[show_footer ? 'addClass' : 'removeClass']('active');
 	}
 
 	function parseContentSettings(content, callback) {
-		var title = '', show_back = true, show_options = true,
-			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))? -->/i);
+		var title = '', show_back = true, show_options = true, show_footer = true,
+			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))?;? ?(footer: ?([\w]+))?;? -->/i);
 
 		if(matches) {
 			if(matches.length > 1) {
@@ -28,9 +30,12 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 			if(matches.length > 5) {
 				show_options = matches[6] !== 'false';
 			}
+			if(matches.length > 7) {
+				show_footer = matches[8] !== 'false';
+			}
 		}
 
-		callback(title, show_back, show_options);
+		callback(title, show_back, show_options, show_footer);
 	}
 
 	function animateContent(content, slide_right) {
@@ -63,11 +68,11 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 	}
 
 	function renderContent(content, path, push) {
-		parseContentSettings(content, function(title, show_back, show_options) {
+		parseContentSettings(content, function(title, show_back, show_options, show_footer) {
 			if(push) {
 				history.pushState({ title:title, back:show_back, options:show_options }, '', path);
 			}
-			applyContentSettings(title, show_back, show_options);
+			applyContentSettings(title, show_back, show_options, show_footer);
 
 			if(resize.is_desktop()) {
 				$content.hide().html('<div class="content-panel">' + content + '</div>').fadeIn('fast');
@@ -119,6 +124,7 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 			return false;
 		});
 		$options_btn = $('.js-header-options-btn');
+		$footer = $('.js-app-footer');
 
 		// Get persistent "content" wrapper element
 		$content = $('.content');

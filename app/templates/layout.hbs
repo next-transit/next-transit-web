@@ -55,8 +55,7 @@
 				{{{body}}}
 			</div>
 		</div>
-		{{#if show_footer}}
-		<footer class="app-footer {{route_type.slug}}">
+		<footer class="app-footer{{#if show_footer}} active{{/if}} js-app-footer {{route_type.slug}}">
 			<ul>
 				<li class="">
 					<a href="/" class="app-footer-btn js-nav-link"><i class="icon-home"></i></a>
@@ -71,7 +70,6 @@
 				</li>
 			</ul>
 		</footer>
-		{{/if}}
 	</div>
 </body>
 </html>

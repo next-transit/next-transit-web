@@ -1,4 +1,4 @@
-nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
+nextsepta.module('nextsepta').service('history', ['resize', 'content_settings', function(resize, settings) {
 	if(!window.history) {
 		return {};
 	}
@@ -6,39 +6,20 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 	var $back_btn,
 		$options_btn,
 		$content,
+		$map,
 		$footer;
 
-	function applyContentSettings(title, show_back, show_options, show_footer) {
-		$('.js-app-title').text(title || 'NEXT|Septa');
-		$('.js-title').text(title ? (title + ' - NEXT|Septa') : 'NEXT|Septa');
-		$back_btn[show_back ? 'addClass' : 'removeClass']('active');
-		$options_btn[show_options ? 'addClass' : 'removeClass']('active');
-		$footer[show_footer ? 'addClass' : 'removeClass']('active');
+	function apply_content_settings(settings) {
+		$('.js-app-title').text(settings.title || 'NEXT|Septa');
+		$('.js-title').text(settings.title ? (settings.title + ' - NEXT|Septa') : 'NEXT|Septa');
+		$back_btn[settings.back ? 'addClass' : 'removeClass']('active');
+		$options_btn[settings.options ? 'addClass' : 'removeClass']('active');
+		$footer[settings.footer ? 'addClass' : 'removeClass']('active');
+		$map[settings.map ? 'addClass' : 'removeClass']('active');
+		$content[settings.map ? 'removeClass' : 'addClass']('hidden');
 	}
 
-	function parseContentSettings(content, callback) {
-		var title = '', show_back = true, show_options = true, show_footer = true,
-			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))?;? ?(footer: ?([\w]+))?;? -->/i);
-
-		if(matches) {
-			if(matches.length > 1) {
-				title = matches[2];
-			}
-			if(matches.length > 3) {
-				show_back = matches[4] !== 'false';
-			}
-			if(matches.length > 5) {
-				show_options = matches[6] !== 'false';
-			}
-			if(matches.length > 7) {
-				show_footer = matches[8] !== 'false';
-			}
-		}
-
-		callback(title, show_back, show_options, show_footer);
-	}
-
-	function animateContent(content, slide_right) {
+	function animate_content(content, slide_right) {
 		var going = 'going-left',
 			incoming_side = 'right',
 			incoming_direction = 'left',
@@ -56,8 +37,8 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 		animate_incoming[incoming_direction] = 0;
 		animate_complete[incoming_direction] = 'auto';
 
-		var $current = $('.content-panel', $content).addClass(['current', going].join(' ')),
-			$next = $('<div class="content-panel"></div>').addClass(['incoming', incoming_side].join(' ')).append(content).appendTo($content);
+		var $current = $('.js-content-panel', $content).addClass(['current', going].join(' ')),
+			$next = $('<div class="content-panel js-content-panel"></div>').addClass(['incoming', incoming_side].join(' ')).append(content).appendTo($content);
 
 		$current.animate(animate_current, function() {
 			$current.remove();
@@ -67,23 +48,23 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 		});
 	}
 
-	function renderContent(content, path, push) {
-		parseContentSettings(content, function(title, show_back, show_options, show_footer) {
+	function render_content(content, path, push) {
+		settings.parse(content, function(settings) {
 			if(push) {
-				history.pushState({ title:title, back:show_back, options:show_options }, '', path);
+				history.pushState(settings, '', path);
 			}
-			applyContentSettings(title, show_back, show_options, show_footer);
+			apply_content_settings(settings);
 
 			if(resize.is_desktop()) {
-				$content.hide().html('<div class="content-panel">' + content + '</div>').fadeIn('fast');
+				$content.hide().html('<div class="content-panel js-content-panel">' + content + '</div>').fadeIn('fast');
 			} else {
-				animateContent(content, !push);
+				animate_content(content, !push);
 			}
 			eval();
 		});
 	}
 
-	function getContent(url, success) {
+	function get_content(url, success) {
 		var url_parts = url.split('?'),
 			query = '?' + (url_parts[1] ? url_parts[1] + '&' : '') + 'layout=false';
 
@@ -98,12 +79,12 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 	}
 
 	// Looks for ".js-nav-link" elements and binds an override to History
-	function attachEvents($context) {
+	function attach_events($context) {
 		$context = $context || $('body');
 		$('.js-nav-link', $context).click(function() {
 			var path = $(this).attr('href');
-			getContent(path, function(content, path) {
-				renderContent(content, path, true);
+			get_content(path, function(content, path) {
+				render_content(content, path, true);
 			});
 			return false;
 		});
@@ -113,7 +94,7 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 	function eval($context) {
 		$context = $context || $content;
 		nextsepta.module('nextsepta').eval($context);
-		attachEvents($context);
+		attach_events($context);
 	} 
 
 	// Initial event binding for links and window.History
@@ -125,24 +106,25 @@ nextsepta.module('nextsepta').service('history', ['resize', function(resize) {
 		});
 		$options_btn = $('.js-header-options-btn');
 		$footer = $('.js-app-footer');
+		$map = $('.js-map');
 
 		// Get persistent "content" wrapper element
-		$content = $('.content');
+		$content = $('.js-content');
 
 		// Do initial event bindings for whatever we have to start with
-		attachEvents();
+		attach_events();
 
 		// Event listener for browser back button clicks
 		var first_pop = true;
 		$(window).bind('popstate', function(evt) {
 			if(first_pop) { first_pop = false; return; }
-			getContent(window.location.pathname, renderContent);
+			get_content(window.location.pathname, render_content);
 		});
 	});
 
 	return {
 		eval: function($elem) {
-			attachEvents($elem);
+			attach_events($elem);
 		}
 	};
 }]);

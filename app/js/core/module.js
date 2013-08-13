@@ -60,7 +60,11 @@
 				args = [];
 
 			service_def.dependencies.forEach(function(depName) {
-				args.push(_self.dependency(depName));
+				if(depName === 'module') {
+					args.push(_self);
+				} else {
+					args.push(_self.dependency(depName));
+				}
 			});
 
 			_services[name] = service_def.constructor.apply(service_def, args);
@@ -75,6 +79,14 @@
 			} else {
 				return _controllers[name];
 			}
+		};
+
+		_self.on = function(name, handler) {
+			$(_self).bind(name, handler);
+		};
+
+		_self.emit = function(name, data) {
+			$(_self).trigger(name, data);
 		};
 
 		_self.eval = function(selector) {

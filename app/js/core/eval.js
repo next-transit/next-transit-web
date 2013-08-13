@@ -18,6 +18,8 @@
 					ctrl.dependencies.forEach(function(depName) {
 						if(depName === '$elem') {
 							args.push($ctrl);
+						} else if(depName === 'module') { 
+							args.push(module);
 						} else {
 							args.push(module.dependency(depName));
 						}

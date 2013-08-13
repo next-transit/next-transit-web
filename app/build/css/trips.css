@@ -5,6 +5,7 @@
   padding: 0.6em 1.4em;
   background-color: #2f3d49;
   font-size: 0.9em;
+  -webkit-text-size-adjust: 85%;
 }
 .trips-header:before, .trips-header:after {
   display: table;
@@ -28,6 +29,14 @@
 
 .trips-header-to-stop {
   float: right;
+  text-align: right;
+}
+
+.trips-header-from-stop, .trips-header-to-stop {
+  width: 45%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .trips-header .icon-map-marker, .stops .icon-map-marker {

@@ -7,6 +7,7 @@
 	padding: 0.6em 1.4em;
 	background-color: #2f3d49;
 	font-size: 0.9em;
+	-webkit-text-size-adjust: 85%;
 }
 .trips-header, .trips-header a {
 	color: rgba(250, 250, 250, 0.5);
@@ -19,6 +20,11 @@
 	}
 	.trips-header-to-stop {
 		float: right;
+		text-align: right;
+	}
+	.trips-header-from-stop, .trips-header-to-stop {
+		width: 45%;
+		@include ellipsis;
 	}
 		.trips-header .icon-map-marker, .stops .icon-map-marker {
 			margin-right: 0.6em;

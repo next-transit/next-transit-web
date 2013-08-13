@@ -22,6 +22,10 @@ a.btn {
   color: #f0f0f0;
 }
 
+input[type=button].btn {
+  -webkit-appearance: none;
+}
+
 .btn:hover {
   background-color: rgba(255, 255, 255, 0.15);
 }

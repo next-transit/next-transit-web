@@ -16,17 +16,21 @@
   top: 50%;
   right: 0;
   margin-top: -0.9em;
+  -webkit-text-size-adjust: 100%;
+}
+
+.simple-nav a.options-trip {
+  padding-right: 3.6em;
 }
 
 .options-trip-stops {
-  display: inline-block;
+  position: relative;
 }
 
 .options-trip-direction {
-  position: relative;
-  bottom: -4px;
-  display: block;
-  margin-top: -7px;
+  position: absolute;
+  bottom: -9px;
+  left: 0;
   font-size: 0.5em;
   font-weight: 200;
   text-transform: uppercase;

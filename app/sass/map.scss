@@ -1,0 +1,11 @@
+.map {
+	display: none;
+}
+.map.active {
+	display: block;
+}
+
+	.map-inner {
+		height: 360px;
+		width: auto;
+	}

@@ -59,6 +59,10 @@
   padding: 3.2em 0.8em;
 }
 
+.content.hidden {
+  display: none;
+}
+
 .content a {
   text-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.6);
 }

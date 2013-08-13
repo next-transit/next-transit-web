@@ -15,6 +15,7 @@
 	<link rel="apple-touch-icon-precomposed" href="/images/nextsepta-logo-114.png" sizes="114x114" />
 	<link rel="apple-touch-icon-precomposed" href="/images/nextsepta-logo-144.png" sizes="144x144" />
 
+	<link rel="stylesheet" type="text/css" href="//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css" />
 	<link rel="stylesheet" type="text/css" href="/css/vendor/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="/css/normalize.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/typography.css" />
@@ -23,6 +24,7 @@
 	<link rel="stylesheet" type="text/css" href="/build/css/forms.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/layout.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/components.css" />
+	<link rel="stylesheet" type="text/css" href="/build/css/map.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/home.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/stops.css" />
 	<link rel="stylesheet" type="text/css" href="/build/css/trips.css" />
@@ -31,27 +33,30 @@
 
 	<script src="/js/vendor/jquery-1.9.1.min.js"></script>
 	<script src="/js/vendor/jquery.scrollTo-1.4.3.1.js"></script>
+	<script src="//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js"></script>
 	<script src="/js/core/core.js"></script>
 	<script src="/js/core/eval.js"></script>
 	<script src="/js/core/controller.js"></script>
 	<script src="/js/core/service.js"></script>
 	<script src="/js/core/module.js"></script>
 	<script src="/js/services/templates.js"></script>
+	<script src="/js/services/content-settings.js"></script>
 	<script src="/js/services/resize.js"></script>
 	<script src="/js/services/history.js"></script>
 	<script src="/js/controllers/app.js"></script>
+	<script src="/js/controllers/map.js"></script>
 	<script src="/js/controllers/trips.js"></script>
 	<script src="/js/controllers/options.js"></script>
 </head>
 <body ctrl="app">
 	<div class="container">
-		<header class="app-header">
+		<header class="app-header js-app-header">
 			<a href="{{back_path}}" class="app-header-btn app-header-back-btn {{#if back_path}}active{{/if}} js-nav-link-back" title="Go back"><i class="icon-chevron-sign-left"></i></a>
 			<span class="app-title js-app-title">{{title}}</span>
 			<a href="/options" class="app-header-btn js-nav-link js-header-options-btn"><i class="icon-reorder"></i></a>
 		</header>
-		<div class="content" data-type="{{route_type_slug}}" data-route="{{route_id}}" data-direction="{{direction_id}}" data-from="{{from_stop.stop_id}}" data-to="{{to_stop.stop_id}}">
-			<div class="content-panel">
+		<div class="content js-content{{#if show_map}} hidden{{/if}}">
+			<div class="content-panel js-content-panel">
 				{{{body}}}
 			</div>
 		</div>
@@ -70,6 +75,9 @@
 				</li>
 			</ul>
 		</footer>
+		<div class="map js-map{{#if show_map}} active{{/if}}" ctrl="map">
+			<div id="map-inner" class="map-inner js-map-inner"></div>
+		</div>
 	</div>
 </body>
 </html>

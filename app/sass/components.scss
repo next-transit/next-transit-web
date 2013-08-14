@@ -53,9 +53,12 @@
 			font-weight: 100;
 			@include ellipsis;
 		}
+		.simple-nav-small a, .simple-nav-small .simple-nav-item {
+			font-size: 1.2em;
+		}
 		.simple-nav a:hover, .simple-nav a:focus {
 			background-color: rgba(255, 255, 255, 0.075);
-			@include transition('background-color', '1s');
+			@include transition(background-color, 0.15s);
 		}
 		.simple-nav-add, a.simple-nav-add {
 			background-color: $background_add;
@@ -70,6 +73,9 @@
 
 			.simple-nav a [class^="icon-"], .simple-nav-item [class^="icon-"] {
 				font-size: 0.8em;
+			}
+			.simple-nav a [class^="icon-"]:first-child, .simple-nav-item [class^="icon-"]:first-child {
+				margin-right: 0.6em;
 			}
 			.simple-nav strong {
 				display: inline-block;

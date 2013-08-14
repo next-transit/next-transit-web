@@ -1,11 +1,14 @@
 nextsepta.module('nextsepta').service('content_settings', ['module', function(module) {
-	function parse_content_settings(content, callback) {
+	function parse_settings(content, callback) {
 		var settings = {
 				title: '',
 				back: true,
 				options: true,
 				footer: true,
-				map: false
+				map: false,
+				map_locate: false,
+				route_type: null,
+				route_id: null
 			},
 			comment_matches = content.match(/<!-- (.+) -->/i),
 			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))?;? ?(footer: ?([\w]+))?;? -->/i);
@@ -32,10 +35,12 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 			}
 		}
 
-		callback(settings);
+		if(typeof callback === 'function') {
+			callback(settings);
+		}
 
 		module.emit('content-settings-changed', [settings]);
 	}
 
-	return { parse:parse_content_settings };
+	return { parse:parse_settings };
 }]);

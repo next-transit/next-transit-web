@@ -65,13 +65,17 @@
   text-overflow: ellipsis;
 }
 
+.simple-nav-small a, .simple-nav-small .simple-nav-item {
+  font-size: 1.2em;
+}
+
 .simple-nav a:hover, .simple-nav a:focus {
   background-color: rgba(255, 255, 255, 0.075);
-  -webkit-transition: "background-color" "1s" linear;
-  -moz-transition: "background-color" "1s" linear;
-  -ms-transition: "background-color" "1s" linear;
-  -o-transition: "background-color" "1s" linear;
-  transition: "background-color" "1s" linear;
+  -webkit-transition: background-color 0.15s linear;
+  -moz-transition: background-color 0.15s linear;
+  -ms-transition: background-color 0.15s linear;
+  -o-transition: background-color 0.15s linear;
+  transition: background-color 0.15s linear;
 }
 
 .simple-nav-add, a.simple-nav-add {
@@ -89,6 +93,10 @@
 
 .simple-nav a [class^="icon-"], .simple-nav-item [class^="icon-"] {
   font-size: 0.8em;
+}
+
+.simple-nav a [class^="icon-"]:first-child, .simple-nav-item [class^="icon-"]:first-child {
+  margin-right: 0.6em;
 }
 
 .simple-nav strong {

@@ -47,6 +47,7 @@
 				$(function() {
 					_self.$elem = $('[module=' + _self.name + ']');
 					_self.eval('body');
+					_self.dependency('content_settings').parse($('.js-content').html());
 				});
 			}
 		};

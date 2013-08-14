@@ -1,4 +1,4 @@
-nextsepta.module('nextsepta').service('history', ['resize', 'content_settings', function(resize, settings) {
+nextsepta.module('nextsepta').service('history', ['module', 'resize', 'content_settings', function(module, resize, settings) {
 	if(!window.history) {
 		return {};
 	}
@@ -16,7 +16,7 @@ nextsepta.module('nextsepta').service('history', ['resize', 'content_settings', 
 		$options_btn[settings.options ? 'addClass' : 'removeClass']('active');
 		$footer[settings.footer ? 'addClass' : 'removeClass']('active');
 		$map[settings.map ? 'addClass' : 'removeClass']('active');
-		$content[settings.map ? 'removeClass' : 'addClass']('hidden');
+		$content[settings.map ? 'addClass' : 'removeClass']('hidden');
 	}
 
 	function animate_content(content, slide_right) {

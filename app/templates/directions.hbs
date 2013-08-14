@@ -1,6 +1,6 @@
 <!-- title: {{title}} -->
 <div class="directions">
-	<div class="content-inner">
+	<div class="content-inner content-section">
 		<nav class="simple-nav">
 			<ul>
 				{{#directions}}
@@ -11,6 +11,14 @@
 				</li>
 				{{/directions}}
 			</ul>
+		</nav>
+	</div>
+
+	<div class="content-inner">
+		<nav class="simple-nav simple-nav-small">
+			<a href="/{{route_type_slug}}/{{route.slug}}/map" class="js-nav-link">
+				<i class="icon-globe"></i> View Route Map
+			</a>
 		</nav>
 	</div>
 </div>

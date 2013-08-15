@@ -8,6 +8,9 @@ nextsepta.module('nextsepta').service('data', [function() {
 	return {
 		get: function(url, success, error) {
 			request({ url:url, method:'GET', success:success, error:error });
+		},
+		get_html: function(url, success, error) {
+			request({ url:url, method:'GET', dataType:'html', success:success, error:error });
 		}
 	};
 }]);

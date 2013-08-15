@@ -1,4 +1,4 @@
-nextsepta.module('nextsepta').controller('map', ['module', 'data', '$elem', function(module, data, $elem) {
+nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate', '$elem', function(module, data, locate, $elem) {
 	var $inner = $('.js-map-inner', $elem),
 		settings = {
 			tiles_url: 'http://api.tiles.mapbox.com/v3/reedlauber.map-55lsrr7u.jsonp',
@@ -9,7 +9,9 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', '$elem', func
 			zoom: 16
 		},
 		initialized = false,
+		self = {},
 		map,
+		marker_layer,
 		routes_layer;
 
 	function set_center(lat, lng, zoom) {
@@ -17,24 +19,31 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', '$elem', func
 		lng = lng || settings.center.lng;
 		zoom = zoom || settings.zoom;
 
-		map.setView([lat, lng], zoom);
+		self.map.setView([lat, lng], zoom);
 	}
 
-	function get_routes_layer(callback) {
-		if(routes_layer) {
-			callback(routes_layer);
-		} else {
-			routes_layer = L.multiPolyline([], { color:'#a33', opacity: 0.65 }).addTo(map);
-			callback(routes_layer);
-		}
+	function get_marker_icon() {
+		return L.icon({
+			iconUrl: '/images/maki/marker-24.png',
+			iconRetinaUrl: '/images/maki/marker-24@2x.png',
+			iconSize: [24, 24],
+			iconAnchor: [12, 24]
+		});
+	}
+
+	function add_marker(lat, lng) {
+		L.marker([lat, lng], {
+			icon: get_marker_icon(),
+			clickable: false,
+			title: 'Your location'
+		}).addTo(self.map);
 	}
 
 	function get_route_shape(route_type, route_id) {
 		data.get(['', route_type, route_id, 'shape'].join('/'), function(resp) {
-			get_routes_layer(function(routes_layer) {
-				routes_layer.setLatLngs([resp.shapes]);
-				map.fitBounds(routes_layer.getBounds());
-			});
+			var route_layer = L.polyline(resp.points, { color:'#a33', opacity: 0.65 });
+			routes_layer.addLayer(route_layer);
+			self.map.fitBounds(route_layer.getBounds());
 		});
 	}
 
@@ -47,7 +56,13 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', '$elem', func
 		if(!initialized && $elem.is(':visible')) {
 			adjust_size();
 
-			map = L.mapbox.map($inner.attr('id'), 'reedlauber.map-55lsrr7u');
+			self.map = window.MAP = L.mapbox.map($inner.attr('id'), 'reedlauber.map-55lsrr7u');
+
+			self.map.on('moveend', function() {
+				module.emit('map-moveend', []);
+			});
+
+			locate.set_map_ctrl(self, $elem);
 
 			set_center();
 
@@ -59,12 +74,8 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', '$elem', func
 		if(settings.map) {
 			initialize_map();
 
-			if(settings.map_locate && navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(function(position) {
-					if(position) {
-						set_center(position.coords.latitude, position.coords.longitude, 17);
-					}
-				});
+			if(settings.map_locate) {
+				locate.locate();
 			}
 
 			if(settings.route_type && settings.route_id) {
@@ -72,4 +83,7 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', '$elem', func
 			}
 		}
 	});
+
+	self.set_center = set_center;
+	self.add_marker = add_marker;
 }]);

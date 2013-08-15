@@ -1,4 +1,4 @@
-nextsepta.module('nextsepta').service('history', ['module', 'resize', 'content_settings', function(module, resize, settings) {
+nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'content_settings', function(module, data, resize, settings) {
 	if(!window.history) {
 		return {};
 	}
@@ -16,7 +16,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'resize', 'content_s
 		$options_btn[settings.options ? 'addClass' : 'removeClass']('active');
 		$footer[settings.footer ? 'addClass' : 'removeClass']('active');
 		$map[settings.map ? 'addClass' : 'removeClass']('active');
-		$content[settings.map ? 'addClass' : 'removeClass']('hidden');
+		$content[settings.map ? 'hide' : 'show']();
 	}
 
 	function animate_content(content, slide_right) {
@@ -55,12 +55,14 @@ nextsepta.module('nextsepta').service('history', ['module', 'resize', 'content_s
 			}
 			apply_content_settings(settings);
 
-			if(resize.is_desktop()) {
-				$content.hide().html('<div class="content-panel js-content-panel">' + content + '</div>').fadeIn('fast');
-			} else {
-				animate_content(content, !push);
+			if($content.is(':visible')) {
+				if(resize.is_desktop()) {
+					$content.hide().html('<div class="content-panel js-content-panel">' + content + '</div>').fadeIn('fast');
+				} else {
+					animate_content(content, !push);
+				}
+				eval();
 			}
-			eval();
 		});
 	}
 
@@ -68,25 +70,31 @@ nextsepta.module('nextsepta').service('history', ['module', 'resize', 'content_s
 		var url_parts = url.split('?'),
 			query = '?' + (url_parts[1] ? url_parts[1] + '&' : '') + 'layout=false';
 
-		$.ajax({
-			url: url_parts[0] + query,
-			method: 'GET',
-			dataType: 'html',
-			success: function(content) {
-				success(content, url);
-			}
+		data.get_html(url_parts[0] + query, function(content) {
+			success(content, url);
+		});
+	}
+
+	function push_path(path) {
+		$back_btn.attr('href', window.location.pathname);
+		get_content(path, function(content, path) {
+			render_content(content, path, true);
 		});
 	}
 
 	// Looks for ".js-nav-link" elements and binds an override to History
 	function attach_events($context) {
 		$context = $context || $('body');
-		$('.js-nav-link', $context).click(function() {
-			var path = $(this).attr('href');
-			get_content(path, function(content, path) {
-				render_content(content, path, true);
-			});
-			return false;
+		$('.js-nav-link', $context).each(function() {
+			if(!$(this).data('nav-link-bound')) {
+				$(this).click(function() {
+					var path = $(this).attr('href');
+					if(path) {
+						push_path($(this).attr('href'));
+					}
+					return false;
+				}).data('nav-link-bound', true);
+			}
 		});
 	}
 
@@ -101,7 +109,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'resize', 'content_s
 	$(function() {
 		// Bind custom events for the "back" and "options" buttons
 		$back_btn = $('.js-nav-link-back').click(function() {
-			history.back();
+			window.history.back();
 			return false;
 		});
 		$options_btn = $('.js-header-options-btn');
@@ -125,6 +133,10 @@ nextsepta.module('nextsepta').service('history', ['module', 'resize', 'content_s
 	return {
 		eval: function($elem) {
 			attach_events($elem);
+		},
+		push: push_path,
+		back: function() {
+			window.history.back();
 		}
 	};
 }]);

@@ -7,6 +7,7 @@
 	"get /search": { "action":"search" },
 	"get /options": { "action":"options" },
 	"get /patterns": { "action":"patterns" },
+	"get /shapes": { "action":"shapes:bbox" },
 	"get /:route_type/:route_id/map": { "action":"map:route" },
 	"get /:route_type/:route_id/shape": { "action":"shapes" },
 	"get /:route_type/:route_id/:direction_id/:from_id/choose": { "action":"stops:to" },

@@ -64,6 +64,7 @@
 	.trips-subheader-to {
 		float: right;
 		display: none;
+		padding-right: 3.3em;
 	}
 	.trips.has-to .trips-subheader-to {
 		display: block;
@@ -96,11 +97,7 @@
 		.trip-stop {
 			position: relative;
 		}
-
-		.trip-from {
-			float: left;
-		}
-			.trip .icon-time {
+			.trip-stop [class^="icon-"] {
 				position: absolute;
 				top: 50%;
 				left: 0;
@@ -108,14 +105,18 @@
 				font-size: 0.8em;
 				color: darken(#fff, 20%);
 			}
-				.trip-from .trip-label {
-					margin-left: 1.3em;
-				}
-				.trip-from-now {
-					font-size: 0.6em;
-					font-weight: 200;
-					color: darken(#fff, 30%);
-				}
+
+		.trip-from {
+			float: left;
+		}
+			.trip-from .trip-label {
+				margin-left: 1.3em;
+			}
+			.trip-from-now {
+				font-size: 0.6em;
+				font-weight: 200;
+				color: darken(#fff, 30%);
+			}
 		.trip-to {
 			float: right;
 			display: none;
@@ -123,6 +124,18 @@
 		.trips.has-to .trip-to {
 			display: block;
 		}
+			.trip-to .trip-label {
+				margin-right: 1.3em;
+			}
+			.trip-to .icon-map-marker {
+				left: auto;
+				right: 0;
+				opacity: 0.2;
+				cursor: pointer;
+			}
+			.trip.has-vehicle .trip-to .icon-map-marker {
+				opacity: 1.0;
+			}
 			.trip-to .trip-stop-footer {
 				right: 0;
 			}

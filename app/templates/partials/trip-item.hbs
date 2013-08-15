@@ -8,7 +8,10 @@
 		</div>
 	</div>
 	<div class="trip-stop trip-to">
-		{{arrival_time_formatted}}
+		<div class="trip-label">
+			{{arrival_time_formatted}}
+		</div>
+		<i class="icon-map-marker js-trip-vehicle-marker js-nav-link" href=""></i>
 	</div>
 	{{#unless coverage.full}}
 	<div class="trip-coverage">

@@ -67,7 +67,9 @@ ctrl.action('index', { json:true }, function(req, res, callback) {
 		? 'http://www3.septa.org/hackathon/TrainView/'
 		: 'http://www3.septa.org/transitview/bus_route_data/' + req.route_id;
 
-	http.get(realtime_url + req.route_id, function(res) {
+	console.log('realtime url', realtime_url);
+
+	http.get(realtime_url, function(res) {
 		res.setEncoding('utf8');
 
 		var data = '';

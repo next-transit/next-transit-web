@@ -7,7 +7,11 @@ function normalize_buses(res) {
 		res_buses;
 
 	if(res) {
-		res_data = JSON.parse(res);
+		try {
+			res_data = JSON.parse(res);
+		} catch(e) {
+			console.log('Error parsing buses realtime JSON: ', e);
+		}
 
 		if(res_data) {
 			res_buses = res_data['bus'];
@@ -35,7 +39,12 @@ function normalize_rail(res) {
 		res_trains;
 
 	if(res) {
-		res_data = JSON.parse(res);
+		try {
+			res_data = JSON.parse(res);
+		} catch(e) {
+			console.log('Error parsing rail realtime JSON: ', e);
+		}
+
 		if(res_data) {
 			res_data.forEach(function(train) {
 				trains.push({

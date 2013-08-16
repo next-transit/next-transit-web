@@ -3,6 +3,7 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 		var $inner = $('.js-map-inner', $elem),
 			settings = {
 				tiles_id: 'reedlauber.map-55lsrr7u',
+				retina_tiles_id: 'reedlauber.map-1j4vhxof',
 				center: {
 					lat: 39.9523350,
 					lng: -75.163789
@@ -24,14 +25,18 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 
 		function adjust_size() {
 			var height = $(window).height() - $('.js-app-header').outerHeight() - $('.js-app-footer').outerHeight();
-			$inner.height(height).css('top', $('.js-app-header').outerHeight());
+			$inner.height(height);
+			$elem.css('top', $('.js-app-header').outerHeight());
 		}
 
 		function initialize_map() {
 			if(!initialized && $elem.is(':visible')) {
 				adjust_size();
 
-				self.map = window.MAP = L.mapbox.map($inner.attr('id'), settings.tiles_id);
+				self.map = window.MAP = L.mapbox.map($inner.attr('id'), settings.tiles_id, {
+					detectRetina: true,
+					retinaVersion: settings.retina_tiles_id
+				});
 
 				self.map.on('moveend', function() {
 					module.emit('map-moveend', []);

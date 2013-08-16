@@ -4,6 +4,9 @@
 	.home-search {
 		margin-bottom: 1em;
 	}
+		.home-search input {
+			width: 16em;
+		}
 		.home-route-type a:before {
 			content: "";
 			position: relative;

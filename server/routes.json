@@ -10,6 +10,7 @@
 	"get /shapes": { "action":"shapes:bbox" },
 	"get /:route_type/:route_id/map": { "action":"map:route" },
 	"get /:route_type/:route_id/shape": { "action":"shapes" },
+	"get /:route_type/:route_id/locations": { "action":"locations" },
 	"get /:route_type/:route_id/:direction_id/:from_id/choose": { "action":"stops:to" },
 	"get /:route_type/:route_id/:direction_id/:from_id/:to_id": { "action":"trips" },
 	"get /:route_type/:route_id/:direction_id/:from_id": { "action":"trips" },

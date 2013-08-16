@@ -93,6 +93,15 @@
 		_self.eval = function(selector) {
 			nextsepta.__eval(_self, selector);
 		};
+
+		var _data_store = {};
+		_self.data = function(name, value) {
+			if(typeof value === 'undefined') {
+				return _data_store[name];
+			} else {
+				_data_store[name] = value;
+			}
+		};
 	}
 
 	nextsepta.module = function module(name, dependencies) {

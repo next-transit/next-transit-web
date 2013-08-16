@@ -5,7 +5,7 @@ ctrl.action('index', function(req, res, callback) {
 });
 
 ctrl.action('route', function(req, res, callback) {
-	callback({ show_map:true, locate:'false', title:'Route Map' });
+	callback({ show_map:true, locate:'false', title:'Route Map', vehicle:req.query.vehicle });
 });
 
 ctrl.action('locate', function(req, res, callback) {

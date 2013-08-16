@@ -45,7 +45,10 @@
 	<script src="/js/services/data.js"></script>
 	<script src="/js/services/history.js"></script>
 	<script src="/js/services/geo-utils.js"></script>
+	<script src="/js/services/map-markers.js"></script>
+	<script src="/js/services/map-vectors.js"></script>
 	<script src="/js/services/map-locate.js"></script>
+	<script src="/js/services/map-vehicles.js"></script>
 	<script src="/js/controllers/app.js"></script>
 	<script src="/js/controllers/map.js"></script>
 	<script src="/js/controllers/trips.js"></script>
@@ -58,7 +61,7 @@
 			<span class="app-title js-app-title">{{title}}</span>
 			<a href="/options" class="app-header-btn js-nav-link js-header-options-btn"><i class="icon-reorder"></i></a>
 		</header>
-		<div class="content js-content{{#if show_map}} hidden{{/if}}">
+		<div class="content js-content{{#if show_map}} hidden{{/if}}" data-route-type="{{route_type_slug}}" data-route-id="{{route_id}}">
 			<div class="content-panel js-content-panel">
 				{{{body}}}
 			</div>

@@ -1,13 +1,42 @@
-nextsepta.module('nextsepta').controller('trips', ['$elem', 'templates', function($elem, templates) {
+nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data', '$elem', function(module, templates, data, $elem) {
 	var prevKey = '0',
 		$list = $('.js-trips-list', $elem),
 		cache = {
 			'0': $('li:first', $list)
-		};
+		},
+		vehicles = {};
 
 	$list.height($list.outerHeight());
 
-	function getScrollTo($link, forward, cacheKey, callback) {
+	function update_realtime(route_type, route_id) {
+		$('.trip', $list).each(function() {
+			var block_id = $(this).attr('data-block-id');
+
+			if(block_id && block_id in vehicles) {
+				var vehicle = vehicles[block_id],
+					map_url = ['', route_type, route_id, 'map'].join('/') + '?vehicle=' + vehicle.vehicle_id;
+
+				$(this).addClass('has-vehicle');
+				$('.icon-map-marker', this).attr('href', map_url);
+			}
+		});
+	}
+
+	function get_realtime_data(route_type, route_id) {
+		if(route_id) {
+			data.get(['', route_type, route_id, 'locations'].join('/'), function(resp) {
+				vehicles = {};
+				if(resp && resp.vehicles) {
+					resp.vehicles.forEach(function(vehicle) {
+						vehicles[vehicle.block_id] = vehicle;
+					});
+				}
+				update_realtime(route_type, route_id);
+			});
+		}
+	}
+
+	function get_scroll_to($link, forward, cacheKey, callback) {
 		if(cacheKey in cache) {
 			callback(cache[cacheKey]);
 		} else {
@@ -36,7 +65,7 @@ nextsepta.module('nextsepta').controller('trips', ['$elem', 'templates', functio
 			offset = parseInt(cacheKey, 10);
 
 		if(offset || offset === 0) {
-			getScrollTo($(this), forward, cacheKey, function(scrollTo) {
+			get_scroll_to($(this), forward, cacheKey, function(scrollTo) {
 				$list.scrollTo(cache[cacheKey], 500);
 				prevKey = cacheKey;
 				$('.js-trips-prev', $elem).attr('href', '?offset=' + (offset - 5));
@@ -46,4 +75,8 @@ nextsepta.module('nextsepta').controller('trips', ['$elem', 'templates', functio
 
 		return false;
 	});
-}]).run();
+
+	if(module.data('route-type') !== 'subways') {
+		get_realtime_data(module.data('route-type'), module.data('route-id'));
+	}
+}]);

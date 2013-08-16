@@ -7,6 +7,7 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 				footer: true,
 				map: false,
 				map_locate: false,
+				map_vehicle: null,
 				route_type: null,
 				route_id: null
 			},

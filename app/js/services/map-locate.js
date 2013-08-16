@@ -2,13 +2,11 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 	var map_ctrl,
 		active = false,
 		initialized = false,
-		layer_group,
 		$map,
 		$results,
 			$results_list;
 
 	function render_user_location(lat, lng) {
-		map_ctrl.set_center(lat, lng, 17);
 		map_ctrl.add_marker(lat, lng);
 	}
 
@@ -46,12 +44,13 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 	}
 
 	function render_routes(results) {
-		layer_group.clearLayers();
 		$results_list.empty();
 
 		results.forEach(function(result) {
 			if(result.points.length) {
-				var route_layer = L.polyline(result.points, { color:result.color, opacity: 0.45 });
+
+				var route_layer = map_ctrl.add_vector(result.points, result.color, 0.45 );
+
 				route_layer.on('click', function(evt) {
 					history.push('/' + result.route_type_slug + '/' + result.slug);
 				}).on('mouseover', function() {
@@ -59,7 +58,6 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 				}).on('mouseout', function() {
 					route_layer.setStyle({ opacity:0.45 });
 				});
-				layer_group.addLayer(route_layer);
 				result.route_layer = route_layer;
 			}
 		});
@@ -115,8 +113,6 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 				}
 			});
 
-			layer_group = L.layerGroup().addTo(map_ctrl.map);
-
 			$results = $('<div class="map-results-list"></div>').hide().appendTo($map);
 			$results_list = $('<ul></ul>').appendTo($results);
 
@@ -133,6 +129,7 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 			initialize();
 		},
 		disable: function() {
+			$results.hide();
 			active = false;
 		}
 	};

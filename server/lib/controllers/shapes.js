@@ -47,7 +47,7 @@ ctrl.action('index', { json:true }, function(req, res, callback) {
 	if(req.route_id) {
 		var route_id = req.route_id.toLowerCase(), route = req.route;
 
-		get_simplified_shape_by_route_id(route_id, function(simplified_shape) {
+		get_simplified_shape_by_route_id(route_id).done(function(simplified_shape) {
 			callback(simplified_shape);
 		});
 	} else {

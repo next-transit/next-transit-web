@@ -73,7 +73,8 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 
 		self.set_center = set_center;
 		self.add_marker = markers.add;
-		self.move_marker = markers.move_marker;
+		self.move_marker = markers.move;
+		self.remove_marker = markers.remove;
 		self.add_vector = vectors.add;
 	}
 ]);

@@ -12,7 +12,7 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 				iconUrl: '/images/maki/' + icon_name + '.png',
 				iconRetinaUrl: '/images/maki/' + icon_name + '@2x.png',
 				iconSize: [24, 24],
-				iconAnchor: [12, 24]
+				iconAnchor: [12, 12]
 			});
 		}
 
@@ -47,7 +47,15 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 	function move_marker(id, lat, lng, center) {
 		if(id in markers) {
 			markers[id].setLatLng([lat, lng]).update();
-			map_ctrl.set_center(lat, lng, map_ctrl.map.getZoom());
+			if(center) {
+				map_ctrl.set_center(lat, lng, map_ctrl.map.getZoom());
+			}
+		}
+	}
+
+	function remove_marker(id) {
+		if(id in markers) {
+			layer_group.removeLayer(markers[id]);
 		}
 	}
 
@@ -66,7 +74,8 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 
 	return {
 		add: add_marker,
-		move_marker: move_marker,
+		move: move_marker,
+		remove: remove_marker,
 		clear: clear_markers,
 		set_map_ctrl: function(ctrl) {
 			map_ctrl = ctrl;

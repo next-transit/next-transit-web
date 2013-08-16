@@ -1,7 +1,18 @@
 var http = require('http'),
-	ctrl = require('./controller').create('locations');
+	promise = require('promise'),
+	ctrl = require('./controller').create('locations'),
+	trips = require('../models/trips');
 
-function normalize_buses(res) {
+function get_trip_by_block_id(block_id, callback) {
+	block_id = parseInt(block_id, 10);
+	trips.where('block_id = ?', [block_id]).first(function(trip) {
+		if(typeof callback === 'function') {
+			callback(trip);
+		}
+	});
+}
+
+function normalize_buses(res, callback) {
 	var buses = [],
 		res_data,
 		res_buses;
@@ -30,11 +41,11 @@ function normalize_buses(res) {
 		}
 	}
 
-	return buses;
+	callback(buses);
 }
 
-function normalize_rail(res) {
-	var trains = [],
+function normalize_rail(res, callback) {
+	var promises = [],
 		res_data,
 		res_trains;
 
@@ -47,19 +58,28 @@ function normalize_rail(res) {
 
 		if(res_data) {
 			res_data.forEach(function(train) {
-				trains.push({
-					mode: 'rail',
-					lat: train.lat,
-					lng: train.lng,
-					vehicle_id: train.trainno,
-					offset: 0,
-					block_id: 0,
-					destination: train.dest,
-					late: train.late
-				});
+				promises.push(new promise(function(resolve, reject) {
+					get_trip_by_block_id(train.trainno, function(trip) {
+						resolve({
+							mode: 'rail',
+							lat: train.lat,
+							lng: train.lon,
+							vehicle_id: train.trainno,
+							offset: 0,
+							block_id: 0,
+							destination: train.dest,
+							late: train.late,
+							route_id: (trip ? trip.route_id : '')
+						});
+					});
+				}));
 			});
 		}
 	}
+
+	promise.all(promises).done(function(trains) {
+		callback(trains);
+	});
 }
 
 ctrl.action('index', { json:true }, function(req, res, callback) {
@@ -67,17 +87,18 @@ ctrl.action('index', { json:true }, function(req, res, callback) {
 		? 'http://www3.septa.org/hackathon/TrainView/'
 		: 'http://www3.septa.org/transitview/bus_route_data/' + req.route_id;
 
-	http.get(realtime_url + req.route_id, function(res) {
+	http.get(realtime_url, function(res) {
 		res.setEncoding('utf8');
 
 		var data = '';
 		res.on('data', function(chunk) {
 			data += chunk;
 		}).on('end', function() {
-			var normalize_fn = req.route.is_rail ? normalize_rail : normalize_buses,
-				vehicles = normalize_fn(data);
+			var normalize_fn = req.route.is_rail ? normalize_rail : normalize_buses;
 
-			callback({ vehicles:vehicles });
+			normalize_fn(data, function(vehicles) {
+				callback({ vehicles:vehicles });
+			});
 		});
 	}).on('error', function() {
 		callback({});

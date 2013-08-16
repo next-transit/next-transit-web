@@ -19,9 +19,9 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 
 	function add_route(route_type, route_id, fit_to_route) {
 		data.get(['', route_type, route_id, 'shape'].join('/'), function(resp) {
-			add_shape(resp.points);
+			add_shape(resp.points, resp.color);
 			if(fit_to_route) {
-				fit_to_last();	
+				fit_to_last();
 			}
 		});
 	}

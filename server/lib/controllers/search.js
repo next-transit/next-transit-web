@@ -14,14 +14,17 @@ ctrl.action('index', function(req, res, callback) {
 				routes.sort_by_short_name(results);
 				
 				results.forEach(function(route) {
-					route.route_type_name = (route_types.get_by_id(route.route_type) || {}).slug;
-					route.route_short_name_lower = route.route_short_name.toLowerCase();
-					route.path = '/' + route.route_type_name + '/' + route.route_short_name_lower;
+					route = routes.process(route, function(route) {
+						route.route_type_name = (route_types.get_by_id(route.route_type) || {}).slug;
+						route.route_short_name_lower = route.route_short_name.toLowerCase();
+						route.path = '/' + route.route_type_name + '/' + route.slug;
 
-					if(route.route_short_name_lower === term) {
-						exact_match = route;
-					}
+						if(route.route_short_name_lower === term || route.route_id.toLowerCase() === term) {
+							exact_match = route;
+						}
+					});
 				});
+
 				if(exact_match) {
 					res.redirect(exact_match.path);
 				} else if(results.length === 1) {

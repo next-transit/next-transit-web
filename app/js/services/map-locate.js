@@ -129,7 +129,9 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 			initialize();
 		},
 		disable: function() {
-			$results.hide();
+			if($results) {
+				$results.hide();	
+			}
 			active = false;
 		}
 	};

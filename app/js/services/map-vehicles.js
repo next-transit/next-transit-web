@@ -4,7 +4,53 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 		vehicles = {},
 		track_interval,
 		map_ctrl,
+		icons = {
+			bus: 'bus-24',
+			rail: 'rail-24'
+		},
 		$map;
+
+	function add_vehicle_markers(route_type, route_id, vehicle_id, vehicles_to_track) {
+		var center_on_vehicle = vehicles_to_track.length === 1;
+
+		vehicles_to_track.forEach(function(vehicle) {
+			if(vehicle.vehicle_id in vehicles) {
+				map_ctrl.move_marker('vehicle-' + vehicle.vehicle_id, vehicle.lat, vehicle.lng, center_on_vehicle);
+			} else if(!vehicle.route_id || vehicle.route_id.toLowerCase() === route_id) {
+				var title = vehicle.mode === 'rail' ? 
+						(vehicle.late + ' ' + (vehicle.late === 1 ? 'min' : 'mins') + ' late') : 
+						(vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago');
+
+				map_ctrl.add_marker(vehicle.lat, vehicle.lng, {
+					id: 'vehicle-' + vehicle.vehicle_id, 
+					icon: icons[vehicle.mode], 
+					title: title, 
+					center: center_on_vehicle,
+					zoom: 16
+				}).on('click', function() {
+					if(!vehicle_id) {
+						history.push('/' + route_type + '/' + route_id + '/map?vehicle=' + vehicle.vehicle_id);	
+					}
+				});
+				vehicles[vehicle.vehicle_id] = vehicle;
+			}
+		});
+
+		// Clear markers that have dropped out
+		for(var id in vehicles) {
+			var found = false;
+			vehicles_to_track.forEach(function(vehicle) {
+				if((vehicle.vehicle_id in vehicles)) {
+					found = true;
+				}
+			});
+			if(!found) {
+				console.log('remove', id);
+				map_ctrl.remove_marker('vehicle-' + id);
+				delete vehicles[id];
+			}
+		}
+	}
 
 	function get_vehicles(route_type, route_id, vehicle_id) {
 		data.get('/' + route_type + '/' + route_id + '/locations', function(resp) {
@@ -17,25 +63,7 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 					}
 				});
 
-				var center_on_vehicle = vehicles_to_track.length === 1;
-				vehicles_to_track.forEach(function(vehicle) {
-					if(vehicle.vehicle_id in vehicles) {
-						map_ctrl.move_marker('vehicle-' + vehicle.vehicle_id, vehicle.lat, vehicle.lng, center_on_vehicle);
-					} else {
-						map_ctrl.add_marker(vehicle.lat, vehicle.lng, {
-							id: 'vehicle-' + vehicle.vehicle_id, 
-							icon: 'bus-24', 
-							title: vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago', 
-							center: center_on_vehicle,
-							zoom: 16
-						}).on('click', function() {
-							if(!vehicle_id) {
-								history.push('/' + route_type + '/' + route_id + '/map?vehicle=' + vehicle.vehicle_id);	
-							}
-						});
-						vehicles[vehicle.vehicle_id] = vehicle;
-					}
-				});
+				add_vehicle_markers(route_type, route_id, vehicle_id, vehicles_to_track);
 			}
 		});
 	}

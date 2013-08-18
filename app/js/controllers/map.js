@@ -81,5 +81,6 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 		self.move_marker = markers.move;
 		self.remove_marker = markers.remove;
 		self.add_vector = vectors.add;
+		self.clear_vectors = vectors.clear;
 	}
 ]);

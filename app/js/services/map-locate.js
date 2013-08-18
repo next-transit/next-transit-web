@@ -45,6 +45,7 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 
 	function render_routes(results) {
 		$results_list.empty();
+		map_ctrl.clear_vectors();
 
 		results.forEach(function(result) {
 			if(result.points.length) {

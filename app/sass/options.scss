@@ -21,6 +21,11 @@
 			margin-top: -0.9em;
 			-webkit-text-size-adjust: 100%;
 		}
+		.options .simple-nav .btn-right.icon-angle-right {
+			margin-top: -0.5em;
+			margin-right: 0.5em;
+			font-size: 1.4em;
+		}
 
 		.options-trip {}
 			.simple-nav a.options-trip {
@@ -38,3 +43,8 @@
 					text-transform: uppercase;
 					color: darken(#fff, 25%);
 				}
+
+	.options-by-line {
+		margin: -1em 0 0;
+		font-size: 0.8em;
+	}

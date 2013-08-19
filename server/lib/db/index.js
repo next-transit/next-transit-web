@@ -1,5 +1,6 @@
 var pg = require('pg'),
-	connString = process.env.DATABASE_URL || 'postgres://reedlauber:5432@localhost/nextsepta_dev';
+	config = require('../util/config'),
+	connString = config.database_url;
 
 function query(query, params, success, error) {
 	pg.connect(connString, function(err, client, done) {

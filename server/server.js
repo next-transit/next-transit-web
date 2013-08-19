@@ -14,6 +14,7 @@ var app = express();
 app.set('view engine', 'hbs');
 app.set('views', './app/templates');
 app.use(express.static('./app'));
+app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.cookieSession({ secret:'bsl-mfl' }));
 

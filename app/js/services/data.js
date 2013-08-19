@@ -11,6 +11,9 @@ nextsepta.module('nextsepta').service('data', [function() {
 		},
 		get_html: function(url, success, error) {
 			request({ url:url, method:'GET', dataType:'html', success:success, error:error });
+		},
+		post: function(url, data, success, error) {
+			request({ url:url, method:'POST', data:data, success:success, error:error });
 		}
 	};
 }]);

@@ -2,6 +2,6 @@
   color: #79a65d;
 }
 
-.patterns p {
+.patterns > p {
   margin: 1em 0;
 }

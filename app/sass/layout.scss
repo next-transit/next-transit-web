@@ -85,6 +85,23 @@
 		right: 100%;
 	}
 
+	.content-text {
+		padding: 0.6em 0.8em;
+		color: darken($default_color, 20%);
+	}
+		.content-text p {
+			margin-bottom: 1em;
+		}
+		.content-text p:last-child, .content-text p.last {
+			margin-bottom: 0;
+		}
+		.content-text a {
+			color: darken($default_color, 35%);
+		}
+		.content-text a:hover, .content-text a:active {
+			color: darken($default_color, 10%);
+		}
+
 .app-footer {
 	position: fixed;
 	right: 0;

@@ -19,6 +19,12 @@
   -webkit-text-size-adjust: 100%;
 }
 
+.options .simple-nav .btn-right.icon-angle-right {
+  margin-top: -0.5em;
+  margin-right: 0.5em;
+  font-size: 1.4em;
+}
+
 .simple-nav a.options-trip {
   padding-right: 3.6em;
 }
@@ -35,4 +41,9 @@
   font-weight: 200;
   text-transform: uppercase;
   color: #bfbfbf;
+}
+
+.options-by-line {
+  margin: -1em 0 0;
+  font-size: 0.8em;
 }

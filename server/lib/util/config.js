@@ -2,7 +2,7 @@ var config = {},
 	fs = require('fs');
 	local = {};
 
-if(fs.existsSync('../../local.json')) {
+if(fs.existsSync(__dirname + '/../../local.json')) {
 	local = require('../../local.json');	
 }
 

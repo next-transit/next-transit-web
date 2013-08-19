@@ -1,5 +1,10 @@
 var config = {},
-	local = require('../../local.json') || {};
+	fs = require('fs');
+	local = {};
+
+if(fs.existsSync('../../local.json')) {
+	local = require('../../local.json');	
+}
 
 config.database_url = process.env.DATABASE_URL || local.database_url;
 config.mail_username = process.env.MAIL_USERNAME || local.mail_username;

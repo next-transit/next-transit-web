@@ -61,7 +61,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 				} else {
 					animate_content(content, !push);
 				}
-				eval();
+				parse();
 			}
 		});
 	}
@@ -99,9 +99,9 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 	}
 
 	// Evaluates html for "directives" and attaches history event handlers
-	function eval($context) {
+	function parse($context) {
 		$context = $context || $content;
-		nextsepta.module('nextsepta').eval($context);
+		nextsepta.module('nextsepta').parse($context);
 		attach_events($context);
 	} 
 
@@ -131,7 +131,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 	});
 
 	return {
-		eval: function($elem) {
+		parse: function($elem) {
 			attach_events($elem);
 		},
 		push: push_path,

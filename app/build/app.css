@@ -402,12 +402,6 @@ a .icon-rotate-90:before,a .icon-rotate-180:before,a .icon-rotate-270:before,a .
 .icon-weibo:before{content:"\f18a";}
 .icon-renren:before{content:"\f18b";}
 
-/* Adapted from:
-
-   http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
 html, body, div, span,
 h1, h2, h3, h4, h5, h6, p, pre,
 a, abbr, acronym, code, 
@@ -539,9 +533,6 @@ html, body {
   clear: both;
 }
 
-/* ==========================================================================
-   Buttons
-   ========================================================================== */
 .btn {
   display: inline-block;
   padding: 0.5em 1.2em;
@@ -699,7 +690,6 @@ input[type=button].btn {
   margin-left: 0.5em;
 }
 
-/* Messages */
 .message {
   position: relative;
   display: block;

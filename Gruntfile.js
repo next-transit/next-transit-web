@@ -33,6 +33,9 @@ module.exports = function(grunt) {
 			}
 		},
 		concat: {
+			options: {
+				stripBanners: true
+			},
 			css: {
 				src: [
 					'<%= dirs.css_src %>/vendor/font-awesome.min.css',
@@ -45,7 +48,6 @@ module.exports = function(grunt) {
 			},
 			js: {
 				src: [
-					'<%= dirs.js_src %>/vendor/jquery.scrollTo-1.4.3.1.js',
 					'<%= dirs.js_src %>/core/core.js',
 					'<%= dirs.js_src %>/core/*.js',
 					'<%= dirs.js_src %>/services/*.js',
@@ -76,7 +78,10 @@ module.exports = function(grunt) {
 			},
 			app: {
 				files: {
-					'<%= dirs.dest %>/app.min.js': ['<%= dirs.build %>/app.js']
+					'<%= dirs.dest %>/app.min.js': [
+						'<%= dirs.js_src %>/vendor/jquery.scrollTo-1.4.3.1.js',
+						'<%= dirs.build %>/app.js'
+					]
 				}
 			}
 		},

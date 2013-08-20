@@ -36,16 +36,19 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 			}
 		});
 
-		// Clear markers that have dropped out
-		for(var id in vehicles) {
+		function exists(id) {
 			var found = false;
 			vehicles_to_track.forEach(function(vehicle) {
-				if((vehicle.vehicle_id in vehicles)) {
+				if(vehicle.vehicle_id === id) {
 					found = true;
 				}
 			});
-			if(!found) {
-				console.log('remove', id);
+			return found;
+		}
+
+		// Clear markers that have dropped out
+		for(var id in vehicles) {
+			if(!exists(id)) {
 				map_ctrl.remove_marker('vehicle-' + id);
 				delete vehicles[id];
 			}

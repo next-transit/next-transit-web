@@ -46,7 +46,7 @@
 				_self.loaded = true;
 				$(function() {
 					_self.$elem = $('[module=' + _self.name + ']');
-					_self.eval('body');
+					_self.parse('body');
 					_self.dependency('content_settings').parse($('.js-content').html());
 				});
 			}
@@ -54,7 +54,7 @@
 
 		_self.service = function(name, dependencies) {
 			if(name in _services) {
-				throw new Error('A dependency named ' + name + ' already exists.')
+				throw new Error('A dependency named ' + name + ' already exists.');
 			}
 
 			var service_def = nextsepta.__service(name, dependencies),
@@ -90,8 +90,8 @@
 			$(_self).trigger(name, data);
 		};
 
-		_self.eval = function(selector) {
-			nextsepta.__eval(_self, selector);
+		_self.parse = function(selector) {
+			nextsepta.__parse(_self, selector);
 		};
 
 		var _data_store = {};

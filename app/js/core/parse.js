@@ -1,7 +1,7 @@
 (function(global) {
 	var nextsepta = global.nextsepta;
 
-	nextsepta.__eval = function eval(module, selector) {
+	nextsepta.__parse = function parse(module, selector) {
 		var $elem = $(selector, module.$elem),
 			$parent = $elem.parent();
 

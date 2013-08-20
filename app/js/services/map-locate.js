@@ -78,7 +78,7 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 
 		$results.show();
 
-		history.eval($results);
+		history.parse($results);
 	}
 
 	function get_nearby_routes() {

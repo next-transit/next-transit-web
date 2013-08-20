@@ -2,7 +2,7 @@ nextsepta.module('nextsepta').service('cookie', [function() {
 	function _set(name, value, options) {
 		options = options || {};
 		if(value === null) { value = ''; }
-		var expires = ''
+		var expires = '';
 		if(options.expires) {
 			var date;
 			if(options.expires.getDate) {

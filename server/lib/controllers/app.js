@@ -1,4 +1,6 @@
-var route_types = require('../models/route_types'),
+var package = require(__dirname + '/../../../package.json'),
+	config = require('../util/config'),
+	route_types = require('../models/route_types'),
 	routes = require('../models/routes'),
 	directions = require('../models/directions'),
 	simplified_stops = require('../models/simplified_stops');
@@ -103,6 +105,7 @@ function getRouteType(req, success, not_found) {
 
 function before(req, res, next) {
 	req.locals = {
+		app_version: package.version,
 		last_path: req.session.last_path,
 		last_trip: req.session.last_trip,
 		show_footer: req.originalUrl !== '/'
@@ -120,7 +123,10 @@ function before(req, res, next) {
 
 	if(req.query.layout === 'null' || req.query.layout === 'false') {
 		req.locals.layout = null;
+	} else if(config.debug_assets) {
+		req.locals.layout = 'layout_debug';
 	}
+
 	getRouteType(req, next, function() {
 		res.send('404');
 	});

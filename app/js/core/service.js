@@ -21,7 +21,3 @@
 		return { name:name, dependencies:dependencies, constructor:constructor };
 	};
 })(window);
-
-// 215-686-2748
-
-// 215-686-0199

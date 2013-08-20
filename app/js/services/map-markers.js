@@ -5,14 +5,14 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 		markers = {};
 
 	function get_marker_icon(icon_name) {
-		icon_name = icon_name || 'marker-24';
+		icon_name = icon_name || 'marker-36';
 		
 		if(!(icon_name in icons)) {
 			icons[icon_name] = L.icon({
 				iconUrl: '/images/maki/' + icon_name + '.png',
 				iconRetinaUrl: '/images/maki/' + icon_name + '@2x.png',
-				iconSize: [24, 24],
-				iconAnchor: [12, 12]
+				iconSize: [32, 32],
+				iconAnchor: [16, 16]
 			});
 		}
 

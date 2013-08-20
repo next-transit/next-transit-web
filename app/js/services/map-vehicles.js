@@ -5,8 +5,8 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 		track_interval,
 		map_ctrl,
 		icons = {
-			bus: 'bus-24',
-			rail: 'rail-24'
+			bus: 'bus-36',
+			rail: 'rail-36'
 		},
 		$map;
 

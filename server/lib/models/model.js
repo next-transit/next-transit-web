@@ -6,33 +6,50 @@ function Model(table) {
 	this.table = table;
 }
 
-function generate_sql(table, select, joins, where, params, orders, limit, offset) {
+function execute_query(sql, params, success, error) {
+	db.query(sql, params, function(result) {
+		if(typeof success === 'function') {
+			success(result.rows);
+		}
+	}, error);
+}
+
+function swap_params(sql, params) {
+	var i = 0, len = params.length, idx, pg_var;
+	for(; i < len; i++) {
+		idx = sql.indexOf('?');
+		if(idx === -1) {
+			throw new Error('More expected values provided than params spots.');
+		}
+
+		pg_var = '$' + (i+1);
+
+		sql = sql.substr(0, idx) + pg_var + sql.substr(idx+1);
+	}
+	return sql;
+}
+
+function generate_sql(table, select, joins, where, params, group_bys, orders, limit, offset) {
 	var sql = 'SELECT ' + (select || '*') + ' FROM ' + table;
 
 	if(joins) {
-		sql += ' ' + joins.trim() + ' ';
+		sql += ' ' + joins.trim();
 	}
 
 	if(where) {
 		sql += ' WHERE ' + where;
 	}
 
-	if(params) {
-		var i = 0, len = params.length, idx, pg_var;
-		for(; i < len; i++) {
-			idx = sql.indexOf('?');
-			if(idx === -1) {
-				throw new Error('More expected values provided than params spots.');
-			}
-
-			pg_var = '$' + (i+1);
-
-			sql = sql.substr(0, idx) + pg_var + sql.substr(idx+1);
-		}
+	if(group_bys) {
+		sql += ' GROUP BY ' + group_bys;
 	}
 
 	if(orders && typeof orders === 'string') {
 		sql += ' ORDER BY ' + orders;
+	}
+
+	if(params) {
+		sql = swap_params(sql, params);
 	}
 
 	if(typeof limit === 'number') {
@@ -41,6 +58,24 @@ function generate_sql(table, select, joins, where, params, orders, limit, offset
 
 	if(typeof offset === 'number') {
 		sql += ' OFFSET ' + offset;
+	}
+
+	sql += ';';
+
+	return sql;
+}
+
+function generate_update_sql(table, set, params, where) {
+	var sql = 'UPDATE ' + table;
+
+	sql += ' SET ' + set;
+
+	if(where) {
+		sql += ' WHERE ' + where;
+	}
+
+	if(params) {
+		sql = swap_params(sql, params);
 	}
 
 	sql += ';';
@@ -90,13 +125,9 @@ Model.prototype.select = function(select, joins, where, params, orders, limit, o
 		offset = null;
 	}
 
-	var sql = generate_sql(this.table, select, joins, where, params, orders, limit, offset);
+	var sql = generate_sql(this.table, select, joins, where, params, null, orders, limit, offset);
 
-	db.query(sql, params, function(result) {
-		if(typeof success === 'function') {
-			success(result.rows);
-		}
-	}, error);
+	execute_query(sql, params, success, error);
 };
 
 Model.prototype.process = function(data, callback) {
@@ -104,7 +135,7 @@ Model.prototype.process = function(data, callback) {
 };
 
 Model.prototype.all = function(success, error) {
-	this.where(null, success, error);
+	Model.prototype.query.call(this).where('').error(error).done(success);
 };
 
 Model.prototype.where = function(where, params) {
@@ -124,6 +155,7 @@ Model.prototype.query = function() {
 	query.select = fn('select');
 	query.params = fn('params');
 	query.orders = fn('orders');
+	query.group_by = fn('group_by');
 	query.limit = fn('limit');
 	query.error = fn('error');
 	query.offset = fn('offset');
@@ -140,14 +172,30 @@ Model.prototype.query = function() {
 		return query;
 	};
 
-	query.done = function(callback) {
-		model.select(q.select, q.joins, q.where, q.params, q.orders, q.limit, q.offset, callback, q.error);
+	query.done = function(callback, no_process) {
+		var sql = generate_sql(model.table, q.select, q.joins, q.where, q.params, q.group_by, q.orders, q.limit, q.offset);
+		execute_query(sql, q.params, function(results) {
+			if(results && results.length) {
+				if(no_process) {
+					callback(results);
+				} else {
+					model.process(results, callback);	
+				}
+			} else {
+				callback([]);
+			}
+		}, q.error);
 	};
 
-	query.first = function(callback) {
-		model.select(q.select, q.joins, q.where, q.params, q.orders, 1, function(results) {
+	query.first = function(callback, no_process) {
+		var sql = generate_sql(model.table, q.select, q.joins, q.where, q.params, q.group_by, q.orders, q.limit, q.offset);
+		execute_query(sql, q.params, function(results) {
 			if(results && results.length) {
-				model.process(results[0], callback);
+				if(no_process) {
+					callback(results[0]);
+				} else {
+					model.process(results[0], callback);	
+				}
 			} else {
 				callback();
 			}
@@ -155,6 +203,65 @@ Model.prototype.query = function() {
 	};
 
 	return query;
+};
+
+Model.prototype.update = function(set, params) {
+	var query = {}, model = this, sets = [], q = {};
+
+	function fn(param) {
+		return function(val) {
+			q[param] = val;
+			return query;
+		};
+	}
+
+	query.error = fn('error');
+
+	function add_params(params) {
+		if(q.params) {
+			q.params = q.params.concat(params);
+		} else {
+			q.params = params;
+		}
+	}
+
+	query.set = function(set, params) {
+		sets.push(set);
+		q.set = sets.join(', ');
+		add_params(params);
+		return query;
+	};
+
+	query.where = function(where, params) {
+		q.where = where;
+		add_params(params);
+		return query;
+	};
+
+	query.commit = function(callback) {
+		var sql = generate_update_sql(model.table, q.set, q.params, q.where);
+		execute_query(sql, q.params, function() {
+			callback();
+		}, q.error);
+	};
+
+	if(set) {
+		query.set(set, params);
+	}
+
+	return query;
+};
+
+Model.prototype.truncate = function(success, error) {
+	execute_query('TRUNCATE TABLE ' + this.table + ';', null, success, error);
+};
+
+Model.prototype.import = function(columns, file_path, success, error) {
+	var self = this;
+	self.truncate(function() {
+		var sql = 'COPY ' + self.table + ' (' + columns.join(', ') + ') FROM \'' + file_path + '\';';
+		execute_query(sql, null, success, error);
+	}, error);
 };
 
 module.exports = {

@@ -10,7 +10,7 @@ var fs = require('fs'),
 	gtfs_path = __dirname + '/../../../assets/gtfs',
 	stage_path = gtfs_path + '/stage';
 
-function write_data(data, write_path, columns) {
+function write_data(data, write_path, columns, custom_timer) {
 	return new promise(function(resolve, reject) {
 		var write_stream = fs.createWriteStream(write_path, { flags:'w' });
 
@@ -23,6 +23,7 @@ function write_data(data, write_path, columns) {
 			.on('error', reject);
 
 		write_stream.on('finish', function() {
+			custom_timer.interval('Time spent writing to database', true);
 			resolve();
 		});
 	});
@@ -30,50 +31,49 @@ function write_data(data, write_path, columns) {
 
 function import_custom(title, process, file_name, columns) {
 	return new promise(function(resolve, reject) {
-		var custom_timer = timer('\n\n!!! ' + title + ' !!!');
+		var custom_timer = timer('\n' + title, true),
+			write_path = stage_path + '/' + file_name + '.txt';
 
-		process(file_name, columns).then(function(data) {
-			custom_timer.interval('\nTime spent creating values');
-			resolve();
-		}, reject);
+		process(file_name, columns, write_path, custom_timer).then(resolve, reject);
 	});
 }
 
-function import_route_extras(file_name, columns) {
+function import_route_extras(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
 		directions.generate_directions().then(function(new_directions) {
-			var write_path = stage_path + '/' + file_name + '.txt';
-			write_data(new_directions, write_path, columns).then(function(count) {
+			custom_timer.interval('Time spent reading source file', true).start();
+			write_data(new_directions, write_path, columns, custom_timer).then(function(count) {
 				directions.import(columns, write_path, resolve, reject);
 			}, reject);
 		}, reject);
 	});
 }
 
-function import_route_shapes(file_name, columns) {
+function import_route_shapes(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
 		shapes.update('route_id = ?', ['']).error(reject).commit(function() {
+			custom_timer.interval('Time spent reading source file', true).start();
 			shapes.assign_route_shapes().then(resolve, reject);
 		});
 	});
 }
 
-function import_simplified_stops(file_name, columns) {
+function import_simplified_stops(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
 		simplified_stops.generate_stops().then(function(new_simplified_stops) {
-			var write_path = stage_path + '/' + file_name + '.txt';
-			write_data(new_simplified_stops, write_path, columns).then(function(count) {
+			custom_timer.interval('Time spent reading source file', true).start();
+			write_data(new_simplified_stops, write_path, columns, custom_timer).then(function(count) {
 				simplified_stops.import(columns, write_path, resolve, reject);
 			}, reject);
 		}, reject);
 	});
 }
 
-function import_trip_variants(file_name, columns) {
+function import_trip_variants(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
 		trip_variants.generate_variants().then(function(new_trip_variants) {
-			var write_path = stage_path + '/' + file_name + '.txt';
-			write_data(new_trip_variants, write_path, columns).then(function(count) {
+			custom_timer.interval('Time spent reading source file', true).start();
+			write_data(new_trip_variants, write_path, columns, custom_timer).then(function(count) {
 				trip_variants.import(columns, write_path, resolve, reject);
 			}, reject);
 		}, reject);

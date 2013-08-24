@@ -1,7 +1,8 @@
 var promise = require('promise'),
 	routes = require('./routes'),
 	trips = require('./trips'),
-	shapes = require('./model').create('shapes')
+	shapes = require('./model').create('shapes'),
+	verbose = false;
 
 function assign_route_shapes(route) {
 	return new promise(function(resolve, reject) {
@@ -10,7 +11,9 @@ function assign_route_shapes(route) {
 
 		trips.get_longest_trip(route.route_id, 0, function(longest_trip) {
 			if(longest_trip) {
-				console.log('Setting Shape for Route ' + route_pub_id + ' with Trip/Shape: ' + longest_trip.trip_id + '/' + longest_trip.shape_id);
+				if(verbose) {
+					console.log('Setting Shape for Route ' + route_pub_id + ' with Trip/Shape: ' + longest_trip.trip_id + '/' + longest_trip.shape_id);	
+				}
 
 				shapes.update()
 					.error(reject)
@@ -22,8 +25,9 @@ function assign_route_shapes(route) {
 	});
 }
 
-shapes.assign_route_shapes = function() {
+shapes.assign_route_shapes = function(vrbse) {
 	return new promise(function(resolve, reject) {
+		verbose = vrbse;
 		routes.all(function(rts) {
 			var promises = [];
 			rts.forEach(function(route) {

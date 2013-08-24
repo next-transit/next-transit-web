@@ -25,45 +25,70 @@ function format_time(secs) {
 	return time;
 }
 
-function Timer(message) {
+function message(msg, wrap, wrap_char) {
+	if(msg) {
+		if(wrap) {
+			wrap_char = wrap_char || '*';
+			var len = msg.length + 4,
+				border = '',
+				first_char = '';
+
+			if(msg[0] === '\n') {
+				first_char = '\n';
+				msg = msg.substr(1);
+				len--;
+			}
+
+			while(len--) {
+				border += wrap_char;
+			}
+			msg = [first_char, '\n', border, '\n', wrap_char, ' ', msg, ' ', wrap_char, '\n', border, '\n'].join('');
+		}
+		console.log(msg);
+	}
+}
+
+function Timer(msg, wrap, wrap_char) {
 	var start,
 		old = 0;
 
-	this.start = function(message) {
+	this.start = function(msg, wrap, wrap_char) {
 		start = new Date();
-		if(message) {
-			console.log(message);
-		}
+		message(msg, wrap, wrap_char);
+		return this;
 	};
 
 	this.stop = function() {
 		old += (new Date() - start) / 1000;
+		return this;
 	};
 
-	this.total = function(message, stop_first) {
+	this.total = function(msg, stop_first, wrap, wrap_char) {
 		if(stop_first) {
 			this.stop();
 		}
 		
 		var formatted = format_time(old);
 
-		console.log(message + ': ' + formatted);
+		message(msg + ': ' + formatted, wrap, wrap_char);
+		return this;
 	};
 
-	this.interval = function(message, stop) {
+	this.interval = function(msg, stop, wrap, wrap_char) {
 		var elapsed = (new Date() - start) / 1000,
 			formatted = format_time(elapsed);
 
-		console.log(message + ': ' + formatted);
+		message(msg + ': ' + formatted, wrap, wrap_char);
 
 		if(stop) {
 			this.stop();
 		}
+		return this;
 	};
 
-	this.start(message);
+	this.start(msg, wrap, wrap_char);
 }
 
-module.exports = function(message) {
-	return new Timer(message);
+module.exports = function(message, wrap, wrap_char) {
+	return new Timer(message, wrap, wrap_char);
 };

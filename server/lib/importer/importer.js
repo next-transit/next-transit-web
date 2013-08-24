@@ -6,12 +6,10 @@ var fs = require('fs'),
 	sequential = require('./sequential'),
 	gtfs_path = __dirname + '/../../../assets/gtfs',
 	stage_path = gtfs_path + '/stage',
-	batch_size = 50000;
+	batch_size = 100000;
 
 function copy_to_database(file_name, model, columns, success, error) {
-	var write_timer = timer('\nWriting bulk file to database ...');
 	model.import(columns, file_name, function() {
-		write_timer.interval('\nTime spent writing to database', true);
 		if(typeof success === 'function') {
 			success();
 		}
@@ -59,22 +57,23 @@ function add_path_sequence(first, path, file_name, write_path, model, columns) {
 	};
 }
 
-function importer(mode) {
-	var self = {},
+function importer(options) {
+	var self = {},		
 		paths = [];
 
-	if(mode === 'bus' || mode === 'all') {
+	if(options.mode === 'bus' || options.mode === 'all') {
 		paths.push(gtfs_path + '/google_bus');
 	}
-	if(mode === 'rail' || mode === 'all') {
+	if(options.mode === 'rail' || options.mode === 'all') {
 		paths.push(gtfs_path + '/google_rail');
 	}
 
 	self.import_type = function import_type(title, file_name, columns) {
 		return new promise(function(resolve, reject) {
 			var model = require('../models/' + file_name),
-				total_timer = timer('\n\n!!! Importing ' + title + ' !!!'),
-				read_timer = timer();
+				total_timer = timer('\nImporting ' + title, true),
+				read_timer = timer(),
+				write_timer = timer();
 
 			total_timer.start();
 
@@ -91,10 +90,13 @@ function importer(mode) {
 			});
 
 			sequencer.then(function() {
-				read_timer.interval('\nTime spent reading source files', true);
+				read_timer.stop();
 
+				write_timer.start('Writing bulk file to database ...');
 				copy_to_database(write_path, model, columns, function() {
-					total_timer.interval('\n' + title + ' Import Complete. Total time', true);
+					read_timer.total('Time spent reading source files');
+					write_timer.interval('Time spent writing to database', true);
+					total_timer.interval(title + ' Import Complete! Total time', true, true, '-');
 					resolve();
 				}, function(err) {
 					console.log('Error copying data to database', err);
@@ -107,6 +109,6 @@ function importer(mode) {
 	return self;
 }
 
-module.exports = function(mode, type) {
-	return importer(mode, type);
+module.exports = function(options) {
+	return importer(options);
 };

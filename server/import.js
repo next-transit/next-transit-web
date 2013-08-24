@@ -13,7 +13,8 @@ var promise = require('promise'),
 		trip_variants: ['route_id', 'direction_id', 'trip_headsign', 'stop_count', 'variant_name', 'first_stop_sequence', 'last_stop_sequence']
 	},
 	mode = 'all',
-	type = 'all';
+	type = 'all',
+	verbose = false;
 
 process.on('uncaughtException', function(err) {
 	console.log(new Error('Uncaught exception: ' + err).stack);
@@ -24,12 +25,13 @@ process.argv.forEach(function(arg) {
 	var parts = arg.split(':');
 	if(parts[0] === 'type') {
 		type = parts[1] || 'all';
+	} else if(parts[1] === '-v') {
+		verbose = true;
 	}
 });
 
-var promises = [],
-	total_timer = timer(),
-	importer = require('./lib/importer/importer')(mode);
+var importer = require('./lib/importer/importer')({ mode:mode, verbose:verbose }),
+	total_timer = timer();
 
 function add_type(import_type, file_name, custom_type) {
 	return function(next, error) {
@@ -56,7 +58,7 @@ sequential
 	.add(add_type('Simplified Stops', 'simplified_stops', 'import_simplified_stops'))
 	.add(add_type('Trip Variants', 'trip_variants', 'import_trip_variants'))
 	.then(function() {
-		total_timer.interval('\n*** Import complete *** Total time: ', true);
+		total_timer.interval('\nImport complete! Total time:', true, true, '!');
 		process.exit(0);
 	}, function(err) {
 		console.log('Import failed');

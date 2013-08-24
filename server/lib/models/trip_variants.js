@@ -11,22 +11,21 @@ function get_variant_name(trip, stop_info) {
 	return new promise(function(resolve, reject) {
 		var direction_key = [trip.route_id, trip.direction_id].join('-'),
 			trip_key = [trip.route_id, trip.direction_id, stop_info.min_sequence, stop_info.max_sequence].join('-'),
-			index = 0;
+			index = 0,
+			variant_name;
 
-		if(trip_key in trip_variant_lookup) {
-			index = trip_variant_lookup[trip_key];
-		} else if(direction_key in route_variant_lookup) {
-			trip_variant_lookup[trip_key] = route_variant_lookup[direction_key];
-			route_variant_lookup[direction_key]++;
-		} else {
-			route_variant_lookup[direction_key] = 1;
-			trip_variant_lookup[trip_key] = 0;
+		if(!(trip_key in trip_variant_lookup)) {
+			if(direction_key in route_variant_lookup) {
+				trip_variant_lookup[trip_key] = route_variant_lookup[direction_key];
+				route_variant_lookup[direction_key]++;
+			} else {
+				route_variant_lookup[direction_key] = 1;
+				trip_variant_lookup[trip_key] = 0;
+			}
+			variant_name = variant_names[trip_variant_lookup[trip_key]] || '?';
 		}
 
-		if(route_variant_lookup[direction_key] > 25) {
-			console.log('variant name lookup over 26', trip_key, route_variant_lookup[direction_key])
-		}
-		resolve(variant_names[trip_variant_lookup[trip_key]] || '?');
+		resolve(variant_name);
 	});
 }
 
@@ -51,23 +50,26 @@ function get_trip_variant(trip) {
 			.error(reject)
 			.first(function(stop_info) {
 				if(stop_info) {
-					promise.all([
-						get_variant_name(trip, stop_info),
-						get_stop_count(trip)
-					]).then(function(results) {
-						var variant = {
-							route_id: trip.route_id,
-							direction_id: trip.direction_id,
-							trip_headsign: trip.trip_headsign,
-							variant_name: results[0],
-							stop_count: results[1],
-							first_stop_sequence: stop_info.min_sequence,
-							last_stop_sequence: stop_info.max_sequence
-						};
-						resolve(variant);
+					get_variant_name(trip, stop_info).then(function (variant_name) {
+						if(variant_name) {
+							get_stop_count(trip).then(function(stop_count) {
+								var variant = {
+									route_id: trip.route_id,
+									direction_id: trip.direction_id,
+									trip_headsign: trip.trip_headsign,
+									variant_name: variant_name,
+									stop_count: stop_count,
+									first_stop_sequence: stop_info.min_sequence,
+									last_stop_sequence: stop_info.max_sequence
+								};
+								resolve(variant);
+							}, reject);
+						} else {
+							resolve(null);
+						}
 					}, reject);
 				} else {
-					resolve();
+					resolve(null);
 				}
 			});
 	});
@@ -81,7 +83,13 @@ trip_variants.generate_variants = function() {
 			results.forEach(function(trip) {
 				promises.push(get_trip_variant(trip));
 			});
-			promise.all(promises).then(resolve, reject);
+			promise.all(promises).then(function(variants) {
+				variants = variants.filter(function(variant) { return !!variant; });
+				resolve(variants);
+			}, function(err) {
+				console.log('failed for some reason', err);
+				reject(err);
+			});
 		}, reject);
 	});
 };

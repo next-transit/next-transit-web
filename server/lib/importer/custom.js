@@ -12,11 +12,16 @@ var fs = require('fs'),
 
 function write_data(data, write_path, columns, custom_timer) {
 	return new promise(function(resolve, reject) {
-		var write_stream = fs.createWriteStream(write_path, { flags:'w' });
+		var write_stream = fs.createWriteStream(write_path, { flags:'w' }),
+			date_str = new Date().toFormat('YYYY-MM-DD HH24:MI:SS');
 
 		csv()
 			.from(data)
 			.to(write_stream, { delimiter:'\t', columns:columns })
+			.transform(function(record, idx) {
+				record.created_at = record.updated_at = date_str;
+				return record;
+			})
 			.on('end', function() {
 				write_stream.end();
 			})
@@ -32,9 +37,10 @@ function write_data(data, write_path, columns, custom_timer) {
 function import_custom(title, process, file_name, columns) {
 	return new promise(function(resolve, reject) {
 		var custom_timer = timer('\n' + title, true),
-			write_path = stage_path + '/' + file_name + '.txt';
+			write_path = stage_path + '/' + file_name + '.txt',
+			extended_columns = columns.concat(['created_at', 'updated_at']);
 
-		process(file_name, columns, write_path, custom_timer).then(resolve, reject);
+		process(file_name, extended_columns, write_path, custom_timer).then(resolve, reject);
 	});
 }
 

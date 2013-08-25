@@ -50,6 +50,7 @@ module.exports = function(grunt) {
 				src: [
 					'<%= dirs.js_src %>/core/core.js',
 					'<%= dirs.js_src %>/core/*.js',
+					'<%= dirs.js_src %>/services/resize.js',
 					'<%= dirs.js_src %>/services/*.js',
 					'<%= dirs.js_src %>/controllers/*.js'
 				],

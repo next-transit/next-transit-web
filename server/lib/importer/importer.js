@@ -6,7 +6,7 @@ var fs = require('fs'),
 	transforms = require('./transforms'),
 	sequential = require('./sequential'),
 	config = require('../util/config'),
-	gtfs_path = __dirname + '/../../../assets/gtfs/' + config.local,
+	gtfs_path = __dirname + '/../../../assets/gtfs/' + config.agency_name,
 	stage_path = gtfs_path + '/stage',
 	batch_size = 100000;
 

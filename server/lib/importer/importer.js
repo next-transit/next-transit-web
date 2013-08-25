@@ -5,7 +5,8 @@ var fs = require('fs'),
 	timer = require('./timer'),
 	transforms = require('./transforms'),
 	sequential = require('./sequential'),
-	gtfs_path = __dirname + '/../../../assets/gtfs',
+	config = require('../util/config'),
+	gtfs_path = __dirname + '/../../../assets/gtfs/' + config.local,
 	stage_path = gtfs_path + '/stage',
 	batch_size = 100000;
 
@@ -62,14 +63,7 @@ function add_path_sequence(first, path, file_name, write_path, model, columns) {
 
 function importer(options) {
 	var self = {},		
-		paths = [];
-
-	if(options.mode === 'bus' || options.mode === 'all') {
-		paths.push(gtfs_path + '/google_bus');
-	}
-	if(options.mode === 'rail' || options.mode === 'all') {
-		paths.push(gtfs_path + '/google_rail');
-	}
+		paths = config.import_paths;
 
 	self.import_type = function import_type(title, file_name, columns) {
 		return new promise(function(resolve, reject) {
@@ -89,7 +83,7 @@ function importer(options) {
 			read_timer.start();
 
 			paths.forEach(function(path) {
-				sequencer.add(add_path_sequence(first, path, file_name, write_path, model, extended_columns));
+				sequencer.add(add_path_sequence(first, gtfs_path + path, file_name, write_path, model, extended_columns));
 				first = false;
 			});
 

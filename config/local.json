@@ -1,6 +1,10 @@
 {
-	"agency": "septa",
+	"agency": "rtd",
 	"debug_assets": true,
 	"mail_username": "nextsepta@gmail.com",
-	"mail_password": "marketfrankford"
+	"mail_password": "marketfrankford",
+	"database_url": {
+		"septa": "postgres://reedlauber:5432@localhost/nextsepta_dev",
+		"rtd": "postgres://reedlauber:5432@localhost/nextrtd_dev"
+	}
 }

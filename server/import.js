@@ -1,4 +1,5 @@
 var promise = require('promise'),
+	date_utils = require('date-utils'),
 	sequential = require('./lib/importer/sequential')(),
 	timer = require('./lib/importer/timer'),
 	custom = require('./lib/importer/custom'),
@@ -57,6 +58,7 @@ sequential
 	.add(add_type('Route Shapes', 'route_shapes', 'import_route_shapes'))
 	.add(add_type('Simplified Stops', 'simplified_stops', 'import_simplified_stops'))
 	.add(add_type('Trip Variants', 'trip_variants', 'import_trip_variants'))
+	.add(add_type('Stats', 'stats', 'generate_stats'))
 	.then(function() {
 		total_timer.interval('\nImport complete! Total time:', true, true, '!');
 		process.exit(0);

@@ -1,12 +1,14 @@
 var fs = require('fs'),
 	csv = require('csv'),
 	promise = require('promise'),
+	date_utils = require('date-utils'),
 	timer = require('./timer'),
 	routes = require('../models/routes'),
 	directions = require('../models/directions'),
 	shapes = require('../models/shapes'),
 	simplified_stops = require('../models/simplified_stops'),
 	trip_variants = require('../models/trip_variants'),
+	stats = require('../models/stats'),
 	gtfs_path = __dirname + '/../../../assets/gtfs',
 	stage_path = gtfs_path + '/stage';
 
@@ -38,7 +40,7 @@ function import_custom(title, process, file_name, columns) {
 	return new promise(function(resolve, reject) {
 		var custom_timer = timer('\n' + title, true),
 			write_path = stage_path + '/' + file_name + '.txt',
-			extended_columns = columns.concat(['created_at', 'updated_at']);
+			extended_columns = (columns || []).concat(['created_at', 'updated_at']);
 
 		process(file_name, extended_columns, write_path, custom_timer).then(resolve, reject);
 	});
@@ -86,6 +88,44 @@ function import_trip_variants(file_name, columns, write_path, custom_timer) {
 	});
 }
 
+function generate_stats() {
+	return new promise(function(resolve, reject) {
+		var models = ['shapes', 'stops', 'routes', 'directions', 'simplified_stops', 'trips', 'trip_variants', 'stop_times'],
+			promises = [],
+			get_model_count = function get_model_count(model_name) {
+				return promise(function(resolve, reject) {
+					var model = require('../models/' + model_name);
+					model.query()
+						.error(reject)
+						.count(function(count) {
+							if(count) {
+								resolve({ model_name:model_name, count:count });
+							} else {
+								resolve({ model_name:model_name, count:0 });
+							}
+						});
+				});
+			};
+
+		models.forEach(function(model_name) {
+			promises.push(get_model_count(model_name));
+		});
+
+		promise.all(promises).then(function(model_counts) {
+			var stats_data = {
+				created_at: new Date().toFormat('YYYY-MM-DD HH24:MI:SS'), 
+				process_seconds: 0
+			};
+
+			model_counts.forEach(function(model_count) {
+				stats_data[model_count.model_name + '_count'] = model_count.count;
+			});
+
+			stats.insert(stats_data, resolve, reject);
+		}, reject);
+	});
+}
+
 module.exports = {
 	import_route_extras: function(file_name, columns) {
 		return import_custom('Generating Route Directions', import_route_extras, file_name, columns);
@@ -98,5 +138,8 @@ module.exports = {
 	},
 	import_trip_variants: function(file_name, columns) {
 		return import_custom('Generating Trip Variants', import_trip_variants, file_name, columns);
+	},
+	generate_stats: function(file_name, columns) {
+		return import_custom('Generating Import Stats', generate_stats, file_name, columns);
 	}
 };

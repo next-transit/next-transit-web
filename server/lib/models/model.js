@@ -83,6 +83,26 @@ function generate_update_sql(table, set, params, where) {
 	return sql;
 }
 
+function generate_insert_sql(table, data, callback) {
+	var sql = 'INSERT INTO ' + table,
+		columns = [],
+		value_params = [],
+		values = [];
+
+	for(var field in data) {
+		if(data.hasOwnProperty(field)) {
+			columns.push(field);
+			value_params.push('?');
+			values.push(data[field]);
+		}
+	}
+
+	sql += ' (' + columns.join(', ') + ') values (' + value_params.join(', ') + ');';
+	sql = swap_params(sql, values);
+
+	callback(sql, values);
+}
+
 Model.prototype.select = function(select, joins, where, params, orders, limit, offset, success, error) {
 	if(typeof joins === 'function') {
 		error = where;
@@ -202,6 +222,17 @@ Model.prototype.query = function() {
 		}, q.error);
 	};
 
+	query.count = function(callback) {
+		query.select('count(*) as the_count')
+			.first(function(result) {
+				var count;
+				if(result) {
+					count = parseInt(result.the_count);
+				}
+				callback(count);
+			}, true);
+	};
+
 	return query;
 };
 
@@ -250,6 +281,12 @@ Model.prototype.update = function(set, params) {
 	}
 
 	return query;
+};
+
+Model.prototype.insert = function(data, success, error) {
+	generate_insert_sql(this.table, data, function(sql, values) {
+		execute_query(sql, values, success, error);
+	});
 };
 
 Model.prototype.truncate = function(success, error) {

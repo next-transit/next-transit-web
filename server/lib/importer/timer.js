@@ -49,44 +49,49 @@ function message(msg, wrap, wrap_char) {
 }
 
 function Timer(msg, wrap, wrap_char) {
-	var start,
+	var self = this,
+		start,
 		old = 0;
 
-	this.start = function(msg, wrap, wrap_char) {
+	self.get_seconds = function() {
+		return (new Date() - start) / 1000;
+	};
+
+	self.start = function(msg, wrap, wrap_char) {
 		start = new Date();
 		message(msg, wrap, wrap_char);
-		return this;
+		return self;
 	};
 
-	this.stop = function() {
-		old += (new Date() - start) / 1000;
-		return this;
+	self.stop = function() {
+		old += self.get_seconds();
+		return self;
 	};
 
-	this.total = function(msg, stop_first, wrap, wrap_char) {
+	self.total = function(msg, stop_first, wrap, wrap_char) {
 		if(stop_first) {
-			this.stop();
+			self.stop();
 		}
 		
 		var formatted = format_time(old);
 
 		message(msg + ': ' + formatted, wrap, wrap_char);
-		return this;
+		return self;
 	};
 
-	this.interval = function(msg, stop, wrap, wrap_char) {
-		var elapsed = (new Date() - start) / 1000,
+	self.interval = function(msg, stop, wrap, wrap_char) {
+		var elapsed = self.get_seconds(),
 			formatted = format_time(elapsed);
 
 		message(msg + ': ' + formatted, wrap, wrap_char);
 
 		if(stop) {
-			this.stop();
+			self.stop();
 		}
-		return this;
+		return self;
 	};
 
-	this.start(msg, wrap, wrap_char);
+	self.start(msg, wrap, wrap_char);
 }
 
 module.exports = function(message, wrap, wrap_char) {

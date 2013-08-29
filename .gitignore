@@ -3,3 +3,5 @@
 node_modules
 config/local.json
 assets/gtfs
+backups
+db-deploy-instructions.md

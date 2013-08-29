@@ -7,7 +7,7 @@ ctrl.action('index', function(req, res, callback) {
 
 	if(term) {
 		var param = term + '%';
-		routes.query().where('lower(route_short_name) like ? OR lower(route_long_name) like ?', [param, param]).done(function(results) {
+		routes.query().where('agency_id = ? AND (lower(route_short_name) like ? OR lower(route_long_name) like ?)', [req.agency.id, param, param]).done(function(results) {
 			var exact_match;
 
 			routes.process(results, function(results) {

@@ -5,7 +5,7 @@ ctrl.action('from', function(req, res, callback) {
 	var route = req.route, direction = req.direction;
 
 	simplified_stops.query()
-		.where('route_id = ? AND direction_id = ?', [route.route_id, direction.direction_id])
+		.where('agency_id = ? AND route_id = ? AND direction_id = ?', [req.agency.id, route.route_id, direction.direction_id])
 		.orders('stop_sequence')
 		.done(function(stops) {
 			stops.forEach(function(stop) {
@@ -19,7 +19,7 @@ ctrl.action('to', function(req, res, callback) {
 	var route = req.route, direction = req.direction, from = req.from_stop;
 
 	simplified_stops.query()
-		.where('route_id = ? AND direction_id = ? AND stop_sequence > ?', [route.route_id, direction.direction_id, from.stop_sequence])
+		.where('agency_id = ? AND route_id = ? AND direction_id = ? AND stop_sequence > ?', [req.agency.id, route.route_id, direction.direction_id, from.stop_sequence])
 		.orders('stop_sequence')
 		.done(function(stops) {
 			stops.forEach(function(stop) {

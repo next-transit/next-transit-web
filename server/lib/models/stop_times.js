@@ -6,7 +6,7 @@ var SERVICE_IDS_BUS = ['7', '1', '1', '1', '1', '1', '5'],
 	SERVICE_IDS_RAIL = ['S3', 'S1', 'S1', 'S1', 'S1', 'S1', 'S2'],
 	TIME_FORMAT = 'HH24:MI:SS';
 
-stop_times.get_by_time = function(is_rail, route_id, direction_id, from_id, offset, success, error) {
+stop_times.get_by_time = function(agency_id, is_rail, route_id, direction_id, from_id, offset, success, error) {
 	var now = date().add({ minutes:-5 }),
 		service = is_rail ? SERVICE_IDS_RAIL : SERVICE_IDS_BUS,
 		service_id = service[now.getDay()],
@@ -33,8 +33,8 @@ stop_times.get_by_time = function(is_rail, route_id, direction_id, from_id, offs
 		.select('distinct stop_times.*, t.block_id, tv.stop_count, tv.first_stop_sequence, tv.last_stop_sequence')
 		.join('join trips t ON stop_times.trip_id = t.trip_id')
 		.join('left outer join trip_variants tv ON t.trip_variant_id = tv.id')
-		.where('t.route_id = ? AND stop_id = ? AND t.direction_id = ? AND service_id = ? AND departure_time ' + compare_dir + ' ?')
-		.params([route_id, from_id, direction_id, service_id, compare_time])
+		.where('stop_times.agency_id = ? AND t.route_id = ? AND stop_id = ? AND t.direction_id = ? AND service_id = ? AND departure_time ' + compare_dir + ' ?')
+		.params([agency_id, route_id, from_id, direction_id, service_id, compare_time])
 		.orders('departure_time ' + sort_dir)
 		.limit(5)
 		.offset(Math.abs(offset))

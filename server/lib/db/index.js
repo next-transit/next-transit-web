@@ -18,7 +18,7 @@ function query(query, params, success, error) {
 				if(typeof error === 'function') {
 					error(err);
 				}
-				return console.error('Error running query', err);
+				return console.error('Error running query', query, '\n', err);
 			}
 			if(typeof success === 'function') {
 				success(result);

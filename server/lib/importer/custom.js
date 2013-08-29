@@ -9,8 +9,7 @@ var fs = require('fs'),
 	simplified_stops = require('../models/simplified_stops'),
 	trip_variants = require('../models/trip_variants'),
 	stats = require('../models/stats'),
-	gtfs_path = __dirname + '/../../../assets/gtfs',
-	stage_path = gtfs_path + '/stage';
+	options;
 
 function write_data(data, write_path, columns, custom_timer) {
 	return new promise(function(resolve, reject) {
@@ -22,6 +21,7 @@ function write_data(data, write_path, columns, custom_timer) {
 			.to(write_stream, { delimiter:'\t', columns:columns })
 			.transform(function(record, idx) {
 				record.created_at = record.updated_at = date_str;
+				record.agency_id = options.agency.id;
 				return record;
 			})
 			.on('end', function() {
@@ -39,8 +39,8 @@ function write_data(data, write_path, columns, custom_timer) {
 function import_custom(title, process, file_name, columns) {
 	return new promise(function(resolve, reject) {
 		var custom_timer = timer('\n' + title, true),
-			write_path = stage_path + '/' + file_name + '.txt',
-			extended_columns = (columns || []).concat(['created_at', 'updated_at']);
+			write_path = options.stage_path + '/' + file_name + '.txt',
+			extended_columns = (columns || []).concat(['created_at', 'updated_at', 'agency_id']);
 
 		process(file_name, extended_columns, write_path, custom_timer).then(resolve, reject);
 	});
@@ -48,10 +48,10 @@ function import_custom(title, process, file_name, columns) {
 
 function import_route_extras(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
-		directions.generate_directions().then(function(new_directions) {
+		directions.generate_directions(options.agency.id).then(function(new_directions) {
 			custom_timer.interval('Time spent reading source file', true).start();
 			write_data(new_directions, write_path, columns, custom_timer).then(function(count) {
-				directions.import(columns, write_path, resolve, reject);
+				directions.import(options.agency.id, columns, write_path, resolve, reject);
 			}, reject);
 		}, reject);
 	});
@@ -59,19 +59,22 @@ function import_route_extras(file_name, columns, write_path, custom_timer) {
 
 function import_route_shapes(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
-		shapes.update('route_id = ?', ['']).error(reject).commit(function() {
-			custom_timer.interval('Time spent reading source file', true).start();
-			shapes.assign_route_shapes().then(resolve, reject);
-		});
+		shapes.update('route_id = ?', [''])
+			.error(reject)
+			.where('agency_id = ?', [options.agency.id])
+			.commit(function() {
+				custom_timer.interval('Time spent flushing old values', true).start();
+				shapes.assign_route_shapes(options.agency.id, options.verbose).then(resolve, reject);
+			});
 	});
 }
 
 function import_simplified_stops(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
-		simplified_stops.generate_stops().then(function(new_simplified_stops) {
+		simplified_stops.generate_stops(options.agency.id).then(function(new_simplified_stops) {
 			custom_timer.interval('Time spent reading source file', true).start();
 			write_data(new_simplified_stops, write_path, columns, custom_timer).then(function(count) {
-				simplified_stops.import(columns, write_path, resolve, reject);
+				simplified_stops.import(options.agency.id, columns, write_path, resolve, reject);
 			}, reject);
 		}, reject);
 	});
@@ -79,10 +82,10 @@ function import_simplified_stops(file_name, columns, write_path, custom_timer) {
 
 function import_trip_variants(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
-		trip_variants.generate_variants().then(function(new_trip_variants) {
+		trip_variants.generate_variants(options.agency.id).then(function(new_trip_variants) {
 			custom_timer.interval('Time spent reading source file', true).start();
 			write_data(new_trip_variants, write_path, columns, custom_timer).then(function(count) {
-				trip_variants.import(columns, write_path, resolve, reject);
+				trip_variants.import(options.agency.id, columns, write_path, resolve, reject);
 			}, reject);
 		}, reject);
 	});
@@ -97,6 +100,7 @@ function generate_stats() {
 					var model = require('../models/' + model_name);
 					model.query()
 						.error(reject)
+						.where('agency_id = ?', [options.agency.id])
 						.count(function(count) {
 							if(count) {
 								resolve({ model_name:model_name, count:count });
@@ -126,20 +130,27 @@ function generate_stats() {
 	});
 }
 
-module.exports = {
-	import_route_extras: function(file_name, columns) {
-		return import_custom('Generating Route Directions', import_route_extras, file_name, columns);
-	},
-	import_route_shapes: function(file_name, columns) {
-		return import_custom('Generating Route Shapes', import_route_shapes, file_name, columns);
-	},
-	import_simplified_stops: function(file_name, columns) {
-		return import_custom('Generating Simplified Shapes', import_simplified_stops, file_name, columns);
-	},
-	import_trip_variants: function(file_name, columns) {
-		return import_custom('Generating Trip Variants', import_trip_variants, file_name, columns);
-	},
-	generate_stats: function(file_name, columns) {
-		return import_custom('Generating Import Stats', generate_stats, file_name, columns);
-	}
+function custom_importer(opts) {
+	options = opts;
+	return {
+		import_route_extras: function(file_name, columns) {
+			return import_custom('Generating Route Directions', import_route_extras, file_name, columns);
+		},
+		import_route_shapes: function(file_name, columns) {
+			return import_custom('Generating Route Shapes', import_route_shapes, file_name, columns);
+		},
+		import_simplified_stops: function(file_name, columns) {
+			return import_custom('Generating Simplified Stops', import_simplified_stops, file_name, columns);
+		},
+		import_trip_variants: function(file_name, columns) {
+			return import_custom('Generating Trip Variants', import_trip_variants, file_name, columns);
+		},
+		generate_stats: function(file_name, columns) {
+			return import_custom('Generating Import Stats', generate_stats, file_name, columns);
+		}
+	};
+}
+
+module.exports = function(options) {
+	return custom_importer(options);
 };

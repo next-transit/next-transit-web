@@ -2,7 +2,10 @@ var promise = require('promise'),
 	date_utils = require('date-utils'),
 	sequential = require('./lib/importer/sequential')(),
 	timer = require('./lib/importer/timer'),
+	importer = require('./lib/importer/importer'),
 	custom = require('./lib/importer/custom'),
+	config = require('./lib/util/config'),
+	agencies = require('./lib/models/agencies'),
 	columns = {
 		shapes: ['shape_id', 'shape_pt_lat', 'shape_pt_lon', 'shape_pt_sequence'],
 		stops: ['stop_id', 'stop_name', 'stop_lat', 'stop_lon', 'location_type', 'parent_station', 'zone_id'],
@@ -15,6 +18,7 @@ var promise = require('promise'),
 	},
 	mode = 'all',
 	type = 'all',
+	agency_arg,
 	verbose = false;
 
 process.on('uncaughtException', function(err) {
@@ -24,46 +28,65 @@ process.on('uncaughtException', function(err) {
 
 process.argv.forEach(function(arg) {
 	var parts = arg.split(':');
-	if(parts[0] === 'type') {
+	if(parts[0] === 'agency') {
+		agency_arg = parts[1];
+	} else if(parts[0] === 'type') {
 		type = parts[1] || 'all';
-	} else if(parts[1] === '-v') {
+	} else if(parts[0] === '-v') {
 		verbose = true;
 	}
 });
 
-var importer = require('./lib/importer/importer')({ mode:mode, verbose:verbose }),
-	total_timer = timer();
-
-function add_type(import_type, file_name, custom_type) {
-	return function(next, error) {
-		if(type === 'all' || type === file_name) {
-			if(custom_type) {
-				custom[custom_type](file_name, columns[file_name]).then(next, error);
-			} else {
-				importer.import_type(import_type, file_name, columns[file_name]).then(next, error);	
-			}
-		} else {
-			next();
-		}
-	};
+if(!agency_arg) {
+	console.log('No Agency argument provided.');
+	process.exit(1);
+	return;
 }
 
-sequential
-	.add(add_type('Shapes', 'shapes'))
-	.add(add_type('Stops', 'stops'))
-	.add(add_type('Trips', 'trips'))
-	.add(add_type('Stop Times', 'stop_times'))
-	.add(add_type('Routes', 'routes'))
-	.add(add_type('Route Directions', 'directions', 'import_route_extras'))
-	.add(add_type('Route Shapes', 'route_shapes', 'import_route_shapes'))
-	.add(add_type('Simplified Stops', 'simplified_stops', 'import_simplified_stops'))
-	.add(add_type('Trip Variants', 'trip_variants', 'import_trip_variants'))
-	.add(add_type('Stats', 'stats', 'generate_stats'))
-	.then(function() {
-		total_timer.interval('\nImport complete! Total time:', true, true, '!');
-		process.exit(0);
-	}, function(err) {
-		console.log('Import failed');
-		console.log(err.stack);
+agencies.where('slug = ?', [agency_arg]).first(function(agency) {
+	if(agency) {
+		var gtfs_path = __dirname + '/../assets/gtfs/' + agency.slug,
+			stage_path = gtfs_path + '/stage',
+			importer_options = { agency:agency, verbose:verbose, gtfs_path:gtfs_path, stage_path:stage_path },
+			gtfs_importer = importer(importer_options),
+			custom_importer = custom(importer_options),
+			total_timer = timer();
+
+		function add_type(import_type, file_name, custom_type) {
+			return function(next, error) {
+				if(type === 'all' || type === file_name) {
+					if(custom_type) {
+						custom_importer[custom_type](file_name, columns[file_name]).then(next, error);
+					} else {
+						gtfs_importer.import_type(import_type, file_name, columns[file_name]).then(next, error);	
+					}
+				} else {
+					next();
+				}
+			};
+		}
+
+		sequential
+			.add(add_type('Shapes', 'shapes'))
+			.add(add_type('Stops', 'stops'))
+			.add(add_type('Trips', 'trips'))
+			.add(add_type('Stop Times', 'stop_times'))
+			.add(add_type('Routes', 'routes'))
+			.add(add_type('Route Directions', 'directions', 'import_route_extras'))
+			.add(add_type('Route Shapes', 'route_shapes', 'import_route_shapes'))
+			.add(add_type('Simplified Stops', 'simplified_stops', 'import_simplified_stops'))
+			.add(add_type('Trip Variants', 'trip_variants', 'import_trip_variants'))
+			.add(add_type('Stats', 'stats', 'generate_stats'))
+			.then(function() {
+				total_timer.interval('\nImport complete! Total time:', true, true, '!');
+				process.exit(0);
+			}, function(err) {
+				console.log('Import failed');
+				console.log(err.stack);
+				process.exit(1);
+			});
+	} else {
+		console.log('Agency was not found.');
 		process.exit(1);
-	});
+	}
+});

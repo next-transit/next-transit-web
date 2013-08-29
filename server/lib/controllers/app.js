@@ -1,5 +1,6 @@
 var package = require(__dirname + '/../../../package.json'),
 	config = require('../util/config'),
+	agencies = require('../models/agencies'),
 	route_types = require('../models/route_types'),
 	routes = require('../models/routes'),
 	directions = require('../models/directions'),
@@ -103,9 +104,22 @@ function getRouteType(req, success, not_found) {
 	}
 }
 
+function getAgency(req, success, not_found) {
+	agencies.where('slug = ?', [config.agency]).first(function(agency) {
+		if(agency) {
+			req.agency = agency;
+			getRouteType(req, success, not_found);
+		} else {
+			console.error('Could not find agency', config.agency);
+			not_found();
+		}
+	}, not_found);
+}
+
 function before(req, res, next) {
 	req.locals = {
 		app_version: package.version,
+		agency: config.agency || {},
 		last_path: req.session.last_path,
 		last_trip: req.session.last_trip,
 		show_footer: req.originalUrl !== '/'
@@ -127,7 +141,7 @@ function before(req, res, next) {
 		req.locals.layout = 'layout_debug';
 	}
 
-	getRouteType(req, next, function() {
+	getAgency(req, next, function() {
 		res.send('404');
 	});
 }

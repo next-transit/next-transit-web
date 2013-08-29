@@ -16,7 +16,8 @@ ctrl.action('index', function(req, res, callback) {
 
 	var offset_prev = offset - 5,
 		offset_next = offset + 5;
-	display_trips.get_by_time(req.route.is_rail, req.route.route_id, req.direction_id, req.from_stop.stop_id, offset, req.to_stop, function(trips) {
+		
+	display_trips.get_by_time(req.agency.id, req.route.is_rail, req.route.route_id, req.direction_id, req.from_stop.stop_id, offset, req.to_stop, function(trips) {
 		callback(view, {
 			title:route.route_short_name + ' - ' + direction.direction_name, 
 			trips:trips, 

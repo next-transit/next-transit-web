@@ -5,7 +5,7 @@ var http = require('http'),
 
 function get_trip_by_block_id(block_id, callback) {
 	block_id = parseInt(block_id, 10);
-	trips.where('block_id = ?', [block_id]).first(function(trip) {
+	trips.where('agency_id = ? AND block_id = ?', [req.agency.id, block_id]).first(function(trip) {
 		if(typeof callback === 'function') {
 			callback(trip);
 		}

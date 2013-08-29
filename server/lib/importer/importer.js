@@ -1,17 +1,17 @@
 var fs = require('fs'),
 	promise = require('promise'),
 	csv = require('csv'),
+	trim = require('trim'),
 	date_utils = require('date-utils'),
 	timer = require('./timer'),
 	transforms = require('./transforms'),
 	sequential = require('./sequential'),
 	config = require('../util/config'),
-	gtfs_path = __dirname + '/../../../assets/gtfs/' + config.agency_name,
-	stage_path = gtfs_path + '/stage',
-	batch_size = 100000;
+	batch_size = 100000,
+	options;
 
 function copy_to_database(file_name, model, columns, success, error) {
-	model.import(columns, file_name, function() {
+	model.import(options.agency.id, columns, file_name, function() {
 		if(typeof success === 'function') {
 			success();
 		}
@@ -31,13 +31,17 @@ function import_path(type, read_path, write_stream, model, columns) {
 					console.log('Processed ' + idx + ' so far ...');
 				}
 				record.created_at = record.updated_at = date_str;
+				record.agency_id = options.agency.id;
 				transform(record);
 				return record;
 			})
 			.on('end', function() {
 				resolve();
 			})
-			.on('error', reject);
+			.on('error', function(err) {
+				console.error('Error reading source file', err);
+				reject();
+			});
 	});
 }
 
@@ -61,9 +65,11 @@ function add_path_sequence(first, path, file_name, write_path, model, columns) {
 	};
 }
 
-function importer(options) {
+function importer(opts) {
+	options = opts;
+
 	var self = {},		
-		paths = config.import_paths;
+		paths = (options.agency.import_paths || '/').split(',');
 
 	self.import_type = function import_type(title, file_name, columns) {
 		return new promise(function(resolve, reject) {
@@ -71,19 +77,20 @@ function importer(options) {
 				total_timer = timer('\nImporting ' + title, true),
 				read_timer = timer(),
 				write_timer = timer(),
-				extended_columns = columns.concat(['created_at', 'updated_at']);
+				extended_columns = columns.concat(['created_at', 'updated_at', 'agency_id']);
 
 			total_timer.start();
 
 			var sequencer = sequential(),
 				read_path = '',
-				write_path = gtfs_path + '/stage/' + file_name + '.txt',
+				write_path = options.gtfs_path + '/stage/' + file_name + '.txt',
 				first = true;
 
 			read_timer.start();
 
 			paths.forEach(function(path) {
-				sequencer.add(add_path_sequence(first, gtfs_path + path, file_name, write_path, model, extended_columns));
+				path = options.gtfs_path + trim(path);
+				sequencer.add(add_path_sequence(first, path, file_name, write_path, model, extended_columns));
 				first = false;
 			});
 

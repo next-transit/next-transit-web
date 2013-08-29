@@ -76,9 +76,9 @@ function get_directions_from_route(route) {
 	});
 }
 
-directions.generate_directions = function() {
+directions.generate_directions = function(agency_id) {
 	return new promise(function(resolve, reject) {
-		routes.all(function(rts) {
+		routes.where('agency_id = ?', [agency_id]).done(function(rts) {
 			var promises = [];
 			rts.forEach(function(route) {
 				promises.push(get_directions_from_route(route));

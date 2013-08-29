@@ -28,10 +28,10 @@ function DisplayTrip(stop_time) {
 	this.coverage.full = !this.coverage.left && !this.coverage.right;
 }
 
-function addToStopTime(now, trip, to_stop) {
+function addToStopTime(agency_id, now, trip, to_stop) {
 	return new promise(function(resolve, reject) {
 		if(to_stop) {
-			stop_times.query().where('trip_id = ? AND stop_id = ?', [trip.trip_id, to_stop.stop_id]).first(function(to_stop_time) {
+			stop_times.query().where('agency_id = ? AND trip_id = ? AND stop_id = ?', [agency_id, trip.trip_id, to_stop.stop_id]).first(function(to_stop_time) {
 				if(to_stop_time) {
 					trip.arrival_stop_time = to_stop_time;
 					trip.arrival_time_formatted = now.dateFromTime(to_stop_time.departure_time).toFormat(time_format);
@@ -44,7 +44,7 @@ function addToStopTime(now, trip, to_stop) {
 	});
 }
 
-function convert(now, stop_time, to_stop) {
+function convert(agency_id, now, stop_time, to_stop) {
 	var trip = new DisplayTrip(stop_time),
 		departure_datetime = now.dateFromTime(stop_time.departure_time),
 		diff = departure_datetime - now._dt;
@@ -56,12 +56,12 @@ function convert(now, stop_time, to_stop) {
 	return addToStopTime(now, trip, to_stop);
 }
 
-function convert_list(stop_times, to_stop, callback) {
+function convert_list(agency_id, stop_times, to_stop, callback) {
 	var now = date(), 
 		promises = [];
 
 	stop_times.forEach(function(stop_time) {
-		promises.push(convert(now, stop_time, to_stop));
+		promises.push(convert(agency_id, now, stop_time, to_stop));
 	});
 
 	promise.all(promises).done(function(trips) {
@@ -71,9 +71,10 @@ function convert_list(stop_times, to_stop, callback) {
 
 var trips = {};
 
-trips.get_by_time = function(is_rail, route_id, direction_id, from_id, offset, to_stop, success, error) {
-	stop_times.get_by_time(is_rail, route_id, direction_id, from_id, offset, function(times) {
-		convert_list(times, to_stop, function(trips) {
+trips.get_by_time = function(agency_id, is_rail, route_id, direction_id, from_id, offset, to_stop, success, error) {
+		console.log('agency_id', agency_id)
+	stop_times.get_by_time(agency_id, is_rail, route_id, direction_id, from_id, offset, function(times) {
+		convert_list(agency_id, times, to_stop, function(trips) {
 			success(trips);
 		});
 	}, error);

@@ -289,13 +289,13 @@ Model.prototype.insert = function(data, success, error) {
 	});
 };
 
-Model.prototype.truncate = function(success, error) {
-	execute_query('TRUNCATE TABLE ' + this.table + ';', null, success, error);
+Model.prototype.truncate = function(agency_id, success, error) {
+	execute_query('DELETE FROM ' + this.table + ' WHERE agency_id = $1;', [agency_id], success, error);
 };
 
-Model.prototype.import = function(columns, file_path, success, error) {
+Model.prototype.import = function(agency_id, columns, file_path, success, error) {
 	var self = this;
-	self.truncate(function() {
+	self.truncate(agency_id, function() {
 		var sql = 'COPY ' + self.table + ' (' + columns.join(', ') + ') FROM \'' + file_path + '\';';
 		execute_query(sql, null, success, error);
 	}, error);

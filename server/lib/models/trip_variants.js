@@ -29,11 +29,11 @@ function get_variant_name(trip, stop_info) {
 	});
 }
 
-function get_stop_count(trip) {
+function get_stop_count(agency_id, trip) {
 	return new promise(function(resolve, reject) {
 		simplified_stops.query()
 			.select('count(*) as stop_count')
-			.where('route_id = ? AND direction_id = ?', [trip.route_id, trip.direction_id])
+			.where('agency_id = ? AND route_id = ? AND direction_id = ?', [agency_id, trip.route_id, trip.direction_id])
 			.error(reject)
 			.first(function(result) {
 				resolve(parseInt(result.stop_count, 0) || 0);
@@ -41,18 +41,18 @@ function get_stop_count(trip) {
 	});
 }
 
-function get_trip_variant(trip) {
+function get_trip_variant(agency_id, trip) {
 	return new promise(function(resolve, reject) {
 		stop_times.query()
 			.select('MIN(stop_sequence) as min_sequence, MAX(stop_sequence) as max_sequence')
-			.where('trip_id = ?', [trip.trip_id])
+			.where('agency_id = ? AND trip_id = ?', [agency_id, trip.trip_id])
 			.group_by('trip_id')
 			.error(reject)
 			.first(function(stop_info) {
 				if(stop_info) {
 					get_variant_name(trip, stop_info).then(function (variant_name) {
 						if(variant_name) {
-							get_stop_count(trip).then(function(stop_count) {
+							get_stop_count(agency_id, trip).then(function(stop_count) {
 								var variant = {
 									route_id: trip.route_id,
 									direction_id: trip.direction_id,
@@ -75,13 +75,13 @@ function get_trip_variant(trip) {
 	});
 }
 
-trip_variants.generate_variants = function() {
+trip_variants.generate_variants = function(agency_id) {
 	return new promise(function(resolve, reject) {
 		variant_count_lookup = {};
-		trips.all(function(results) {
+		trips.where('agency_id = ?', [agency_id]).done(function(results) {
 			var promises = [];
 			results.forEach(function(trip) {
-				promises.push(get_trip_variant(trip));
+				promises.push(get_trip_variant(agency_id, trip));
 			});
 			promise.all(promises).then(function(variants) {
 				variants = variants.filter(function(variant) { return !!variant; });

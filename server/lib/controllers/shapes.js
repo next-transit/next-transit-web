@@ -5,7 +5,7 @@ var promise = require('promise'),
 
 function get_simplified_shape_by_route_id(route_id) {
 	return new promise(function(resolve, reject) {
-		shapes.where('lower(route_id) = ?', [route_id.toLowerCase()])
+		shapes.where('agency_id = ? AND lower(route_id) = ?', [req.agency.id, route_id.toLowerCase()])
 			.orders('shape_pt_sequence')
 			.done(function(points) {
 				var simplified_shape = [];
@@ -13,7 +13,7 @@ function get_simplified_shape_by_route_id(route_id) {
 					simplified_shape.push([parseFloat(point.shape_pt_lat), parseFloat(point.shape_pt_lon)]);
 				});
 				
-				routes.where('lower(route_id) = ? OR lower(route_short_name) = ?', [route_id.toLowerCase(), route_id.toLowerCase()]).first(function(route) {
+				routes.where('agency_id = ? AND (lower(route_id) = ? OR lower(route_short_name) = ?)', [req.agency.id, route_id.toLowerCase(), route_id.toLowerCase()]).first(function(route) {
 					routes.process(route, function(processed) {
 						processed.points = simplified_shape;
 						resolve(processed);
@@ -65,7 +65,7 @@ ctrl.action('bbox', { json:true }, function(req, res, callback) {
 
 		shapes.query()
 			.select('distinct route_id')
-			.where('shape_pt_lon > ? AND shape_pt_lon < ? AND shape_pt_lat > ? AND shape_pt_lat < ?', [left, right, bottom, top])
+			.where('agency_id = ? AND shape_pt_lon > ? AND shape_pt_lon < ? AND shape_pt_lat > ? AND shape_pt_lat < ?', [req.agency.id, left, right, bottom, top])
 			.done(function(results) {
 				get_shapes_for_routes(results, function(routes) {
 					callback({ routes:routes });

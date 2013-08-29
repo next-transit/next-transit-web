@@ -32,14 +32,14 @@ function stop_results_to_simplified_stops(direction, stop_results) {
 	return stops;
 }
 
-function get_bus_stops_for_direction(direction) {
+function get_bus_stops_for_direction(agency_id, direction) {
 	return new promise(function(resolve, reject) {
 		stops.query()
 			.select('DISTINCT stops.stop_id, stops.stop_name, st.stop_sequence, stops.stop_lat, stops.stop_lon')
 			.join('JOIN stop_times st ON stops.stop_id = st.stop_id')
 			.join('JOIN trips t ON st.trip_id = t.trip_id')
 			.join('JOIN routes r ON r.route_id = ?')
-			.where('t.route_id = ? AND t.direction_id = ?', [direction.route_id, direction.route_id, direction.direction_id])
+			.where('stops.agency_id = ? AND t.route_id = ? AND t.direction_id = ?', [direction.route_id, agency_id, direction.route_id, direction.direction_id])
 			.error(reject)
 			.done(function(stop_results) {
 				resolve(stop_results_to_simplified_stops(direction, stop_results));
@@ -47,14 +47,14 @@ function get_bus_stops_for_direction(direction) {
 	});
 }
 
-function get_rail_stops_for_direction(direction) {
+function get_rail_stops_for_direction(agency_id, direction) {
 	return new promise(function(resolve, reject) {
-		trips.get_longest_trip(direction.route_id, direction.direction_id, function(longest_trip) {
+		trips.get_longest_trip(agency_id, direction.route_id, direction.direction_id, function(longest_trip) {
 			if(longest_trip) {
 				stop_times.query()
 					.select('s.*, stop_times.stop_sequence')
 					.join('JOIN stops s ON stop_times.stop_id = s.stop_id')
-					.where('stop_times.trip_id = ?', [longest_trip.trip_id])
+					.where('s.agency_id = ? AND stop_times.trip_id = ?', [agency_id, longest_trip.trip_id])
 					.orders('stop_times.stop_sequence')
 					.done(function(stop_results) {
 						resolve(stop_results_to_simplified_stops(direction, stop_results));
@@ -66,16 +66,16 @@ function get_rail_stops_for_direction(direction) {
 	});
 }
 
-function generate_bus_stops() {
+function generate_bus_stops(agency_id) {
 	return new promise(function(resolve, reject) {
 		directions.query()
 			.join('JOIN routes ON routes.route_id = route_directions.route_id')
-			.where('routes.route_type <> ?', [2])
+			.where('routes.agency_id = ? AND routes.route_type <> ?', [agency_id, 2])
 			.error(reject)
 			.done(function(direction_results) {
 				var promises = [];
 				direction_results.forEach(function(direction) {
-					promises.push(get_bus_stops_for_direction(direction));
+					promises.push(get_bus_stops_for_direction(agency_id, direction));
 				});
 				promise.all(promises).then(function(stops_arrays) {
 					resolve(merge_stops_arrays(stops_arrays));
@@ -84,16 +84,16 @@ function generate_bus_stops() {
 	});
 }
 
-function generate_rail_stops() {
+function generate_rail_stops(agency_id) {
 	return new promise(function(resolve, reject) {
 		directions.query()
 			.join('JOIN routes ON routes.route_id = route_directions.route_id')
-			.where('routes.route_type = ?', [2])
+			.where('routes.agency_id = ? AND routes.route_type = ?', [agency_id, 2])
 			.error(reject)
 			.done(function(direction_results) {
 				var promises = [];
 				direction_results.forEach(function(direction) {
-					promises.push(get_rail_stops_for_direction(direction));
+					promises.push(get_rail_stops_for_direction(agency_id, direction));
 				});
 				promise.all(promises).then(function(stops_arrays) {
 					resolve(merge_stops_arrays(stops_arrays));
@@ -102,11 +102,11 @@ function generate_rail_stops() {
 	});
 }
 
-simplified_stops.generate_stops = function() {
+simplified_stops.generate_stops = function(agency_id) {
 	return new promise(function(resolve, reject) {
 		promise.all([
-			generate_bus_stops(),
-			generate_rail_stops()
+			generate_bus_stops(agency_id),
+			generate_rail_stops(agency_id)
 		]).then(function(stops_arrays) {
 			resolve(merge_stops_arrays(stops_arrays));
 		}, reject);

@@ -20,7 +20,7 @@ ctrl.action('submit', { json:true }, function(req, res, callback) {
 		mail = {
 			from: 'nextsepta@gmail.com <NEXT|Septa>',
 			to: 'nextsepta@gmail.com',
-			subject: 'Feedback',
+			subject: 'Next-' + req.agency.agency_name + ' Feedback',
 			html: body 
 		};
 

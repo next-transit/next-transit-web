@@ -14,7 +14,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		$('.js-title').text(settings.title ? (settings.title + ' - NEXT|Septa') : 'NEXT|Septa');
 		$back_btn[settings.back ? 'addClass' : 'removeClass']('active');
 		$options_btn[settings.options ? 'addClass' : 'removeClass']('active');
-		$footer[settings.footer ? 'addClass' : 'removeClass']('active');
+		$footer[settings.footer ? 'addClass' : 'removeClass']('active').removeClass('subways buses trolleys trains').addClass(settings.route_type || '');
 		$map[settings.map ? 'addClass' : 'removeClass']('active');
 		$content[settings.map ? 'hide' : 'show']();
 	}

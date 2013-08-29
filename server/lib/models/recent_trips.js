@@ -1,5 +1,5 @@
 function before(req, res, next) {
-	var cookie_settings = { maxAge:31536000 },
+	var cookie_settings = { maxAge:(1000 * 60 * 60 * 24 * 365.4) },
 		recent_trips = req.cookies.recent_trips || [],
 		saved_trips = req.cookies.saved_trips || [],
 		last_trip;

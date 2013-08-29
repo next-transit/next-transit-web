@@ -1,4 +1,4 @@
-var cookie_settings = { maxAge:31536000 };
+var cookie_settings = { maxAge:(1000 * 60 * 60 * 24 * 365.4) };
 
 function save(req, res, callback) {
 	if(req.params.key) {

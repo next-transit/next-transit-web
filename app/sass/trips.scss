@@ -119,10 +119,6 @@
 			}
 		.trip-to {
 			float: right;
-			display: none;
-		}
-		.trips.has-to .trip-to {
-			display: block;
 		}
 			.trip.has-realtime .trip-to .trip-label {
 				margin-right: 1.3em;
@@ -130,11 +126,15 @@
 			.trip-to .icon-map-marker {
 				left: auto;
 				right: 0;
+				margin-top: 0.2em;
 				opacity: 0.2;
 			}
 			.trip.has-vehicle .trip-to .icon-map-marker {
 				opacity: 1.0;
 				cursor: pointer;
+			}
+			.trips.has-to .trip-to .icon-map-marker {
+				margin-top: -0.5em;
 			}
 			.trip-to .trip-stop-footer {
 				right: 0;

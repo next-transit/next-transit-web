@@ -1,6 +1,7 @@
 var promise = require('promise'),
 	date = require('../util/date'),
 	stop_times = require('./stop_times'),
+	machine_format = 'YYYY-MM-DD HH24:MI',
 	time_format = 'H:MI P';
 
 function DisplayTrip(stop_time) {
@@ -45,10 +46,11 @@ function addToStopTime(agency_id, now, trip, to_stop) {
 }
 
 function convert(agency_id, now, stop_time, to_stop) {
-	var trip = new DisplayTrip(stop_time),
+	var trip = new DisplayTrip(stop_time, now),
 		departure_datetime = now.dateFromTime(stop_time.departure_time),
 		diff = departure_datetime - now._dt;
 
+	trip.departure_datetime = departure_datetime.toFormat(machine_format);
 	trip.departure_time_formatted = departure_datetime.toFormat(time_format);
 	trip.from_now = now.time_period(diff);
 	trip.gone = trip.from_now === 'GONE';

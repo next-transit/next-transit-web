@@ -1,5 +1,5 @@
 {{#trips}}
-<li class="simple-nav-item trip{{#if gone}} gone{{/if}}{{#if ../route.has_realtime}} has-realtime{{/if}}" data-block-id="{{block_id}}">
+<li class="simple-nav-item trip{{#if gone}} gone{{/if}}{{#if ../route.has_realtime}} has-realtime{{/if}}" data-block-id="{{block_id}}" data-departure-time="{{departure_datetime}}">
 	<div class="trip-stop trip-from">
 		<i class="icon-time"></i> 
 		<div class="trip-label">
@@ -12,7 +12,7 @@
 			{{arrival_time_formatted}}
 		</div>
 		{{#if ../route.has_realtime}}
-		<i class="icon-map-marker js-trip-vehicle-marker js-nav-link" href=""></i>
+		<i class="icon-map-marker js-trip-vehicle-marker js-nav-link" href="" title="Vehicle location"></i>
 		{{/if}}
 	</div>
 	{{#unless coverage.full}}

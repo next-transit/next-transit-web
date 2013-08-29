@@ -4,9 +4,48 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 		cache = {
 			'0': $('li:first', $list)
 		},
+		time_intervals = [{ l:'week', s:604800 }, { l:'day', s:86400 }, { l:'hr', s:3600 }, { l:'min', s:60 }],
+		stops = [],
 		vehicles = {};
 
 	$list.height($list.outerHeight());
+
+	function get_relative_time(diff) {
+		if(diff < 0) {
+			return '(GONE)';
+		} else if(diff < 60) {
+			return '(< 1m)';
+		} else {
+			var s = '', v = 0;
+			time_intervals.forEach(function(inv, i) {
+				if(diff > inv.s) {
+					v = Math.floor(diff / inv.s);
+					if(s) {
+						s += ' ';
+					}
+					s += v + inv.l[0];
+					diff = diff % inv.s;
+				}
+			});
+			return '(' + s + ')';
+		}
+	}
+
+	function timer() {
+		var now = new Date();
+		$.each(stops, function(i, stop) {
+			var diff = (stop.time - now) / 1000;
+			stop.el.html(get_relative_time(diff));
+			if(diff < 0) {
+				stop.el.parents('.trip').addClass('gone');
+			}
+		});
+		if(stops.length) {
+			setTimeout(function() {
+				timer();
+			}, 15000);
+		}
+	}
 
 	function update_realtime(route_type, route_id) {
 		$('.trip', $list).each(function() {
@@ -79,4 +118,18 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 	if(module.data('route-type') !== 'subways') {
 		get_realtime_data(module.data('route-type'), module.data('route-id'));
 	}
+
+	$('.trip').each(function() {
+		var ts = $(this).attr('data-departure-time'),
+			relText = $('.trip-from-now', this);
+
+		if(ts) {
+			var dt = new Date(Date.parse(ts));
+			if(dt && !$.isNumeric(dt)) {
+				stops.push({ time:dt, el:relText });
+			}
+		}
+	});
+
+	timer();
 }]);

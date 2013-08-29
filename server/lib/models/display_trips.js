@@ -53,7 +53,7 @@ function convert(agency_id, now, stop_time, to_stop) {
 	trip.from_now = now.time_period(diff);
 	trip.gone = trip.from_now === 'GONE';
 
-	return addToStopTime(now, trip, to_stop);
+	return addToStopTime(agency_id, now, trip, to_stop);
 }
 
 function convert_list(agency_id, stop_times, to_stop, callback) {
@@ -72,7 +72,6 @@ function convert_list(agency_id, stop_times, to_stop, callback) {
 var trips = {};
 
 trips.get_by_time = function(agency_id, is_rail, route_id, direction_id, from_id, offset, to_stop, success, error) {
-		console.log('agency_id', agency_id)
 	stop_times.get_by_time(agency_id, is_rail, route_id, direction_id, from_id, offset, function(times) {
 		convert_list(agency_id, times, to_stop, function(trips) {
 			success(trips);

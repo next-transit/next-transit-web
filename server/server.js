@@ -1,3 +1,7 @@
+if(process.env.NODETIME_ACCOUNT_KEY) {
+	require('nodetime').profile({ accountKey:process.env.NODETIME_ACCOUNT_KEY, appName:'next-transit' });
+}
+
 require('date-utils');
 
 var express = require('express'),

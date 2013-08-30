@@ -102,6 +102,13 @@
 			color: darken($default_color, 10%);
 		}
 
+	.content-subtle {
+		opacity: 0.3;
+	}
+	.content-subtle:hover {
+		opacity: 0.6;
+	}
+
 .app-footer {
 	position: fixed;
 	right: 0;

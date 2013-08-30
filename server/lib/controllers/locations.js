@@ -3,16 +3,16 @@ var http = require('http'),
 	ctrl = require('./controller').create('locations'),
 	trips = require('../models/trips');
 
-function get_trip_by_block_id(block_id, callback) {
+function get_trip_by_block_id(agency_id, block_id, callback) {
 	block_id = parseInt(block_id, 10);
-	trips.where('agency_id = ? AND block_id = ?', [req.agency.id, block_id]).first(function(trip) {
+	trips.where('agency_id = ? AND block_id = ?', [agency_id, block_id]).first(function(trip) {
 		if(typeof callback === 'function') {
 			callback(trip);
 		}
 	});
 }
 
-function normalize_buses(res, callback) {
+function normalize_buses(agency_id, res, callback) {
 	var buses = [],
 		res_data,
 		res_buses;
@@ -44,7 +44,7 @@ function normalize_buses(res, callback) {
 	callback(buses);
 }
 
-function normalize_rail(res, callback) {
+function normalize_rail(agency_id, res, callback) {
 	var promises = [],
 		res_data,
 		res_trains;
@@ -59,7 +59,7 @@ function normalize_rail(res, callback) {
 		if(res_data) {
 			res_data.forEach(function(train) {
 				promises.push(new promise(function(resolve, reject) {
-					get_trip_by_block_id(train.trainno, function(trip) {
+					get_trip_by_block_id(agency_id, train.trainno, function(trip) {
 						resolve({
 							mode: 'rail',
 							lat: train.lat,
@@ -96,7 +96,7 @@ ctrl.action('index', { json:true }, function(req, res, callback) {
 		}).on('end', function() {
 			var normalize_fn = req.route.is_rail ? normalize_rail : normalize_buses;
 
-			normalize_fn(data, function(vehicles) {
+			normalize_fn(req.agency.id, data, function(vehicles) {
 				callback({ vehicles:vehicles });
 			});
 		});

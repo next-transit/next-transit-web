@@ -127,7 +127,7 @@ module.exports = function(grunt) {
 
 		pkg.version = version;
 
-		pkgRaw = JSON.stringify(pkg, null, '\t');
+		pkgRaw = JSON.stringify(pkg, null, '  ');
 
 		grunt.file.write(pkgPath, pkgRaw);
 

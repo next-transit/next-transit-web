@@ -68,18 +68,18 @@ function getDirection(req, success, not_found) {
 function getRoute(req, success, not_found) {
 	if(req.params.route_id) {
 		var route_id = req.params.route_id.toLowerCase();
-		routes.where('lower(route_id) = ? OR lower(route_short_name) = ?', [route_id, route_id]).first(function(route) {
-			if(route) {
-				routes.process(route, function(route) {
+		routes.query(req.agency.id)
+			.where('agency_id = ? AND (lower(route_id) = ? OR lower(route_short_name) = ?)', [req.agency.id, route_id, route_id])
+			.first(function(route) {
+				if(route) {
 					req.locals.route_id = req.route_id = route_id;
 					req.locals.route = req.route = route;
 					req.locals.back_path = '/' + req.route_type.slug;
 					getDirection(req, success, not_found);
-				});
-			} else {
-				not_found();
-			}
-		});	
+				} else {
+					not_found();
+				}
+			});	
 	} else {
 		success();
 	}
@@ -87,18 +87,19 @@ function getRoute(req, success, not_found) {
 
 function getRouteType(req, success, not_found) {
 	if(req.params.route_type) {
-		var route_type_param = req.route_type = req.params.route_type.toLowerCase(),
-			route_type = route_types[route_type_param];
+		var route_type_param = req.route_type = req.params.route_type.toLowerCase();
 
-		if(route_type) {
-			req.route_type_id = route_type.id;
-			req.locals.route_type_slug = req.route_type_slug = route_type.slug;
-			req.locals.route_type = req.route_type = route_type;
-			req.locals.back_path = '/';
-			getRoute(req, success, not_found);
-		} else {
-			not_found();
-		}
+		route_types.get_by_slug(req.agency.id, route_type_param, function(route_type) {
+			if(route_type) {
+				req.route_type_id = route_type.route_type_id;
+				req.locals.route_type_slug = req.route_type_slug = route_type.slug;
+				req.locals.route_type = req.route_type = route_type;
+				req.locals.back_path = '/';
+				getRoute(req, success, not_found);
+			} else {
+				not_found();
+			}
+		});
 	} else {
 		success();
 	}

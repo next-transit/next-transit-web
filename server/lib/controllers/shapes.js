@@ -13,12 +13,12 @@ function get_simplified_shape_by_route_id(agency_id, route_id) {
 					simplified_shape.push([parseFloat(point.shape_pt_lat), parseFloat(point.shape_pt_lon)]);
 				});
 				
-				routes.where('agency_id = ? AND (lower(route_id) = ? OR lower(route_short_name) = ?)', [agency_id, route_id.toLowerCase(), route_id.toLowerCase()]).first(function(route) {
-					routes.process(route, function(processed) {
-						processed.points = simplified_shape;
-						resolve(processed);
+				routes.query(agency_id)
+					.where('agency_id = ? AND (lower(route_id) = ? OR lower(route_short_name) = ?)', [agency_id, route_id.toLowerCase(), route_id.toLowerCase()])
+					.first(function(route) {
+						route.points = simplified_shape;
+						resolve(route);
 					});
-				});
 			});
 	});
 }

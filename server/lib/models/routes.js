@@ -1,4 +1,5 @@
-var model = require('./model'),
+var promise = require('promise'),
+	model = require('./model'),
 	routes = model.create('routes'),
 	route_types = require('./route_types');
 
@@ -13,31 +14,43 @@ function pad_left(str, size, char) {
 	return str;
 }
 
-function process_route(route) {
-	if(route) {
-		var route_type = route_types.get_by_id(route.route_type);
+function process_route(agency_id, route) {
+	return new promise(function(resolve, reject) {
+		if(route) {
+			var custom_type_slug = route.route_short_name.toLowerCase();
+			
+			route_types.get_by_route_type_id(agency_id, route.route_type, custom_type_slug, function(route_type, custom_route_type) {
+				route.is_rail = route.route_type === 2;
+				route.has_realtime = route.route_type !== 1;
+				route.route_name = route.is_rail ? route.route_id : route.route_short_name;
+				route.slug = route.is_rail ? route.route_id.toLowerCase() : route.route_short_name.toLowerCase();
+				route.route_type_slug = route_type.slug;
+				route.color = route_type.color;
 
-		route.is_rail = route.route_type === 2;
-		route.has_realtime = route.route_type !== 1;
-		route.route_name = route.is_rail ? route.route_id : route.route_short_name;
-		route.slug = route.is_rail ? route.route_id.toLowerCase() : route.route_short_name.toLowerCase();
-		route.route_type_slug = route_type.slug;
-		route.color = route_type.color;
-		if(route.route_short_name.toLowerCase() in route_types) {
-			route.color = route_types[route.route_short_name.toLowerCase()].color;
+				if(custom_route_type) {
+					route.color = custom_route_type.color;
+				}
+				resolve(route);
+			});
+		} else {
+			resolve(route);
 		}
-		return route;
-	}
+	});
 }
 
-routes.process = function(data, callback) {
+routes.process = function(agency_id, data, callback) {
 	if(data && data.length) {
+		var promises = [];
 		data.forEach(function(route) {
-			process_route(route);
+			promises.push(process_route(agency_id, route));
 		});
-		callback(data);
+		promise.all(promises).then(callback, function(err) {
+			console.log('Error processing routes', err);
+		});
 	} else if(data) {
-		callback(process_route(data));
+		process_route(agency_id, data).then(callback, function(err) {
+			console.log('Error processing routes', err);
+		});
 	}
 };
 

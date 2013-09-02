@@ -150,7 +150,7 @@ Model.prototype.select = function(select, joins, where, params, orders, limit, o
 	execute_query(sql, params, success, error);
 };
 
-Model.prototype.process = function(data, callback) {
+Model.prototype.process = function(agency_id, data, callback) {
 	callback(data);
 };
 
@@ -162,7 +162,7 @@ Model.prototype.where = function(where, params) {
 	return Model.prototype.query.call(this).where(where, params);
 };
 
-Model.prototype.query = function() {
+Model.prototype.query = function(agency_id) {
 	var query = {}, model = this, joins = [], q = {};
 
 	function fn(param) {
@@ -199,7 +199,7 @@ Model.prototype.query = function() {
 				if(no_process) {
 					callback(results);
 				} else {
-					model.process(results, callback);	
+					model.process(agency_id, results, callback);	
 				}
 			} else {
 				callback([]);
@@ -214,7 +214,7 @@ Model.prototype.query = function() {
 				if(no_process) {
 					callback(results[0]);
 				} else {
-					model.process(results[0], callback);	
+					model.process(agency_id, results[0], callback);	
 				}
 			} else {
 				callback();

@@ -11,6 +11,7 @@
 	"get /about": { "action":"content:about" },
 	"get /feedback": { "action":"feedback" },
 	"post /feedback": { "action":"feedback:submit" },
+	"get /stats": { "action":"stats" },
 	"get /:route_type/:route_id/map": { "action":"map:route" },
 	"get /:route_type/:route_id/shape": { "action":"shapes" },
 	"get /:route_type/:route_id/locations": { "action":"locations" },

@@ -1,0 +1,25 @@
+@import "_utils/utils";
+
+.stats {}
+
+	.stat-box {
+		display: inline-block;
+		margin: 0.5em 1em 0.5em 0;
+		padding: 0.8em 1.6em;
+		text-align: center;
+		font-size: 0.9em;
+		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+		border-radius: 4px;
+		box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.4),
+					0 1px 2px rgba(255, 255, 255, 0.1) inset;
+	}
+		.stat-box strong {
+			display: block;
+			margin-bottom: 0.1em;
+			font-size: 1.8em;
+			color: $green;
+		}
+		.stat-box span {
+			text-transform: uppercase;
+			color: #ddd;
+		}

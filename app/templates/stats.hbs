@@ -1,0 +1,28 @@
+<!-- title: {{title}}; -->
+<div class="stats">
+	<h1>Stats</h1>
+	<div class="content-inner content-section">
+		<ul>
+			{{#counts}}
+			<li class="stat-box">
+				<strong>{{formatted_count}}</strong>
+				<span>{{model_name}}</span>
+			</li>
+			{{/counts}}
+		</ul>
+	</div>
+
+	<h2>Previous</h2>
+	<div class="content-inner">
+		<ul>
+			{{#stats}}
+			<li>
+				<p>{{created_at}}</p>
+				{{#each fields}}
+				<span class="btn"><strong>{{count}}</strong> {{label}}</span>
+				{{/each}}
+			</li>
+			{{/stats}}
+		</ul>
+	</div>
+</div>

@@ -117,6 +117,7 @@ function generate_stats() {
 
 		promise.all(promises).then(function(model_counts) {
 			var stats_data = {
+				agency_id: options.agency.id,
 				created_at: new Date().toFormat('YYYY-MM-DD HH24:MI:SS'), 
 				process_seconds: 0
 			};

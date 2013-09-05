@@ -27,17 +27,19 @@ function get_direction_name(route, first_stop, last_stop, direction_id) {
 	return direction_name;
 }
 
-function get_stop_by_direction(first, route, direction_id) {
+function get_stop_by_direction(agency_id, first, route, direction_id) {
 	return new promise(function(resolve, reject) {
 		var sort_dir = first ? '' : ' DESC';
 
 		routes.query()
 			.error(reject)
 			.select('s.stop_id, s.stop_name, st.stop_sequence, s.stop_lat, s.stop_lon')
-			.join('JOIN trips t ON t.route_id = routes.route_id')
-			.join('LEFT OUTER JOIN stop_times st ON t.trip_id = st.trip_id')
-			.join('LEFT OUTER JOIN stops s ON st.stop_id = s.stop_id')
-			.where('routes.route_id = ? AND t.direction_id = ? AND st.id IS NOT NULL AND s.id IS NOT NULL', [route.route_id, direction_id])
+			.join('JOIN trips t ON t.route_id = routes.route_id AND t.agency_id = ?')
+			.join('LEFT OUTER JOIN stop_times st ON t.trip_id = st.trip_id AND st.agency_id = ?')
+			.join('LEFT OUTER JOIN stops s ON st.stop_id = s.stop_id AND s.agency_id = ?')
+			.where('routes.agency_id = ? AND routes.route_id = ? AND t.direction_id = ? AND st.id IS NOT NULL AND s.id IS NOT NULL', [
+				agency_id, agency_id, agency_id, agency_id, route.route_id, direction_id
+			])
 			.orders('st.stop_sequence' + sort_dir)
 			.first(function(stop) {
 				resolve(stop);
@@ -45,11 +47,11 @@ function get_stop_by_direction(first, route, direction_id) {
 	});
 }
 
-function get_route_direction(route, direction_id) {
+function get_route_direction(agency_id, route, direction_id) {
 	return new promise(function (resolve, reject) {
 		promise.all([
-			get_stop_by_direction(true, route, direction_id),
-			get_stop_by_direction(false, route, direction_id)
+			get_stop_by_direction(agency_id, true, route, direction_id),
+			get_stop_by_direction(agency_id, false, route, direction_id)
 		]).then(function(stops) {
 			var direction_name = get_direction_name(route, stops[0], stops[1], direction_id),
 				direction_long_name = stops[1] ? stops[1].stop_name : null;
@@ -65,11 +67,11 @@ function get_route_direction(route, direction_id) {
 	});
 }
 
-function get_directions_from_route(route) {
+function get_directions_from_route(agency_id, route) {
 	return new promise(function(resolve, reject) {
 		promise.all([
-			get_route_direction(route, 0),
-			get_route_direction(route, 1)
+			get_route_direction(agency_id, route, 0),
+			get_route_direction(agency_id, route, 1)
 		]).then(function(first, second) {
 			resolve(first, second);
 		}, reject);
@@ -85,7 +87,7 @@ directions.generate_directions = function(agency_id) {
 			.done(function(rts) {
 				var promises = [];
 				rts.forEach(function(route) {
-					promises.push(get_directions_from_route(route));
+					promises.push(get_directions_from_route(agency_id, route));
 				});
 				promise.all(promises).then(function(results) {
 					var new_directions = [];

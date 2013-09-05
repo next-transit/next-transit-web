@@ -31,10 +31,10 @@ stop_times.get_by_time = function(agency_id, is_rail, route_id, direction_id, fr
 
 	stop_times.query()
 		.select('distinct stop_times.*, t.block_id, tv.stop_count, tv.first_stop_sequence, tv.last_stop_sequence')
-		.join('join trips t ON stop_times.trip_id = t.trip_id')
+		.join('join trips t ON stop_times.trip_id = t.trip_id AND t.agency_id = ?')
 		.join('left outer join trip_variants tv ON t.trip_variant_id = tv.id')
 		.where('stop_times.agency_id = ? AND t.route_id = ? AND stop_id = ? AND t.direction_id = ? AND service_id = ? AND departure_time ' + compare_dir + ' ?')
-		.params([agency_id, route_id, from_id, direction_id, service_id, compare_time])
+		.params([agency_id, agency_id, route_id, from_id, direction_id, service_id, compare_time])
 		.orders('departure_time ' + sort_dir)
 		.limit(5)
 		.offset(Math.abs(offset))

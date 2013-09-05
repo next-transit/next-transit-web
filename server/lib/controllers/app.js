@@ -120,7 +120,7 @@ function getAgency(req, success, not_found) {
 function before(req, res, next) {
 	req.locals = {
 		app_version: package.version,
-		agency: config.agency || {},
+		agency: {},
 		last_path: req.session.last_path,
 		last_trip: req.session.last_trip,
 		show_footer: req.originalUrl !== '/'

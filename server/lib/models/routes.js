@@ -18,7 +18,7 @@ function process_route(agency_id, route) {
 	return new promise(function(resolve, reject) {
 		if(route) {
 			var custom_type_slug = route.route_short_name.toLowerCase();
-			
+
 			route_types.get_by_route_type_id(agency_id, route.route_type, custom_type_slug, function(route_type, custom_route_type) {
 				route.is_rail = route.route_type === 2;
 				route.has_realtime = route.route_type !== 1;

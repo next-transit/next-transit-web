@@ -78,20 +78,24 @@ function get_directions_from_route(route) {
 
 directions.generate_directions = function(agency_id) {
 	return new promise(function(resolve, reject) {
-		routes.where('agency_id = ?', [agency_id]).done(function(rts) {
-			var promises = [];
-			rts.forEach(function(route) {
-				promises.push(get_directions_from_route(route));
-			});
-			promise.all(promises).then(function(results) {
-				var new_directions = [];
-				results.forEach(function(result) {
-					new_directions.push(result[0]);
-					new_directions.push(result[1]);
+		routes
+			.query(agency_id)
+			.where('agency_id = ?', [agency_id])
+			.error(reject)
+			.done(function(rts) {
+				var promises = [];
+				rts.forEach(function(route) {
+					promises.push(get_directions_from_route(route));
 				});
-				resolve(new_directions);
-			}, reject);
-		});
+				promise.all(promises).then(function(results) {
+					var new_directions = [];
+					results.forEach(function(result) {
+						new_directions.push(result[0]);
+						new_directions.push(result[1]);
+					});
+					resolve(new_directions);
+				}, reject);
+			});
 	});
 };
 

@@ -33,13 +33,16 @@ function assign_route_shapes(agency_id, route) {
 shapes.assign_route_shapes = function(agency_id, vrbse) {
 	return new promise(function(resolve, reject) {
 		verbose = vrbse;
-		routes.where('agency_id = ?', [agency_id]).done(function(rts) {
-			var promises = [];
-			rts.forEach(function(route) {
-				promises.push(assign_route_shapes(agency_id, route));
+		routes
+			.query(agency_id)
+			.where('agency_id = ?', [agency_id])
+			.done(function(rts) {
+				var promises = [];
+				rts.forEach(function(route) {
+					promises.push(assign_route_shapes(agency_id, route));
+				});
+				promise.all(promises).then(resolve, reject);
 			});
-			promise.all(promises).then(resolve, reject);
-		});
 	});
 };
 

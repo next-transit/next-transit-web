@@ -124,8 +124,10 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 			relText = $('.trip-from-now', this);
 
 		if(ts) {
-			var dt = new Date(Date.parse(ts));
-			if(dt && !$.isNumeric(dt)) {
+			var date_parts = ts.split(/[- :]/),
+				dt = new Date(date_parts[0], date_parts[1]-1, date_parts[2], date_parts[3], date_parts[4], '00');
+
+			if(dt) {
 				stops.push({ time:dt, el:relText });
 			}
 		}

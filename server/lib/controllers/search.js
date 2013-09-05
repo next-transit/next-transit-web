@@ -15,7 +15,7 @@ ctrl.action('index', function(req, res, callback) {
 				
 				results.forEach(function(route) {
 					route.route_short_name_lower = route.route_short_name.toLowerCase();
-					route.path = '/' + route.route_type_name + '/' + route.slug;
+					route.path = '/' + route.route_type_slug + '/' + route.slug;
 
 					if(route.route_short_name_lower === term || route.route_id.toLowerCase() === term) {
 						exact_match = route;

@@ -1012,7 +1012,7 @@ textarea::-webkit-input-placeholder {
   background-color: #477997;
 }
 
-.home-route-type-bsl a:before {
+.home-route-type-bss a:before {
   background-color: #f58220;
 }
 
@@ -1361,6 +1361,29 @@ textarea::-webkit-input-placeholder {
 
 .patterns > p {
   margin: 1em 0;
+}
+
+.stat-box {
+  display: inline-block;
+  margin: 0.5em 1em 0.5em 0;
+  padding: 0.8em 1.6em;
+  text-align: center;
+  font-size: 0.9em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(255, 255, 255, 0.1) inset;
+}
+
+.stat-box strong {
+  display: block;
+  margin-bottom: 0.1em;
+  font-size: 1.8em;
+  color: #79a65d;
+}
+
+.stat-box span {
+  text-transform: uppercase;
+  color: #ddd;
 }
 
 .stop-time {

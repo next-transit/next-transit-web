@@ -71,6 +71,7 @@
 		width: 100%;
 		padding: 3.2em 0.8em;
 		@include border-box;
+		-webkit-transform: translate3d(0, 0, 0);
 	}
 	.content-panel.current.going-left {
 		right: 0;

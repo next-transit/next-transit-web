@@ -225,10 +225,18 @@ nextsepta.module('nextsepta').service('resize', [function() {
 		_height = $(window).height(),
 		_width = $(window).width(),
 		_is = {
+			mobile: true,
+			tablet: false,
+			desktop: false
+		};
+
+	function reset_is() {
+		_is = {
 			mobile: (_width <= SIZES.mobile.max),
 			tablet: (_width >= SIZES.tablet.min && _width <= SIZES.tablet.max),
 			desktop: (_width >= SIZES.desktop.min)
 		};
+	}
 
 	function is_size(size) {
 		if(size in SIZES) {
@@ -239,7 +247,10 @@ nextsepta.module('nextsepta').service('resize', [function() {
 	$(window).resize(function(evt) {
 		_height = $(window).height();
 		_width = $(window).width();
+		reset_is();
 	});
+	
+	reset_is();
 
 	return {
 		height: function() {

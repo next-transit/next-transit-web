@@ -17,7 +17,7 @@ function get_direction_name(route, first_stop, last_stop, direction_id) {
 			cardinal = delta_x > delta_y ? 'EastWest' : 'NorthSouth';
 
 		direction_id = 0;
-		if((delta_x > delta_y && last_stop.stop_lon > first_stop.stop_lon) ||
+		if((delta_x > delta_y && last_stop.stop_lon < first_stop.stop_lon) ||
 			(delta_y > delta_x && last_stop.stop_lat > first_stop.stop_lat)) {
 			direction_id = 1;
 		}

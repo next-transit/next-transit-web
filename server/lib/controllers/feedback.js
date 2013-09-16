@@ -26,7 +26,7 @@ ctrl.action('submit', { json:true }, function(req, res, callback) {
 
 	smtp.sendMail(mail, function(error, res) {
 		if(error) {
-			console.log(error);
+			console.log(error, 'using (' + config.mail_username + ':' + config.mail_password + ')', req.body);
 			callback({ success:false });
 		} else {
 			callback({ success:true });

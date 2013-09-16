@@ -45,23 +45,27 @@ function get_model_count(agency_id, model_name) {
 function get_stats(agency_id) {
 	return promise(function(resolve, reject) {
 		stats.where('agency_id = ?', [agency_id])
+			//.orders('created_at DESC')
 			.error(reject)
 			.done(function(stats) {
 				var processed = [];
 				stats.forEach(function(stat) {
 					var stat_fields = [];
 					models.forEach(function(model) {
-						stat_fields.push({ label:model.label, count:stat[model.model_name + '_count'] || 0 });
+						stat_fields.push({
+							label: model.label,
+							count: stat[model.model_name + '_count'] || 0,
+							formatted_count: format_count(stat[model.model_name + '_count'] || 0)
+						});
 					});
 					processed.push({
 						created_at: stat.created_at.toFormat('DD MMM, YYYY H:MIP'),
 						process_seconds: stat.process_seconds,
 						fields: stat_fields
 					});
-					// console.log(processed[processed.length-1]);
 				});
 
-				resolve(function(data) {
+				resolve(function resolve_stats(data) {
 					data.stats = processed;
 				});
 			});
@@ -72,14 +76,15 @@ ctrl.action('index', function(req, res, callback) {
 	var data = { title:'Stats', counts:[], models:models },
 		promises = [get_stats(req.agency.id)];
 
-	models.forEach(function(model) {
-		promises.push(get_model_count(req.agency.id, model.model_name));
-	});
+	// models.forEach(function(model) {
+	// 	promises.push(get_model_count(req.agency.id, model.model_name));
+	// });
 
 	promise.all(promises).then(function(results) {
 		results.forEach(function(result) {
 			result(data);
 		});
+		data.current = data.stats.pop();
 		callback(data);
 	}, function(err) {
 		console.log('Error getting model counts', err);

@@ -3,23 +3,25 @@
 	<h1>Stats</h1>
 	<div class="content-inner content-section">
 		<ul>
-			{{#counts}}
+			{{#current}}
+			{{#each fields}}
 			<li class="stat-box">
 				<strong>{{formatted_count}}</strong>
-				<span>{{model_name}}</span>
+				<span>{{label}}</span>
 			</li>
-			{{/counts}}
+			{{/each}}
+			{{/current}}
 		</ul>
 	</div>
 
 	<h2>Previous</h2>
 	<div class="content-inner">
-		<ul>
+		<ul class="stats-list">
 			{{#stats}}
 			<li>
 				<p>{{created_at}}</p>
 				{{#each fields}}
-				<span class="btn"><strong>{{count}}</strong> {{label}}</span>
+				<span class="btn"><strong>{{formatted_count}}</strong> {{label}}</span>
 				{{/each}}
 			</li>
 			{{/stats}}

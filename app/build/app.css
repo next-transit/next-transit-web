@@ -1306,6 +1306,26 @@ textarea::-webkit-input-placeholder {
   opacity: 0.8;
 }
 
+/* Leaflef/Mapbox overrides */
+.leaflet-popup-content {
+  margin: 1px 4px 0;
+  color: #888;
+}
+
+.leaflet-popup-tip-container {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -9px;
+  width: 12px;
+}
+
+.leaflet-popup-tip {
+  margin: -12px 0 0 15px;
+  width: 12px;
+  height: 28px;
+}
+
 .options-section header {
   margin-bottom: 0.5em;
   padding-left: 0.4em;

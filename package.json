@@ -1,7 +1,7 @@
 {
   "name": "next-septa",
   "description": "NEXT-Septa",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "engines": {
     "node": "0.10.x",

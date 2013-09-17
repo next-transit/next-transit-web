@@ -35,14 +35,14 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 		}).addTo(layer_group);
 
 		if(options.message) {
-			var popup = L.popup({
+			marker.popup = L.popup({
 				autoPan: false,
 				closeButton: false,
 				offset: [52, 10]
 			});
-			popup.setLatLng([lat, lng]);
-			popup.setContent('<div class="map-marker-info">' + options.message + '</div>');
-			map_ctrl.map.addLayer(popup);
+			marker.popup.setLatLng([lat, lng]);
+			marker.popup.setContent('<div class="map-marker-info">' + options.message + '</div>');
+			marker.popup.addTo(layer_group);
 		}
 
 		if(options.id) {
@@ -59,6 +59,9 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 	function move_marker(id, lat, lng, center) {
 		if(id in markers) {
 			markers[id].setLatLng([lat, lng]).update();
+			if(markers[id].popup) {
+				markers[id].popup.setLatLng([lat, lng]);
+			}
 			if(center) {
 				map_ctrl.set_center(lat, lng, map_ctrl.map.getZoom());
 			}

@@ -25,13 +25,25 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 			icon: '',
 			title: 'Location',
 			zoom: 17,
-			center: true
+			center: true,
+			message: ''
 		}, options);
 
 		var marker = L.marker([lat, lng], {
 			icon: get_marker_icon(options.icon),
 			title: options.title || 'Marker'
 		}).addTo(layer_group);
+
+		if(options.message) {
+			var popup = L.popup({
+				autoPan: false,
+				closeButton: false,
+				offset: [52, 10]
+			});
+			popup.setLatLng([lat, lng]);
+			popup.setContent('<div class="map-marker-info">' + options.message + '</div>');
+			map_ctrl.map.addLayer(popup);
+		}
 
 		if(options.id) {
 			markers[options.id] = marker;

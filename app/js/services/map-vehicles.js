@@ -26,7 +26,8 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 					icon: icons[vehicle.mode], 
 					title: title, 
 					center: center_on_vehicle,
-					zoom: 16
+					zoom: 16,
+					message: title
 				}).on('click', function() {
 					if(!vehicle_id) {
 						history.push('/' + route_type + '/' + route_id + '/map?vehicle=' + vehicle.vehicle_id);	

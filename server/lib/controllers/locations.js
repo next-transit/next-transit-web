@@ -35,6 +35,7 @@ function normalize_buses(agency_id, res, callback) {
 					offset: bus.Offset,
 					block_id: bus.BlockID,
 					destination: bus.destination,
+					direction: bus.Direction,
 					late: null
 				});
 			});

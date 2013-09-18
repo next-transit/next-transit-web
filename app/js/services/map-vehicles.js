@@ -8,6 +8,12 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 			bus: 'bus-36',
 			rail: 'rail-36'
 		},
+		direction_icons = {
+			NorthBound: 'icon-caret-up',
+			EastBound: 'icon-caret-right',
+			SouthBound: 'icon-caret-down',
+			WestBound: 'icon-caret-left'
+		},
 		$map;
 
 	function add_vehicle_markers(route_type, route_id, vehicle_id, vehicles_to_track) {
@@ -17,9 +23,10 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 			if(vehicle.vehicle_id in vehicles) {
 				map_ctrl.move_marker('vehicle-' + vehicle.vehicle_id, vehicle.lat, vehicle.lng, center_on_vehicle);
 			} else if(!vehicle.route_id || vehicle.route_id.toLowerCase() === route_id) {
-				var title = vehicle.mode === 'rail' ? 
-						(vehicle.late + ' ' + (vehicle.late === 1 ? 'min' : 'mins') + ' late') : 
-						(vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago');
+				var direction_icon = vehicle.direction ? ' <span class="' + direction_icons[vehicle.direction] + '"></span>' : '',
+					title = (vehicle.mode === 'rail' ? 
+								(vehicle.late + ' ' + (vehicle.late === 1 ? 'min' : 'mins') + ' late') : 
+								(vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago')) + direction_icon;
 
 				map_ctrl.add_marker(vehicle.lat, vehicle.lng, {
 					id: 'vehicle-' + vehicle.vehicle_id, 

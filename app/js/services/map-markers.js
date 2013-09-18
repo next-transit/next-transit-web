@@ -30,8 +30,7 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 		}, options);
 
 		var marker = L.marker([lat, lng], {
-			icon: get_marker_icon(options.icon),
-			title: options.title || 'Marker'
+			icon: get_marker_icon(options.icon)
 		}).addTo(layer_group);
 
 		if(options.message) {

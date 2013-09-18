@@ -80,6 +80,7 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 		self.add_marker = markers.add;
 		self.move_marker = markers.move;
 		self.remove_marker = markers.remove;
+		self.clear_markers = markers.clear;
 		self.add_vector = vectors.add;
 		self.clear_vectors = vectors.clear;
 	}

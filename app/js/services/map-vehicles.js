@@ -19,29 +19,27 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 	function add_vehicle_markers(route_type, route_id, vehicle_id, vehicles_to_track) {
 		var center_on_vehicle = vehicles_to_track.length === 1;
 
-		vehicles_to_track.forEach(function(vehicle) {
-			if(vehicle.vehicle_id in vehicles) {
-				map_ctrl.move_marker('vehicle-' + vehicle.vehicle_id, vehicle.lat, vehicle.lng, center_on_vehicle);
-			} else if(!vehicle.route_id || vehicle.route_id.toLowerCase() === route_id) {
-				var direction_icon = vehicle.direction ? ' <span class="' + direction_icons[vehicle.direction] + '"></span>' : '',
-					title = (vehicle.mode === 'rail' ? 
-								(vehicle.late + ' ' + (vehicle.late === 1 ? 'min' : 'mins') + ' late') : 
-								(vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago')) + direction_icon;
+		map_ctrl.clear_markers();
 
-				map_ctrl.add_marker(vehicle.lat, vehicle.lng, {
-					id: 'vehicle-' + vehicle.vehicle_id, 
-					icon: icons[vehicle.mode], 
-					title: title, 
-					center: center_on_vehicle,
-					zoom: 16,
-					message: title
-				}).on('click', function() {
-					if(!vehicle_id) {
-						history.push('/' + route_type + '/' + route_id + '/map?vehicle=' + vehicle.vehicle_id);	
-					}
-				});
-				vehicles[vehicle.vehicle_id] = vehicle;
-			}
+		vehicles_to_track.forEach(function(vehicle) {
+			var direction_icon = vehicle.direction ? ' <span class="' + direction_icons[vehicle.direction] + '"></span>' : '',
+				title = (vehicle.mode === 'rail' ? 
+							(vehicle.late + ' ' + (vehicle.late === 1 ? 'min' : 'mins') + ' late') : 
+							(vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago')) + direction_icon;
+
+			map_ctrl.add_marker(vehicle.lat, vehicle.lng, {
+				id: 'vehicle-' + vehicle.vehicle_id, 
+				icon: icons[vehicle.mode], 
+				title: title, 
+				center: center_on_vehicle,
+				zoom: 16,
+				message: title
+			}).on('click', function() {
+				if(!vehicle_id) {
+					history.push('/' + route_type + '/' + route_id + '/map?vehicle=' + vehicle.vehicle_id);	
+				}
+			});
+			vehicles[vehicle.vehicle_id] = vehicle;
 		});
 
 		function exists(id) {

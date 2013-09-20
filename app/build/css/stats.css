@@ -21,14 +21,17 @@
   color: #ddd;
 }
 
-.stats-list > li {
-  margin-top: 1px solid #000;
+.stats-table {
+  width: 100%;
 }
 
-.stats-list > li:first-child {
-  margin-top: 0;
+.stats-table th {
+  text-align: left;
+  font-size: 1.2em;
+  color: #79a65d;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 }
 
-.stats-list p {
-  margin-bottom: 0.4em;
+.stats-table td {
+  padding-top: 2px;
 }

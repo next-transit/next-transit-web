@@ -1,30 +1,31 @@
 <!-- title: {{title}}; -->
 <div class="stats">
 	<h1>Stats</h1>
-	<div class="content-inner content-section">
-		<ul>
-			{{#current}}
-			{{#each fields}}
-			<li class="stat-box">
-				<strong>{{formatted_count}}</strong>
-				<span>{{label}}</span>
-			</li>
-			{{/each}}
-			{{/current}}
-		</ul>
-	</div>
-
-	<h2>Previous</h2>
 	<div class="content-inner">
-		<ul class="stats-list">
-			{{#stats}}
-			<li>
-				<p>{{created_at}}</p>
-				{{#each fields}}
-				<span class="btn"><strong>{{formatted_count}}</strong> {{label}}</span>
-				{{/each}}
-			</li>
-			{{/stats}}
-		</ul>
+		<table class="stats-table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Routes</th>
+					<th>Directions</th>
+					<th>Stop Times</th>
+					<th>Stops</th>
+					<th>Trips</th>
+					<th>Simplified Stops</th>
+					<th>Trip Variants</th>
+					<th>Shapes</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#stats}}
+				<tr>
+					<td>{{created_at}}</td>
+					{{#each fields}}
+					<td><strong>{{formatted_count}}</strong></td>
+					{{/each}}
+				</tr>
+				{{/stats}}
+			</tbody>
+		</table>
 	</div>
 </div>

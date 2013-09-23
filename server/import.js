@@ -14,6 +14,7 @@ var promise = require('promise'),
 		routes: ['route_id', 'route_short_name', 'route_long_name', 'route_type', 'route_color', 'route_text_color', 'route_url'],
 		directions: ['route_id', 'route_short_name', 'direction_id', 'direction_name', 'direction_long_name'],
 		simplified_stops: ['route_id', 'route_direction_id', 'direction_id', 'stop_id', 'stop_sequence', 'stop_name', 'stop_lat', 'stop_lon'],
+		simplified_shapes: ['route_id', 'segment_id', 'shape_id', 'shape_pt_lat', 'shape_pt_lon'],
 		trip_variants: ['route_id', 'direction_id', 'trip_headsign', 'stop_count', 'variant_name', 'first_stop_sequence', 'last_stop_sequence']
 	},
 	mode = 'all',
@@ -73,7 +74,7 @@ agencies.where('slug = ?', [agency_arg]).first(function(agency) {
 			.add(add_type('Stop Times', 'stop_times'))
 			.add(add_type('Routes', 'routes'))
 			.add(add_type('Route Directions', 'directions', 'import_route_extras'))
-			.add(add_type('Route Shapes', 'route_shapes', 'import_route_shapes'))
+			.add(add_type('Route Shapes', 'simplified_shapes', 'import_route_shapes'))
 			.add(add_type('Simplified Stops', 'simplified_stops', 'import_simplified_stops'))
 			.add(add_type('Trip Variants', 'trip_variants', 'import_trip_variants'))
 			.add(add_type('Stats', 'stats', 'generate_stats'))

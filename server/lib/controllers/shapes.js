@@ -1,25 +1,38 @@
 var promise = require('promise'),
 	ctrl = require('./controller').create('shapes'),
 	routes = require('../models/routes'),
-	shapes = require('../models/shapes');
+	simplified_shapes = require('../models/simplified_shapes');
 
 function get_simplified_shape_by_route_id(agency_id, route_id) {
 	return new promise(function(resolve, reject) {
-		shapes.where('agency_id = ? AND lower(route_id) = ?', [agency_id, route_id.toLowerCase()])
-			.orders('shape_pt_sequence')
-			.done(function(points) {
-				var simplified_shape = [];
-				points.forEach(function(point) {
-					simplified_shape.push([parseFloat(point.shape_pt_lat), parseFloat(point.shape_pt_lon)]);
-				});
-				
-				routes.query(agency_id)
-					.where('agency_id = ? AND (lower(route_id) = ? OR lower(route_short_name) = ?)', [agency_id, route_id.toLowerCase(), route_id.toLowerCase()])
-					.first(function(route) {
-						route.points = simplified_shape;
+		routes.query(agency_id)
+			.where('agency_id = ? AND (lower(route_id) = ? OR lower(route_short_name) = ?)', [agency_id, route_id.toLowerCase(), route_id.toLowerCase()])
+			.first(function(route) {
+				simplified_shapes.where('agency_id = ? AND route_id = ?', [agency_id, route.route_id])
+					.orders('segment_id, id')//shape_pt_sequence')
+					.done(function(points) {
+						var segments = {};
+
+						points.forEach(function(point) {
+							var segment_id = point.segment_id.toString();
+							if(!(segment_id in segments)) {
+								segments[segment_id] = [];
+							}
+							segments[segment_id].push([parseFloat(point.shape_pt_lat), parseFloat(point.shape_pt_lon)]);
+						});
+
+						var shapes = [];
+						for(segment_id in segments) {
+							if(segments.hasOwnProperty(segment_id)) {
+								shapes.push(segments[segment_id]);
+							}
+						}
+
+						route.shapes = shapes;
 						resolve(route);
 					});
 			});
+
 	});
 }
 
@@ -63,7 +76,7 @@ ctrl.action('bbox', { json:true }, function(req, res, callback) {
 			right = parseFloat(bbox[2]),
 			top = parseFloat(bbox[3]);
 
-		shapes.query()
+		simplified_shapes.query()
 			.select('distinct route_id')
 			.where('agency_id = ? AND shape_pt_lon > ? AND shape_pt_lon < ? AND shape_pt_lat > ? AND shape_pt_lat < ?', [req.agency.id, left, right, bottom, top])
 			.done(function(results) {

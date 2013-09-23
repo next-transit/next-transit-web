@@ -48,9 +48,9 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 		map_ctrl.clear_vectors();
 
 		results.forEach(function(result) {
-			if(result.points.length) {
+			if(result.shapes.length) {
 
-				var route_layer = map_ctrl.add_vector(result.points, result.color, 0.45 );
+				var route_layer = map_ctrl.add_vector(result.shapes, result.color, 0.45);
 
 				route_layer.on('click', function(evt) {
 					history.push('/' + result.route_type_slug + '/' + result.slug);

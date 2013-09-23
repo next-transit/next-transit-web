@@ -6,6 +6,7 @@ var fs = require('fs'),
 	routes = require('../models/routes'),
 	directions = require('../models/directions'),
 	shapes = require('../models/shapes'),
+	simplified_shapes = require('../models/simplified_shapes'),
 	simplified_stops = require('../models/simplified_stops'),
 	trip_variants = require('../models/trip_variants'),
 	stats = require('../models/stats'),
@@ -59,13 +60,12 @@ function import_route_extras(file_name, columns, write_path, custom_timer) {
 
 function import_route_shapes(file_name, columns, write_path, custom_timer) {
 	return new promise(function(resolve, reject) {
-		shapes.update('route_id = ?', [''])
-			.error(reject)
-			.where('agency_id = ?', [options.agency.id])
-			.commit(function() {
-				custom_timer.interval('Time spent flushing old values', true).start();
-				shapes.assign_route_shapes(options.agency.id, options.verbose).then(resolve, reject);
-			});
+		simplified_shapes.generate_route_shapes(options.agency.id, options.verbose).then(function(new_shapes) {
+			custom_timer.interval('Time spent reading shapes from trips', true).start();
+			write_data(new_shapes, write_path, columns, custom_timer).then(function(count) {
+				simplified_shapes.import(options.agency.id, columns, write_path, resolve, reject);
+			}, reject);
+		}, reject);
 	});
 }
 
@@ -93,7 +93,7 @@ function import_trip_variants(file_name, columns, write_path, custom_timer) {
 
 function generate_stats() {
 	return new promise(function(resolve, reject) {
-		var models = ['shapes', 'stops', 'routes', 'directions', 'simplified_stops', 'trips', 'trip_variants', 'stop_times'],
+		var models = ['shapes', 'stops', 'routes', 'directions', 'simplified_stops', 'trips', 'trip_variants', 'stop_times', 'simplified_shapes'],
 			promises = [],
 			get_model_count = function get_model_count(model_name) {
 				return promise(function(resolve, reject) {

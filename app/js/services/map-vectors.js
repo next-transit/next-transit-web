@@ -10,16 +10,18 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 		}
 	}
 
-	function add_shape(points, color, opacity) {
-		return L.polyline(points, {
-			color: color || '#a33', 
-			opacity: opacity || 0.65
-		}).addTo(layer_group);
+	function add_shapes(shapes, color, opacity) {
+		shapes.forEach(function(shape) {
+			L.polyline(shape, {
+				color: color || '#a33', 
+				opacity: opacity || 0.65
+			}).addTo(layer_group);
+		});
 	}
 
 	function add_route(route_type, route_id, fit_to_route) {
 		data.get(['', route_type, route_id, 'shape'].join('/'), function(resp) {
-			add_shape(resp.points, resp.color);
+			add_shapes(resp.shapes, resp.color);
 			if(fit_to_route) {
 				fit_to_last();
 			}
@@ -39,7 +41,7 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 	}
 
 	return {
-		add: add_shape,
+		add: add_shapes,
 		add_route: add_route,
 		clear: clear_layers,
 		set_map_ctrl: function(ctrl, $map_elem) {

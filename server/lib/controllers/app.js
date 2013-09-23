@@ -33,7 +33,7 @@ function getFromStop(req, success, not_found) {
 			direction_id = req.direction.direction_id,
 			from_id = req.from_id = req.params.from_id;
 
-		simplified_stops.where('route_id = ? AND stop_id =? AND direction_id = ?', [route_id, from_id, direction_id]).first(function(stop) {
+		simplified_stops.where('route_id = ? AND stop_id = ? AND direction_id = ?', [route_id, from_id, direction_id]).first(function(stop) {
 			if(stop) {
 				req.locals.from_stop = req.from_stop = stop;
 				req.locals.back_path += '/' + req.direction_id;

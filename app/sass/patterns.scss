@@ -2,10 +2,25 @@
 
 .patterns {}
 
-	.patterns-header {
-		color: $green;
+	.patterns-section {
+		@include clearfix;
 	}
+		.patterns-left {
+			float: left;
+			width: 46%;
+		}
+		.patterns-right {
+			float: right;
+			width: 46%;
+		}
 
-	.patterns > p {
-		margin: 1em 0;
-	}
+		.patterns-header {
+			margin: 2.4em 0 1em;
+			color: $green;
+			font-size: 1.2em;
+			text-transform: uppercase;
+		}
+
+		.patterns-section > p, .patterns-left > p, .patterns-right > p {
+			margin: 1em 0;
+		}

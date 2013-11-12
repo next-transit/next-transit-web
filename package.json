@@ -1,7 +1,7 @@
 {
-  "name": "next-septa",
-  "description": "NEXT-Septa",
-  "version": "2.2.0",
+  "name": "next-transit",
+  "description": "NEXT-Transit",
+  "version": "2.2.1",
   "private": true,
   "engines": {
     "node": "0.10.x",

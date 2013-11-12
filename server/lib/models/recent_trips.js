@@ -1,3 +1,14 @@
+function trim_trips(trips, callback) {
+	var serialized = JSON.stringify(trips);
+
+	if(trips.length && serialized.length > 2048) {
+		trips.splice(trips.length-1, 1);
+		return trim_trips(trips);
+	}
+
+	return trips;
+}
+
 function before(req, res, next) {
 	var cookie_settings = { maxAge:(1000 * 60 * 60 * 24 * 365.4) },
 		recent_trips = req.cookies.recent_trips || [],
@@ -39,9 +50,13 @@ function before(req, res, next) {
 		}
 
 		recent_trips.unshift(last_trip);
-	}
 
-	res.cookie('recent_trips', recent_trips, cookie_settings);
+		recent_trips = trim_trips(recent_trips);
+
+		req.session.last_trip = last_trip;
+
+		res.cookie('recent_trips', recent_trips, cookie_settings);
+	}
 
 	var top_trips = [];
 	recent_trips.forEach(function(recent_trip, idx) {
@@ -55,9 +70,6 @@ function before(req, res, next) {
 		}
 	});
 	req.recent_trips = top_trips;
-	if(last_trip) {
-		req.session.last_trip = last_trip;	
-	}
 
 	next();
 };
@@ -74,7 +86,7 @@ function remove(req, res, callback) {
 		});
 
 		if(remove_idx > -1) {
-			trips.splice(remove_idx, 0);
+			trips.splice(remove_idx, 1);
 			res.cookie('recent_trips', trips, cookie_settings);
 		}
 	} else {

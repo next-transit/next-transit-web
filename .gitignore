@@ -1,6 +1,5 @@
 .sass-cache
 .DS_Store
-node_modules
 config/local.json
 assets/gtfs
 backups

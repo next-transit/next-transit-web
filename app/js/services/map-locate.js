@@ -10,69 +10,82 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 		map_ctrl.add_marker(lat, lng);
 	}
 
-	function sort_top_results(results, limit) {
+	function sort_top_results(routes, limit) {
 		var center = map_ctrl.map.getCenter(),
 			center_point = [center.lat, center.lng],
 			route_closest_points = [];
 
-		results.forEach(function(result) {
+		routes.forEach(function(route) {
 			var closest_distance = 9999;
 
-			result.points.forEach(function(point) {
-				var distance = geo_utils.point_distance(center_point, point);
+			route.shapes.forEach(function(shape) {
+				shape.forEach(function(point) {
+					var distance = geo_utils.point_distance(center_point, point);
 
-				if(distance < closest_distance) {
-					closest_distance = distance;
-				}
+					if(distance < closest_distance) {
+						closest_distance = distance;
+					}
+				});
 			});
 
-			route_closest_points.push({ result:result, closest_distance:closest_distance });
+			route_closest_points.push({ route:route, closest_distance:closest_distance });
 		});
 
 		route_closest_points.sort(function(a, b) {
 			return a.closest_distance - b.closest_distance;
 		});
 
-		var limited = [], count = 0;
-		route_closest_points.forEach(function(route) {
-			if(count++ < limit) {
-				limited.push(route.result);
+		var limited = [], lookup = {}, count = 0;
+		route_closest_points.forEach(function(result) {
+			if(count < limit && !lookup[result.route.id]) {
+				limited.push(result.route);
+				lookup[result.route.id] = true;
+				count++;
 			}
 		});
 
 		return limited;
 	}
 
-	function render_routes(results) {
+	function highlight_route_shapes(route, over) {
+		if(route && route.route_layers) {
+			route.route_layers.forEach(function(layer) {
+				layer.setStyle({ opacity:over ? 0.9 : 0.45 });	
+			});
+		}
+	}
+
+	function render_routes(routes) {
 		$results_list.empty();
 		map_ctrl.clear_vectors();
 
-		results.forEach(function(result) {
-			if(result.shapes.length) {
+		routes.forEach(function(route) {
+			var route_layers = map_ctrl.add_vector(route.shapes, route.color, 0.45);
 
-				var route_layer = map_ctrl.add_vector(result.shapes, result.color, 0.45);
-
-				route_layer.on('click', function(evt) {
-					history.push('/' + result.route_type_slug + '/' + result.slug);
-				}).on('mouseover', function() {
-					route_layer.setStyle({ opacity:0.9 });
-				}).on('mouseout', function() {
-					route_layer.setStyle({ opacity:0.45 });
+			if(route_layers) {
+				route_layers.forEach(function(layer) {
+					layer.on('click', function(evt) {
+						history.push('/' + route.route_type_slug + '/' + route.slug);
+					}).on('mouseover', function() {
+						highlight_route_shapes(route, true);
+					}).on('mouseout', function() {
+						highlight_route_shapes(route, false);
+					});
 				});
-				result.route_layer = route_layer;
+				route.route_layers = route_layers;
 			}
 		});
 
-		var sorted_list = sort_top_results(results, 8);
-		sorted_list.forEach(function(result) {
+		var sorted_list = sort_top_results(routes, 8);
+		sorted_list.forEach(function(route) {
 			var $li = $('<li />').appendTo($results_list);
-			$('<a href="/' + result.route_type_slug + '/' + result.slug + '" class="js-nav-link">' + result.route_name + '</a>')
-				.css('backgroundColor', result.color)
+			$('<a href="/' + route.route_type_slug + '/' + route.slug + '" class="js-nav-link">' + route.route_name + '</a>')
+				.css('backgroundColor', route.color)
 				.appendTo($li)
 				.hover(function() {
-					result.route_layer.setStyle({ opacity:0.9 });
+					highlight_route_shapes(route, true);
 				}, function() {
-					result.route_layer.setStyle({ opacity:0.45 });
+					highlight_route_shapes(route, false);
 				});
 		});
 
@@ -93,7 +106,7 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 	}
 
 	function locate() {
-		active = true;
+		// active = true;
 		// render_user_location(39.926312796934674, -75.16697645187378);
 		// return;
 

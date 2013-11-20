@@ -37,7 +37,7 @@ function Controller(name) {
 		return _self;
 	};
 
-	_self.getAction = function(name) {
+	_self.get_action = function(name) {
 		return _actions[name] || _actions.index;
 	};
 

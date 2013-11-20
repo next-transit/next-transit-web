@@ -1,7 +1,7 @@
 var promise = require('promise'),
 	date_utils = require('date-utils'),
 	ctrl = require('./controller').create('stats'),
-	stats = require('../models/stats'),
+	stats = require('../models/stats', { cache:true }),
 	models = [
 		{ label:'Routes', model_name:'routes' },
 		{ label:'Directions', model_name:'directions' },
@@ -23,69 +23,27 @@ function format_count(count) {
 	return complete;
 }
 
-function get_model_count(agency_id, model_name) {
-	return promise(function(resolve, reject) {
-		var model = require('../models/' + model_name);
-		model.query()
-			.error(reject)
-			.where('agency_id = ?', [agency_id])
-			.count(function(count) {
-				count = count || 0;
-				resolve(function(data) {
-					data.counts.push({
-						model_name: model_name.replace('_', ' '), 
-						count: count, 
-						formatted_count: format_count(count)
-					});
-				});
-			});
-	});
-}
-
-function get_stats(agency_id) {
-	return promise(function(resolve, reject) {
-		stats.where('agency_id = ?', [agency_id])
-			.orders('created_at DESC')
-			.error(reject)
-			.done(function(stats) {
-				var processed = [];
-				stats.forEach(function(stat) {
-					var stat_fields = [];
-					models.forEach(function(model) {
-						stat_fields.push({
-							label: model.label,
-							count: stat[model.model_name + '_count'] || 0,
-							formatted_count: format_count(stat[model.model_name + '_count'] || 0)
-						});
-					});
-					processed.push({
-						created_at: stat.created_at.toFormat('D MMM, YYYY'),
-						process_seconds: stat.process_seconds,
-						fields: stat_fields
-					});
-				});
-
-				resolve(function resolve_stats(data) {
-					data.stats = processed;
-				});
-			});
-	});
-}
-
 ctrl.action('index', function(req, res, callback) {
-	var data = { title:'Stats', counts:[], models:models },
-		promises = [get_stats(req.agency.id)];
-
-	promise.all(promises).then(function(results) {
-		results.forEach(function(result) {
-			result(data);
+	stats.api_query('/stats').then(function(data) {
+		var processed = [];
+		data.forEach(function(stat) {
+			var created_at = new Date(Date.parse(stat.created_at)),
+				stat_fields = [];
+			models.forEach(function(model) {
+				stat_fields.push({
+					label: model.label,
+					count: stat[model.model_name + '_count'] || 0,
+					formatted_count: format_count(stat[model.model_name + '_count'] || 0)
+				});
+			});
+			processed.push({
+				created_at: created_at.toFormat('D MMM, YYYY'),
+				process_seconds: stat.process_seconds,
+				fields: stat_fields
+			});
 		});
-		//data.current = data.stats.pop();
-		callback(data);
-	}, function(err) {
-		console.log('Error getting model counts', err);
-		callback(data);
-	});
+		callback({ title:'Status', stats:processed });
+	}, res.internal_error);
 });
 
 module.exports = ctrl;

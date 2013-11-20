@@ -1,1 +1,1 @@
-module.exports = require('./model').create('agencies');
+module.exports = require('./model').create('agencies', { cache:true });

@@ -11,12 +11,14 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 	}
 
 	function add_shapes(shapes, color, opacity) {
+		var layers = [];
 		shapes.forEach(function(shape) {
-			L.polyline(shape, {
+			layers.push(L.polyline(shape, {
 				color: color || '#a33', 
 				opacity: opacity || 0.65
-			}).addTo(layer_group);
+			}).addTo(layer_group));
 		});
+		return layers;
 	}
 
 	function add_route(route_type, route_id, fit_to_route) {

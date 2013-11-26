@@ -49,7 +49,10 @@ function get_data(path, params, options) {
 					}
 					resolve(data_obj.data);
 				});
-			}).on('error', reject);
+			}).on('error', function(err) {
+				console.error(err);
+				reject();
+			});
 		}
 	});
 }

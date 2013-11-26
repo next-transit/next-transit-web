@@ -3,13 +3,9 @@ var http = require('http'),
 	ctrl = require('./controller').create('locations'),
 	trips = require('../models/trips');
 
-function get_trip_by_block_id(agency_id, block_id, callback) {
+function get_trip_by_block_id(agency_id, block_id) {
 	block_id = parseInt(block_id, 10);
-	trips.where('agency_id = ? AND block_id = ?', [agency_id, block_id]).first(function(trip) {
-		if(typeof callback === 'function') {
-			callback(trip);
-		}
-	});
+	return trips.api_query('/trips', { block_id:block_id });
 }
 
 function normalize_buses(agency_id, res, callback) {
@@ -60,7 +56,8 @@ function normalize_rail(agency_id, res, callback) {
 		if(res_data) {
 			res_data.forEach(function(train) {
 				promises.push(new promise(function(resolve, reject) {
-					get_trip_by_block_id(agency_id, train.trainno, function(trip) {
+					get_trip_by_block_id(agency_id, train.trainno).then(function(trips) {
+						var trip = trips[0];
 						resolve({
 							mode: 'rail',
 							lat: train.lat,
@@ -72,7 +69,7 @@ function normalize_rail(agency_id, res, callback) {
 							late: train.late,
 							route_id: (trip ? trip.route_id : '')
 						});
-					});
+					}, reject);
 				}));
 			});
 		}

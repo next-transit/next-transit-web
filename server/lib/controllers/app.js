@@ -113,7 +113,7 @@ function get_agency(req, success, not_found, error) {
 		} else {
 			not_found('Could not find agency.');
 		}
-	}, not_found);
+	}, error);
 }
 
 function before(req, res, next) {

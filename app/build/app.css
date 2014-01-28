@@ -1376,11 +1376,35 @@ textarea::-webkit-input-placeholder {
   font-size: 0.8em;
 }
 
-.patterns-header {
-  color: #79a65d;
+.patterns-section {
+  *zoom: 1;
+}
+.patterns-section:before, .patterns-section:after {
+  display: table;
+  content: "";
+}
+.patterns-section:after {
+  clear: both;
 }
 
-.patterns > p {
+.patterns-left {
+  float: left;
+  width: 46%;
+}
+
+.patterns-right {
+  float: right;
+  width: 46%;
+}
+
+.patterns-header {
+  margin: 2.4em 0 1em;
+  color: #79a65d;
+  font-size: 1.2em;
+  text-transform: uppercase;
+}
+
+.patterns-section > p, .patterns-left > p, .patterns-right > p {
   margin: 1em 0;
 }
 
@@ -1484,6 +1508,7 @@ textarea::-webkit-input-placeholder {
   float: right;
 }
 
+@charset "UTF-8";
 .trips-header {
   *zoom: 1;
   position: relative;

@@ -58,7 +58,7 @@ module.exports = function(grunt) {
 				dest: '<%= dirs.build %>/app.js'
 			},
 			jquery: {
-				src: ['<%= dirs.js_src %>/vendor/jquery-1.9.1.min.js'], dest: '<%= dirs.dest %>/jquery-1.9.1.min.js'
+				src: ['<%= dirs.js_src %>/vendor/jquery-2.0.3.min.js'], dest: '<%= dirs.dest %>/jquery-2.0.3.min.js'
 			}
 		},
 		jshint: {

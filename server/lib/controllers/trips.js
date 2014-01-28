@@ -5,11 +5,16 @@ ctrl.action('index', function(req, res, callback) {
 	var route = req.route, 
 		direction = req.direction, 
 		offset = 0,
+		params = {},
 		view = 'trips';
 
 	if(req.query.offset) {
 		offset = parseInt(req.query.offset, 10) || 0;
 	}
+	if(offset) {
+		params.offset = offset;
+	}
+
 	if(req.query.itemsonly === 'true') {
 		view = 'partials/trip-item';
 	}
@@ -22,7 +27,7 @@ ctrl.action('index', function(req, res, callback) {
 		stop_ids += '...' + req.to_stop.stop_id;
 	}
 
-	display_trips.api_query('/routes/' + req.route_id + '/directions/' + req.direction_id + '/stops/' + stop_ids + '/trips').then(function(trips) {
+	display_trips.api_query('/routes/' + req.route_id + '/directions/' + req.direction_id + '/stops/' + stop_ids + '/trips', params).then(function(trips) {
 		callback(view, {
 			title: route.route_short_name + ' - ' + direction.direction_name, 
 			trips: trips, 

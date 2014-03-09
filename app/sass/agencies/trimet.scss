@@ -1,0 +1,21 @@
+$colors: (
+	buses: 			#7c99a5, 
+	maxblue: 		#12357d,
+	maxgreen:		#0e8c50,
+	maxred:			#d82b3b,
+	maxyellow:		#fec400,
+	maxstreetcl:	#88c430,
+	maxstreetns:	#88c430,
+	wes:			#0d0e0d,
+	tram:			#868b8e
+);
+
+@each $type, $color in $colors {
+	.home-route-type-#{$type} a:before {
+		background-color: $color;
+	}
+
+	.simple-nav strong.#{$type} {
+		background-color: transparentize($color, 0.5);
+	}
+}

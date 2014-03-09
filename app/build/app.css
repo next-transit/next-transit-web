@@ -996,29 +996,24 @@ textarea::-webkit-input-placeholder {
   box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.9);
 }
 
-.home-route-type-buses a:before {
-  background-color: #41525c;
+/*.home-route-type-buses a:before {
+	background-color: $background_buses;
 }
-
 .home-route-type-subways a:before {
-  background-color: #477997;
+	background-color: $background_subways;
 }
-
 .home-route-type-trolleys a:before {
-  background-color: #539442;
+	background-color: $background_trolleys;
 }
-
 .home-route-type-trains a:before {
-  background-color: #477997;
+	background-color: $background_trains;
 }
-
 .home-route-type-bss a:before {
-  background-color: #f58220;
+	background-color: $background_bsl;
 }
-
 .home-route-type-mfl a:before {
-  background-color: #107dc1;
-}
+	background-color: $background_mfl;
+}*/
 
 .app-header {
   *zoom: 1;

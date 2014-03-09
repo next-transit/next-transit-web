@@ -108,7 +108,7 @@ function get_route_type(req, success, not_found, error) {
 function get_agency(req, success, not_found, error) {
 	agencies.get(config.agency).then(function(agency) {
 		if(agency) {
-			req.agency = agency;
+			req.locals.agency = req.agency = agency;
 			get_route_type(req, success, not_found, error);
 		} else {
 			not_found('Could not find agency.');

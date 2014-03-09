@@ -1,0 +1,71 @@
+.home-route-type-buses a:before {
+  background-color: #7c99a5;
+}
+
+.simple-nav strong.buses {
+  background-color: rgba(124, 153, 165, 0.5);
+}
+
+.home-route-type-maxblue a:before {
+  background-color: #12357d;
+}
+
+.simple-nav strong.maxblue {
+  background-color: rgba(18, 53, 125, 0.5);
+}
+
+.home-route-type-maxgreen a:before {
+  background-color: #0e8c50;
+}
+
+.simple-nav strong.maxgreen {
+  background-color: rgba(14, 140, 80, 0.5);
+}
+
+.home-route-type-maxred a:before {
+  background-color: #d82b3b;
+}
+
+.simple-nav strong.maxred {
+  background-color: rgba(216, 43, 59, 0.5);
+}
+
+.home-route-type-maxyellow a:before {
+  background-color: #fec400;
+}
+
+.simple-nav strong.maxyellow {
+  background-color: rgba(254, 196, 0, 0.5);
+}
+
+.home-route-type-maxstreetcl a:before {
+  background-color: #88c430;
+}
+
+.simple-nav strong.maxstreetcl {
+  background-color: rgba(136, 196, 48, 0.5);
+}
+
+.home-route-type-maxstreetns a:before {
+  background-color: #88c430;
+}
+
+.simple-nav strong.maxstreetns {
+  background-color: rgba(136, 196, 48, 0.5);
+}
+
+.home-route-type-wes a:before {
+  background-color: #0d0e0d;
+}
+
+.simple-nav strong.wes {
+  background-color: rgba(13, 14, 13, 0.5);
+}
+
+.home-route-type-tram a:before {
+  background-color: #868b8e;
+}
+
+.simple-nav strong.tram {
+  background-color: rgba(134, 139, 142, 0.5);
+}

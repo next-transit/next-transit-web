@@ -29,7 +29,10 @@ module.exports = function(grunt) {
 					'<%=dirs.css_build %>/options.css': ['<%=dirs.sass_src %>/options.scss'],
 					'<%=dirs.css_build %>/feedback.css': ['<%=dirs.sass_src %>/feedback.scss'],
 					'<%=dirs.css_build %>/stats.css': ['<%=dirs.sass_src %>/stats.scss'],
-					'<%=dirs.css_build %>/patterns.css': ['<%=dirs.sass_src %>/patterns.scss']
+					'<%=dirs.css_build %>/patterns.css': ['<%=dirs.sass_src %>/patterns.scss'],
+
+					'<%=dirs.css_build %>/agencies/septa.css': ['<%=dirs.sass_src %>/agencies/septa.scss'],
+					'<%=dirs.css_build %>/agencies/trimet.css': ['<%=dirs.sass_src %>/agencies/trimet.scss']
 				}
 			}
 		},
@@ -70,7 +73,9 @@ module.exports = function(grunt) {
 			},
 			app: {
 				files: {
-					'<%= dirs.dest %>/app.min.css': ['<%= dirs.build %>/app.css']
+					'<%= dirs.dest %>/app.min.css': ['<%= dirs.build %>/app.css'],
+					'<%= dirs.dest %>/septa.min.css': ['<%= dirs.css_build %>/agencies/septa.css'],
+					'<%= dirs.dest %>/trimet.min.css': ['<%= dirs.css_build %>/agencies/trimet.css']
 				}
 			}
 		},

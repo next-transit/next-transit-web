@@ -21,11 +21,13 @@ function Controller(name) {
 				if(options.json) {
 					res.send(data);
 				} else {
-					var view_data = extend({}, req.locals, data || {});
+					var app_title = req.agency.title || 'NEXT|Transit',
+						view_data = extend({}, req.locals, data || {});
+
 					if(view_data.title) {
-						view_data.app_title = view_data.title + ' - NEXT|Septa';
+						view_data.app_title = view_data.title + ' - ' + app_title;
 					} else {
-						view_data.title = view_data.app_title = 'NEXT|Septa';
+						view_data.title = view_data.app_title;
 					}
 					res.render(view || _self.name, view_data, function(err, html) {
 						res.send(html);

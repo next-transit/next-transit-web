@@ -1,7 +1,7 @@
 <!-- title: NEXT|Septa; back: false; options: true; footer: false; -->
 <div class="home" ctrl="home">
 	<form class="home-search" action="/search" method="GET">
-		<input type="text" name="term" placeholder="Enter route e.g. 23, BSS, or PAO" /> <button class="btn">Go</button>
+		<input type="text" name="term" placeholder="{{search_text}}" /> <button class="btn">Go</button>
 	</form>
 
 	<div class="content-inner content-section">
@@ -21,6 +21,9 @@
 	</div>
 
 	<div class="content-text content-subtle">
-		<p>Follow <a href="http://twitter.com/nextsepta">@nextsepta</a> for info and updates.</p>
+
+		{{#if twitter_acct}}
+		<p>Follow <a href="http://twitter.com/{{twitter_acct}}">@{{twitter_acct}}</a> for info and updates.</p>
+		{{/if}}
 	</div>
 </div>

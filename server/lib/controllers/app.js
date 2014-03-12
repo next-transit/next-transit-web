@@ -124,6 +124,9 @@ function before(req, res, next) {
 	req.locals = {
 		app_version: package.version,
 		agency: {},
+		app_title: config.agency_settings.app_title,
+		search_text: config.agency_settings.search_text,
+		twitter_acct: config.agency_settings.twitter_acct,
 		last_path: req.session.last_path,
 		last_trip: req.session.last_trip,
 		show_footer: req.originalUrl !== '/'

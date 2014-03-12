@@ -23,18 +23,18 @@
 }
 
 .home-route-type-trains a:before {
-  background-color: #539442;
+  background-color: #477997;
 }
 
 .simple-nav strong.trains {
-  background-color: rgba(83, 148, 66, 0.5);
+  background-color: rgba(71, 121, 151, 0.5);
 }
 
-.home-route-type-bsl a:before {
+.home-route-type-bss a:before {
   background-color: #f58220;
 }
 
-.simple-nav strong.bsl {
+.simple-nav strong.bss {
   background-color: rgba(245, 130, 32, 0.5);
 }
 

@@ -21,7 +21,7 @@ function Controller(name) {
 				if(options.json) {
 					res.send(data);
 				} else {
-					var app_title = req.agency.title || 'NEXT|Transit',
+					var app_title = req.locals.app_title || 'NEXT|Transit',
 						view_data = extend({}, req.locals, data || {});
 
 					if(view_data.title) {

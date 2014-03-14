@@ -7,11 +7,12 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		$options_btn,
 		$content,
 		$map,
-		$footer;
+		$footer,
+		app_title = 'NEXT|Transit';
 
 	function apply_content_settings(settings) {
-		$('.js-app-title').text(settings.title || 'NEXT|Septa');
-		$('.js-title').text(settings.title ? (settings.title + ' - NEXT|Septa') : 'NEXT|Septa');
+		$('.js-app-title').text(settings.title || app_title);
+		$('.js-title').text(settings.title ? (settings.title + ' - ' + app_title) : app_title);
 		$back_btn[settings.back ? 'addClass' : 'removeClass']('active');
 		$options_btn[settings.options ? 'addClass' : 'removeClass']('active');
 		$footer[settings.footer ? 'addClass' : 'removeClass']('active').removeClass('subways buses trolleys trains').addClass(settings.route_type || '');
@@ -118,6 +119,8 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 
 		// Get persistent "content" wrapper element
 		$content = $('.js-content');
+
+		app_title = $('body').attr('data-app-title');
 
 		// Do initial event bindings for whatever we have to start with
 		attach_events();

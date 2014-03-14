@@ -21,11 +21,11 @@ ctrl.action('index', function(req, res, callback) {
 			} else if(results.length === 1) {
 				res.redirect(results[0].path);
 			} else {
-				callback({ term:term, results:results });
+				callback({ title:'Search', term:term, results:results });
 			}
 		}, res.internal_error);
 	} else {
-		callback({});
+		callback({ title:'Search' });
 	}
 });
 

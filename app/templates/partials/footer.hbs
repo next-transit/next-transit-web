@@ -1,0 +1,7 @@
+<footer class="app-footer{{#if show_footer}} active{{/if}} js-app-footer {{route_type.slug}}">
+	<ul>
+		<li class="">
+			<a href="/" class="app-footer-btn js-nav-link"><i class="icon-home"></i></a>
+		</li>{{#footer_menu_items}}<li><a href="/{{slug}}" class="app-footer-btn {{slug}} js-nav-link">{{label}}</a></li>{{/footer_menu_items}}
+	</ul>
+</footer>

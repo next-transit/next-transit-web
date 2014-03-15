@@ -16,12 +16,7 @@ function filtered_types(all_types) {
 }
 
 home.action('index', function(req, res, callback) {
-	route_types.all().then(function(types) {
-		callback({ route_types:filtered_types(types) });
-	}, function(err) {
-		console.log('Error getting route_types', err);
-		callback({});
-	});
+	callback({ route_types:filtered_types(req.route_types) });
 });
 
 module.exports = home;

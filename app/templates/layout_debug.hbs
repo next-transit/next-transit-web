@@ -70,21 +70,7 @@
 				{{{body}}}
 			</div>
 		</div>
-		<footer class="app-footer{{#if show_footer}} active{{/if}} js-app-footer {{route_type.slug}}">
-			<ul>
-				<li class="">
-					<a href="/" class="app-footer-btn js-nav-link"><i class="icon-home"></i></a>
-				</li><li class="app-footer-subways">
-					<a href="/subways" class="app-footer-btn subways js-nav-link">Subways</a>
-				</li><li class="app-footer-buses">
-					<a href="/buses" class="app-footer-btn buses js-nav-link">Buses</a>
-				</li><li class="app-footer-trolleys">
-					<a href="/trolleys" class="app-footer-btn trolleys js-nav-link">Trolleys</a>
-				</li><li class="app-footer-trains">
-					<a href="/trains" class="app-footer-btn trains js-nav-link">Trains</a>
-				</li>
-			</ul>
-		</footer>
+		{{> footer}}
 		<div class="map js-map{{#if show_map}} active{{/if}}" ctrl="map">
 			<div id="map-inner" class="dark map-inner js-map-inner"></div>
 		</div>

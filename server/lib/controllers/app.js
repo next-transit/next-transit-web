@@ -105,15 +105,41 @@ function get_route_type(req, success, not_found, error) {
 	}
 }
 
+function get_route_types(req, success, not_found, error) {
+	route_types.all().then(function(types) {
+		req.route_types = types;
+		build_menu(req);
+		get_route_type(req, success, not_found, error);
+	}, error);
+}
+
 function get_agency(req, success, not_found, error) {
 	agencies.get(config.agency).then(function(agency) {
 		if(agency) {
 			req.locals.agency = req.agency = agency;
-			get_route_type(req, success, not_found, error);
+			get_route_types(req, success, not_found, error);
 		} else {
 			not_found('Could not find agency.');
 		}
 	}, error);
+}
+
+function build_menu(req) {
+	var route_types = req.route_types || [],
+		menu_items = [];
+
+	route_types.forEach(function(type) {
+		if(type.menu_label) {
+			menu_items.push({ slug:type.slug, label:type.menu_label });
+		}
+	});
+
+	// Sort A-Z by label ... for now
+	menu_items.sort(function(a, b) {
+		return a.label > b.label;
+	});
+
+	req.locals.footer_menu_items = menu_items;
 }
 
 function before(req, res, next) {

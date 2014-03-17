@@ -3,4 +3,5 @@ nextsepta.module('nextsepta', ['templates', 'history', 'content_settings']).cont
 
 	module.data('route-type', $content.attr('data-route-type'));
 	module.data('route-id', $content.attr('data-route-id'));
+	module.data('agency-slug', $elem.attr('data-agency-slug'));
 }]).run();

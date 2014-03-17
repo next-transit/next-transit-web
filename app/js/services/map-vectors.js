@@ -30,6 +30,20 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 		});
 	}
 
+	function add_all_routes() {
+		var bounds = map_ctrl.map.getBounds(),
+			bbox = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].join(',');
+
+		data.get('/shapes?bbox=' + bbox, function(resp) {
+			if(resp && resp.routes) {
+				resp.routes.forEach(function(route) {
+					console.log(route)
+					add_shapes(route.shapes, route.color);
+				});
+			}
+		});
+	}
+
 	function clear_layers() {
 		layer_group.clearLayers();
 	}
@@ -45,6 +59,7 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 	return {
 		add: add_shapes,
 		add_route: add_route,
+		add_all_routes: add_all_routes,
 		clear: clear_layers,
 		set_map_ctrl: function(ctrl, $map_elem) {
 			map_ctrl = ctrl;

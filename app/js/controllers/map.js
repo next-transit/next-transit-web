@@ -4,11 +4,17 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 			settings = {
 				tiles_id: 'reedlauber.map-55lsrr7u',
 				retina_tiles_id: 'reedlauber.map-1j4vhxof',
-				center: {
-					lat: 39.9523350,
-					lng: -75.163789
-				},
-				zoom: 16
+				centers: {
+					septa: {
+						lat:  39.9523350,
+						lng: -75.163789,
+						zoom: 16
+					}, trimet: {
+						lat:  45.5197293,
+						lng: -122.673683,
+						zoom: 15
+					}
+				}
 			},
 			initialized = false,
 			self = {},
@@ -16,9 +22,10 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 			routes_layer;
 
 		function set_center(lat, lng, zoom) {
-			lat = lat || settings.center.lat;
-			lng = lng || settings.center.lng;
-			zoom = zoom || settings.zoom;
+			var center = settings.centers[module.data('agency-slug')] || settings.centers.septa;
+			lat = lat || center.lat;
+			lng = lng || center.lng;
+			zoom = zoom || center.zoom;
 
 			self.map.setView([lat, lng], zoom);
 		}
@@ -69,6 +76,8 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 				if(settings.route_type && settings.route_id) {
 					vectors.add_route(settings.route_type, settings.route_id, !settings.map_vehicle);
 					vehicles.add_vehicles(settings.route_type, settings.route_id, settings.map_vehicle);
+				} else {
+					vectors.add_all_routes();
 				}
 			} else {
 				locate.disable();

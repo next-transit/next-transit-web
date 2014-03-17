@@ -1,5 +1,5 @@
 if(process.env.NODETIME_ACCOUNT_KEY) {
-	require('nodetime').profile({ accountKey:process.env.NODETIME_ACCOUNT_KEY, appName:'next-transit' });
+	require('nodetime').profile({ accountKey:process.env.NODETIME_ACCOUNT_KEY, appName:process.env.NODETIME_ACCOUNT_NAME });
 }
 
 require('date-utils');

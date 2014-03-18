@@ -23,9 +23,16 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 
 		vehicles_to_track.forEach(function(vehicle) {
 			var direction_icon = vehicle.direction ? ' <span class="' + direction_icons[vehicle.direction] + '"></span>' : '',
-				title = (vehicle.mode === 'rail' ? 
-							(vehicle.late + ' ' + (vehicle.late === 1 ? 'min' : 'mins') + ' late') : 
-							(vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago')) + direction_icon;
+				early_late = vehicle.late < 0 ? 'early' : 'late',
+				title = '',
+				late = 0;
+
+			if(vehicle.late !== null) {
+				late = Math.abs(vehicle.late);
+				title = late + ' ' + (late === 1 ? 'min' : 'mins') + ' ' + early_late;
+			} else {
+				title = vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago' + direction_icon;
+			}
 
 			map_ctrl.add_marker(vehicle.lat, vehicle.lng, {
 				id: 'vehicle-' + vehicle.vehicle_id, 
@@ -64,7 +71,6 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 	function get_vehicles(route_type, route_id, vehicle_id) {
 		data.get('/' + route_type + '/' + route_id + '/locations', function(resp) {
 			if(resp && resp.vehicles) {
-
 				var vehicles_to_track = [];
 				resp.vehicles.forEach(function(resp_vehicle) {
 					if(!vehicle_id || resp_vehicle.vehicle_id === vehicle_id) {

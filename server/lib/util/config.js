@@ -18,14 +18,14 @@ config.agency = process.env.AGENCY || local.agency;
 
 try {
 	config.agency_settings = require('../../../config/' + config.agency + '.json');
-}
-catch(e) {
+} catch(e) {
 	config.agency_settings = {};
 	config.agency_settings.app_title = process.env.APP_TITLE || 'NEXT|Transit';
 	config.agency_settings.search_text = process.env.SEARCH_TEXT || 'Search for a route ...';
 	config.agency_settings.twitter_acct = process.env.TWITTER_ACCT || '';
 	config.agency_settings.google_ua_code = process.env.GOOGLE_UA_CODE || '';
 	config.agency_settings.google_ua_url = process.env.GOOGLE_UA_URL || '';
+	config.agency_settings.realtime_api_key = process.env.REALTIME_API_KEY || '';
 }
 
 module.exports = config;

@@ -147,6 +147,20 @@ function before(req, res, next) {
 		console.log('request path', req.path)	
 	}
 
+	res.error = function(message, status_code) {
+		status_code = status_code || 500;
+		res.send(status_code, {
+			success: false,
+			message: message || '',
+			status_code: status_code || 500
+		});
+	};
+
+	res.internal_error = function(err) {
+		console.error('Internal error', err);
+		res.error('Internal error');
+	};
+
 	req.locals = {
 		app_version: package.version,
 		agency: {},

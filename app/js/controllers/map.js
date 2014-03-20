@@ -75,7 +75,9 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 
 				if(settings.route_type && settings.route_id) {
 					vectors.add_route(settings.route_type, settings.route_id, !settings.map_vehicle);
-					vehicles.add_vehicles(settings.route_type, settings.route_id, settings.map_vehicle);
+					if(settings.has_realtime) {
+						vehicles.add_vehicles(settings.route_type, settings.route_id, settings.map_vehicle);	
+					}
 				} else {
 					vectors.add_all_routes();
 				}

@@ -115,10 +115,6 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 		return false;
 	});
 
-	if(module.data('route-type') !== 'subways') {
-		get_realtime_data(module.data('route-type'), module.data('route-id'));
-	}
-
 	$('.trip').each(function() {
 		var ts = $(this).attr('data-departure-time'),
 			relText = $('.trip-from-now', this);
@@ -130,6 +126,12 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 			if(dt) {
 				stops.push({ time:dt, el:relText });
 			}
+		}
+	});
+
+	module.on('content-settings-changed', function(evt, settings) {
+		if(settings.has_realtime) {
+			get_realtime_data(settings.route_type, settings.route_id);
 		}
 	});
 

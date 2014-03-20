@@ -37,7 +37,6 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 		data.get('/shapes?bbox=' + bbox, function(resp) {
 			if(resp && resp.routes) {
 				resp.routes.forEach(function(route) {
-					console.log(route)
 					add_shapes(route.shapes, route.color);
 				});
 			}

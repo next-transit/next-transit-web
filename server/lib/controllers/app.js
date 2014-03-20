@@ -94,6 +94,7 @@ function get_route_type(req, success, not_found, error) {
 				req.route_type_id = route_type.route_type_id;
 				req.locals.route_type_slug = req.route_type_slug = route_type.slug;
 				req.locals.route_type = req.route_type = route_type;
+				req.locals.has_realtime = req.route_type.has_realtime;
 				req.locals.back_path = '/';
 				get_route(req, success, not_found, error);
 			} else {

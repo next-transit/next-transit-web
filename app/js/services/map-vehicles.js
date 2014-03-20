@@ -5,8 +5,15 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 		track_interval,
 		map_ctrl,
 		icons = {
-			bus: 'bus-36',
-			rail: 'rail-36'
+			tram: 'rail-light-24',
+			subway: 'rail-underground-24',
+			rail: 'rail-24',
+			bus: 'bus-24',
+			ferry: 'ferry-24',
+			cable: 'rail-underground-24',
+			gondola: 'rail-underground-24',
+			funicular: 'rail-underground-24',
+			unknown: 'rail-24'
 		},
 		direction_icons = {
 			NorthBound: 'icon-caret-up',
@@ -30,7 +37,7 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 			if(vehicle.late !== null) {
 				late = Math.abs(vehicle.late);
 				title = late + ' ' + (late === 1 ? 'min' : 'mins') + ' ' + early_late;
-			} else {
+			} else if(vehicle.offset !== null) {
 				title = vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago' + direction_icon;
 			}
 

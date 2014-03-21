@@ -28,4 +28,8 @@ try {
 	config.agency_settings.realtime_api_key = process.env.REALTIME_API_KEY || '';
 }
 
+if(config.agency_settings.data_api_key) {
+	config.data_api_key = config.agency_settings.data_api_key;
+}
+
 module.exports = config;

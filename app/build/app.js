@@ -276,7 +276,8 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 				map_locate: false,
 				map_vehicle: null,
 				route_type: null,
-				route_id: null
+				route_id: null,
+				has_realtime: false
 			},
 			comment_matches = content.match(/<!-- (.+) -->/i),
 			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))?;? ?(footer: ?([\w]+))?;? -->/i);
@@ -413,11 +414,12 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		$options_btn,
 		$content,
 		$map,
-		$footer;
+		$footer,
+		app_title = 'NEXT|Transit';
 
 	function apply_content_settings(settings) {
-		$('.js-app-title').text(settings.title || 'NEXT|Septa');
-		$('.js-title').text(settings.title ? (settings.title + ' - NEXT|Septa') : 'NEXT|Septa');
+		$('.js-app-title').text(settings.title || app_title);
+		$('.js-title').text(settings.title ? (settings.title + ' - ' + app_title) : app_title);
 		$back_btn[settings.back ? 'addClass' : 'removeClass']('active');
 		$options_btn[settings.options ? 'addClass' : 'removeClass']('active');
 		$footer[settings.footer ? 'addClass' : 'removeClass']('active').removeClass('subways buses trolleys trains').addClass(settings.route_type || '');
@@ -524,6 +526,8 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 
 		// Get persistent "content" wrapper element
 		$content = $('.js-content');
+
+		app_title = $('body').attr('data-app-title');
 
 		// Do initial event bindings for whatever we have to start with
 		attach_events();
@@ -654,7 +658,7 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 	}
 
 	function locate() {
-		// active = true;
+		active = true;
 		// render_user_location(39.926312796934674, -75.16697645187378);
 		// return;
 
@@ -705,14 +709,13 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 		markers = {};
 
 	function get_marker_icon(icon_name) {
-		icon_name = icon_name || 'marker-36';
+		icon_name = icon_name || 'marker-24';
 		
 		if(!(icon_name in icons)) {
 			icons[icon_name] = L.icon({
-				iconUrl: '/images/maki/' + icon_name + '.png',
-				iconRetinaUrl: '/images/maki/' + icon_name + '@2x.png',
-				iconSize: [32, 32],
-				iconAnchor: [16, 16]
+				iconUrl: '/images/maki/' + icon_name + '.svg',
+				iconSize: [48, 48],
+				iconAnchor: [24, 24]
 			});
 		}
 
@@ -830,6 +833,19 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 		});
 	}
 
+	function add_all_routes() {
+		var bounds = map_ctrl.map.getBounds(),
+			bbox = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].join(',');
+
+		data.get('/shapes?bbox=' + bbox, function(resp) {
+			if(resp && resp.routes) {
+				resp.routes.forEach(function(route) {
+					add_shapes(route.shapes, route.color);
+				});
+			}
+		});
+	}
+
 	function clear_layers() {
 		layer_group.clearLayers();
 	}
@@ -845,6 +861,7 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 	return {
 		add: add_shapes,
 		add_route: add_route,
+		add_all_routes: add_all_routes,
 		clear: clear_layers,
 		set_map_ctrl: function(ctrl, $map_elem) {
 			map_ctrl = ctrl;
@@ -860,8 +877,15 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 		track_interval,
 		map_ctrl,
 		icons = {
-			bus: 'bus-36',
-			rail: 'rail-36'
+			tram: 'rail-light-24',
+			subway: 'rail-underground-24',
+			rail: 'rail-24',
+			bus: 'bus-24',
+			ferry: 'ferry-24',
+			cable: 'rail-underground-24',
+			gondola: 'rail-underground-24',
+			funicular: 'rail-underground-24',
+			unknown: 'rail-24'
 		},
 		direction_icons = {
 			NorthBound: 'icon-caret-up',
@@ -878,9 +902,16 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 
 		vehicles_to_track.forEach(function(vehicle) {
 			var direction_icon = vehicle.direction ? ' <span class="' + direction_icons[vehicle.direction] + '"></span>' : '',
-				title = (vehicle.mode === 'rail' ? 
-							(vehicle.late + ' ' + (vehicle.late === 1 ? 'min' : 'mins') + ' late') : 
-							(vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago')) + direction_icon;
+				early_late = vehicle.late < 0 ? 'early' : 'late',
+				title = '',
+				late = 0;
+
+			if(vehicle.late !== null) {
+				late = Math.abs(vehicle.late);
+				title = late + ' ' + (late === 1 ? 'min' : 'mins') + ' ' + early_late;
+			} else if(vehicle.offset !== null) {
+				title = vehicle.offset + ' ' + (vehicle.offset === '1' ? 'min' : 'mins') + ' ago' + direction_icon;
+			}
 
 			map_ctrl.add_marker(vehicle.lat, vehicle.lng, {
 				id: 'vehicle-' + vehicle.vehicle_id, 
@@ -919,7 +950,6 @@ nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', functi
 	function get_vehicles(route_type, route_id, vehicle_id) {
 		data.get('/' + route_type + '/' + route_id + '/locations', function(resp) {
 			if(resp && resp.vehicles) {
-
 				var vehicles_to_track = [];
 				resp.vehicles.forEach(function(resp_vehicle) {
 					if(!vehicle_id || resp_vehicle.vehicle_id === vehicle_id) {
@@ -995,6 +1025,7 @@ nextsepta.module('nextsepta', ['templates', 'history', 'content_settings']).cont
 
 	module.data('route-type', $content.attr('data-route-type'));
 	module.data('route-id', $content.attr('data-route-id'));
+	module.data('agency-slug', $elem.attr('data-agency-slug'));
 }]).run();
 nextsepta.module('nextsepta').controller('feedback', ['data', '$elem', function(data, $elem) {
 	$('#feedback-submit-btn', $elem).click(function() {
@@ -1018,11 +1049,17 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 			settings = {
 				tiles_id: 'reedlauber.map-55lsrr7u',
 				retina_tiles_id: 'reedlauber.map-1j4vhxof',
-				center: {
-					lat: 39.9523350,
-					lng: -75.163789
-				},
-				zoom: 16
+				centers: {
+					septa: {
+						lat:  39.9523350,
+						lng: -75.163789,
+						zoom: 16
+					}, trimet: {
+						lat:  45.5197293,
+						lng: -122.673683,
+						zoom: 15
+					}
+				}
 			},
 			initialized = false,
 			self = {},
@@ -1030,9 +1067,10 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 			routes_layer;
 
 		function set_center(lat, lng, zoom) {
-			lat = lat || settings.center.lat;
-			lng = lng || settings.center.lng;
-			zoom = zoom || settings.zoom;
+			var center = settings.centers[module.data('agency-slug')] || settings.centers.septa;
+			lat = lat || center.lat;
+			lng = lng || center.lng;
+			zoom = zoom || center.zoom;
 
 			self.map.setView([lat, lng], zoom);
 		}
@@ -1082,7 +1120,11 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 
 				if(settings.route_type && settings.route_id) {
 					vectors.add_route(settings.route_type, settings.route_id, !settings.map_vehicle);
-					vehicles.add_vehicles(settings.route_type, settings.route_id, settings.map_vehicle);
+					if(settings.has_realtime) {
+						vehicles.add_vehicles(settings.route_type, settings.route_id, settings.map_vehicle);	
+					}
+				} else {
+					vectors.add_all_routes();
 				}
 			} else {
 				locate.disable();
@@ -1280,10 +1322,6 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 		return false;
 	});
 
-	if(module.data('route-type') !== 'subways') {
-		get_realtime_data(module.data('route-type'), module.data('route-id'));
-	}
-
 	$('.trip').each(function() {
 		var ts = $(this).attr('data-departure-time'),
 			relText = $('.trip-from-now', this);
@@ -1295,6 +1333,12 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 			if(dt) {
 				stops.push({ time:dt, el:relText });
 			}
+		}
+	});
+
+	module.on('content-settings-changed', function(evt, settings) {
+		if(settings.has_realtime) {
+			get_realtime_data(settings.route_type, settings.route_id);
 		}
 	});
 

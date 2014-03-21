@@ -824,30 +824,6 @@ input[type=button].btn {
   border-radius: 3px;
 }
 
-.simple-nav strong.trolleys {
-  background-color: rgba(83, 148, 66, 0.5);
-}
-
-.simple-nav strong.subways {
-  background-color: rgba(71, 121, 151, 0.5);
-}
-
-.simple-nav strong.trains {
-  background-color: rgba(71, 121, 151, 0.5);
-}
-
-.simple-nav strong.buses {
-  background-color: rgba(65, 82, 92, 0.5);
-}
-
-.simple-nav strong.bss {
-  background-color: rgba(245, 130, 32, 0.5);
-}
-
-.simple-nav strong.mfl {
-  background-color: rgba(16, 125, 193, 0.5);
-}
-
 .feedback {
   margin: 0 auto;
   max-width: 40rem;
@@ -995,25 +971,6 @@ textarea::-webkit-input-placeholder {
   border-radius: 4px;
   box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.9);
 }
-
-/*.home-route-type-buses a:before {
-	background-color: $background_buses;
-}
-.home-route-type-subways a:before {
-	background-color: $background_subways;
-}
-.home-route-type-trolleys a:before {
-	background-color: $background_trolleys;
-}
-.home-route-type-trains a:before {
-	background-color: $background_trains;
-}
-.home-route-type-bss a:before {
-	background-color: $background_bsl;
-}
-.home-route-type-mfl a:before {
-	background-color: $background_mfl;
-}*/
 
 .app-header {
   *zoom: 1;

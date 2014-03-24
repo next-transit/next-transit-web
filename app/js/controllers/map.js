@@ -1,5 +1,5 @@
-nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate', 'map_vehicles', 'map_markers', 'map_vectors', '$elem', 
-	function(module, data, locate, vehicles, markers, vectors, $elem) {
+nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate', 'map_routes', 'map_vehicles', 'map_markers', 'map_vectors', '$elem', 
+	function(module, data, locate, routes, vehicles, markers, vectors, $elem) {
 		var $inner = $('.js-map-inner', $elem),
 			settings = {
 				tiles_id: 'reedlauber.map-55lsrr7u',
@@ -9,7 +9,8 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 						lat:  39.9523350,
 						lng: -75.163789,
 						zoom: 16
-					}, trimet: {
+					}, 
+					trimet: {
 						lat:  45.5197293,
 						lng: -122.673683,
 						zoom: 15
@@ -40,7 +41,7 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 			if(!initialized && $elem.is(':visible')) {
 				adjust_size();
 
-				self.map = window.MAP = L.mapbox.map($inner.attr('id'), settings.tiles_id, {
+				self.map = L.mapbox.map($inner.attr('id'), settings.tiles_id, {
 					detectRetina: true,
 					retinaVersion: settings.retina_tiles_id
 				});
@@ -52,6 +53,7 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 				markers.set_map_ctrl(self, $elem);
 				vectors.set_map_ctrl(self, $elem);
 				locate.set_map_ctrl(self, $elem);
+				routes.set_map_ctrl(self, $elem);
 				vehicles.set_map_ctrl(self, $elem);
 
 				set_center();
@@ -66,23 +68,22 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 
 				markers.clear();
 				vectors.clear();
-				locate.disable();
+				routes.disable();
 				vehicles.disable();
 
 				if(settings.map_locate) {
+					routes.enable();
 					locate.locate();
-				}
-
-				if(settings.route_type && settings.route_id) {
-					vectors.add_route(settings.route_type, settings.route_id, !settings.map_vehicle);
+				} else if(settings.route_type && settings.route_id) {
+					routes.add(settings.route_type, settings.route_id, !settings.map_vehicle);
 					if(settings.has_realtime) {
 						vehicles.add_vehicles(settings.route_type, settings.route_id, settings.map_vehicle);	
 					}
 				} else {
-					vectors.add_all_routes();
+					routes.add_all();
 				}
 			} else {
-				locate.disable();
+				routes.disable();
 				vehicles.disable();
 			}
 		});
@@ -93,6 +94,8 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 		self.remove_marker = markers.remove;
 		self.clear_markers = markers.clear;
 		self.add_vector = vectors.add;
+		self.add_vector_points = vectors.add_points;
+		self.fit_to_last_path = vectors.fit_to_last_path;
 		self.clear_vectors = vectors.clear;
 	}
 ]);

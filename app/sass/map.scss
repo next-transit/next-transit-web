@@ -43,6 +43,7 @@
 /* Leaflef/Mapbox overrides */
 .leaflet-popup-content {
 	margin: 1px 4px 0;
+	padding: 2px 4px;
 	color: #888;
 }
 
@@ -54,7 +55,10 @@
 	width: 12px;
 }
 	.leaflet-popup-tip {
-		margin: -12px 0 0 15px;
+		margin: -5px 0 0 -10px;
 		width: 12px;
 		height: 28px;
+		-webkit-transform: rotate(90deg) scale(1) skew(1deg) translate(0px);
+		   -moz-transform: rotate(90deg) scale(1) skew(1deg) translate(0px);
+				transform: rotate(90deg) scale(1) skew(1deg) translate(0px);
 	}

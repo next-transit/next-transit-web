@@ -36,7 +36,7 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 			marker.popup = L.popup({
 				autoPan: false,
 				closeButton: false,
-				offset: [52, 10]
+				offset: [68, 10]
 			});
 			marker.popup.setLatLng([lat, lng]);
 			marker.popup.setContent('<div class="map-marker-info">' + options.message + '</div>');

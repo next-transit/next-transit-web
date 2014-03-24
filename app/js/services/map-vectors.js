@@ -1,10 +1,14 @@
-nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
+nextsepta.module('nextsepta').service('map_vectors', ['module', 'data', function(module, data) {
 	var initialized = false,
 		map_ctrl,
-		layer_group;
+		points_min_zoom_level = 15,
+		paths_layer_group,
+		points_layer_group,
+		point_layers = [],
+		points_hidden = false;
 
-	function fit_to_last() {
-		var layers = layer_group.getLayers();
+	function fit_to_last_path() {
+		var layers = paths_layer_group.getLayers();
 		if(layers.length) {
 			map_ctrl.map.fitBounds(layers[layers.length-1].getBounds());
 		}
@@ -16,40 +20,59 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 			layers.push(L.polyline(shape, {
 				color: color || '#a33', 
 				opacity: opacity || 0.65
-			}).addTo(layer_group));
+			}).addTo(paths_layer_group));
 		});
 		return layers;
 	}
 
-	function add_route(route_type, route_id, fit_to_route) {
-		data.get(['', route_type, route_id, 'shape'].join('/'), function(resp) {
-			add_shapes(resp.shapes, resp.color);
-			if(fit_to_route) {
-				fit_to_last();
+	function add_points(points, color, opacity) {
+		point_layers = [];
+		console.log('add_points')
+		points.forEach(function(point) {
+			var marker = L.circleMarker(point.shape, {
+				color: color || '#3a3',
+				fillColor: '#fff',
+				opacity: (opacity + 0.2) || 0.85,
+				fillOpacity: opacity || 0.65,
+				radius: 7,
+				weight: 5
+			});
+			marker.data = point.data;
+			point_layers.push(marker);
+
+			if(map_ctrl.map.getZoom() >= points_min_zoom_level) {
+				marker.addTo(points_layer_group);
 			}
 		});
-	}
-
-	function add_all_routes() {
-		var bounds = map_ctrl.map.getBounds(),
-			bbox = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].join(',');
-
-		data.get('/shapes?bbox=' + bbox, function(resp) {
-			if(resp && resp.routes) {
-				resp.routes.forEach(function(route) {
-					add_shapes(route.shapes, route.color);
-				});
-			}
-		});
+		return point_layers;
 	}
 
 	function clear_layers() {
-		layer_group.clearLayers();
+		paths_layer_group.clearLayers();
+		points_layer_group.clearLayers();
 	}
 
 	function initialize() {
 		if(!initialized) {
-			layer_group = L.layerGroup().addTo(map_ctrl.map);
+			paths_layer_group = L.layerGroup().addTo(map_ctrl.map);
+			points_layer_group = L.layerGroup().addTo(map_ctrl.map);
+
+			module.on('map-moveend', function() {
+				// Remove/add layers. Kind of a nasty workaround since Leaflet doesn't have show/hide
+				if(map_ctrl.map.getZoom() >= points_min_zoom_level) {
+					if(points_hidden) {
+						point_layers.forEach(function(layer) {
+							points_layer_group.addLayer(layer);
+						});
+						points_hidden = false;
+					}
+				} else if(!points_hidden) {
+					point_layers.forEach(function(layer) {
+						points_layer_group.removeLayer(layer);
+					});
+					points_hidden = true;
+				}
+			});
 
 			initialized = true;
 		}
@@ -57,8 +80,8 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 
 	return {
 		add: add_shapes,
-		add_route: add_route,
-		add_all_routes: add_all_routes,
+		add_points: add_points,
+		fit_to_last_path: fit_to_last_path,
 		clear: clear_layers,
 		set_map_ctrl: function(ctrl, $map_elem) {
 			map_ctrl = ctrl;

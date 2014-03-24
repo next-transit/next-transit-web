@@ -7,7 +7,7 @@ ctrl.action('index', { json:true }, function(req, res, callback) {
 		var route_id = req.route_id.toLowerCase(), route = req.route;
 
 		simplified_shapes.api_query('/routes/' + route_id + '/shapes').then(function(results) {
-			callback({ shapes:results });
+			callback(results);
 		}, res.internal_error);
 	} else {
 		callback({ shapes:[] });
@@ -20,9 +20,10 @@ ctrl.action('bbox', { json:true }, function(req, res, callback) {
 			left = parseFloat(bbox[0]),
 			bottom = parseFloat(bbox[1]),
 			right = parseFloat(bbox[2]),
-			top = parseFloat(bbox[3]);
+			top = parseFloat(bbox[3]),
+			include_stops = req.query.stops !== 'false';
 
-		simplified_shapes.api_query('/shapes', { bbox:bbox }).then(function(results) {
+		simplified_shapes.api_query('/shapes', { bbox:bbox, stops:include_stops }).then(function(results) {
 			callback({ routes:results });
 		}, res.internal_error);
 	} else {

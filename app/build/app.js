@@ -550,111 +550,11 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		}
 	};
 }]);
-nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history', 'geo_utils', function(module, data, history, geo_utils) {
-	var map_ctrl,
-		active = false,
-		initialized = false,
-		$map,
-		$results,
-			$results_list;
+nextsepta.module('nextsepta').service('map_locate', ['module', function(module) {
+	var map_ctrl;
 
 	function render_user_location(lat, lng) {
 		map_ctrl.add_marker(lat, lng);
-	}
-
-	function sort_top_results(routes, limit) {
-		var center = map_ctrl.map.getCenter(),
-			center_point = [center.lat, center.lng],
-			route_closest_points = [];
-
-		routes.forEach(function(route) {
-			var closest_distance = 9999;
-
-			route.shapes.forEach(function(shape) {
-				shape.forEach(function(point) {
-					var distance = geo_utils.point_distance(center_point, point);
-
-					if(distance < closest_distance) {
-						closest_distance = distance;
-					}
-				});
-			});
-
-			route_closest_points.push({ route:route, closest_distance:closest_distance });
-		});
-
-		route_closest_points.sort(function(a, b) {
-			return a.closest_distance - b.closest_distance;
-		});
-
-		var limited = [], lookup = {}, count = 0;
-		route_closest_points.forEach(function(result) {
-			if(count < limit && !lookup[result.route.id]) {
-				limited.push(result.route);
-				lookup[result.route.id] = true;
-				count++;
-			}
-		});
-
-		return limited;
-	}
-
-	function highlight_route_shapes(route, over) {
-		if(route && route.route_layers) {
-			route.route_layers.forEach(function(layer) {
-				layer.setStyle({ opacity:over ? 0.9 : 0.45 });	
-			});
-		}
-	}
-
-	function render_routes(routes) {
-		$results_list.empty();
-		map_ctrl.clear_vectors();
-
-		routes.forEach(function(route) {
-			var route_layers = map_ctrl.add_vector(route.shapes, route.color, 0.45);
-
-			if(route_layers) {
-				route_layers.forEach(function(layer) {
-					layer.on('click', function(evt) {
-						history.push('/' + route.route_type_slug + '/' + route.slug);
-					}).on('mouseover', function() {
-						highlight_route_shapes(route, true);
-					}).on('mouseout', function() {
-						highlight_route_shapes(route, false);
-					});
-				});
-				route.route_layers = route_layers;
-			}
-		});
-
-		var sorted_list = sort_top_results(routes, 8);
-		sorted_list.forEach(function(route) {
-			var $li = $('<li />').appendTo($results_list);
-			$('<a href="/' + route.route_type_slug + '/' + route.slug + '" class="js-nav-link">' + route.route_name + '</a>')
-				.css('backgroundColor', route.color)
-				.appendTo($li)
-				.hover(function() {
-					highlight_route_shapes(route, true);
-				}, function() {
-					highlight_route_shapes(route, false);
-				});
-		});
-
-		$results.show();
-
-		history.parse($results);
-	}
-
-	function get_nearby_routes() {
-		var bounds = map_ctrl.map.getBounds(),
-			bbox = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].join(',');
-
-		data.get('/shapes?bbox=' + bbox, function(resp) {
-			if(resp && resp.routes) {
-				render_routes(resp.routes);
-			}
-		});
 	}
 
 	function locate() {
@@ -671,34 +571,10 @@ nextsepta.module('nextsepta').service('map_locate', ['module', 'data', 'history'
 		}
 	}
 
-	function initialize() {
-		if(!initialized) {
-			module.on('map-moveend', function() {
-				if(active) {
-					get_nearby_routes();
-				}
-			});
-
-			$results = $('<div class="map-results-list"></div>').hide().appendTo($map);
-			$results_list = $('<ul></ul>').appendTo($results);
-
-			initialized = true;
-		}
-	}
-
 	return {
 		locate: locate,
 		set_map_ctrl: function(ctrl, $map_elem) {
 			map_ctrl = ctrl;
-			$map = $map_elem;
-
-			initialize();
-		},
-		disable: function() {
-			if($results) {
-				$results.hide();	
-			}
-			active = false;
 		}
 	};
 }]);
@@ -740,7 +616,7 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 			marker.popup = L.popup({
 				autoPan: false,
 				closeButton: false,
-				offset: [52, 10]
+				offset: [68, 10]
 			});
 			marker.popup.setLatLng([lat, lng]);
 			marker.popup.setContent('<div class="map-marker-info">' + options.message + '</div>');
@@ -801,13 +677,208 @@ nextsepta.module('nextsepta').service('map_markers', [function() {
 		}
 	};
 }]);
-nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
+nextsepta.module('nextsepta').service('map_routes', ['module', 'data', 'history', 'geo_utils', function(module, data, history, geo_utils) {
+	var map_ctrl,
+		active = false,
+		initialized = false,
+		stops_min_zoom_level = 15,
+		$map,
+		$results,
+			$results_list;
+
+	function sort_top_results(routes, limit) {
+		var center = map_ctrl.map.getCenter(),
+			center_point = [center.lat, center.lng],
+			route_closest_points = [];
+
+		routes.forEach(function(route) {
+			var closest_distance = 9999;
+
+			route.paths.forEach(function(shape) {
+				shape.forEach(function(point) {
+					var distance = geo_utils.point_distance(center_point, point);
+
+					if(distance < closest_distance) {
+						closest_distance = distance;
+					}
+				});
+			});
+
+			route_closest_points.push({ route:route, closest_distance:closest_distance });
+		});
+
+		route_closest_points.sort(function(a, b) {
+			return a.closest_distance - b.closest_distance;
+		});
+
+		var limited = [], lookup = {}, count = 0;
+		route_closest_points.forEach(function(result) {
+			if(count < limit && !lookup[result.route.id]) {
+				limited.push(result.route);
+				lookup[result.route.id] = true;
+				count++;
+			}
+		});
+
+		return limited;
+	}
+
+	// Sort routes by distance for routes menu list
+	function render_sorted_routes_menu(routes) {
+		var sorted_list = sort_top_results(routes, 8);
+
+		sorted_list.forEach(function(route) {
+			var $li = $('<li />').appendTo($results_list);
+			$('<a href="/' + route.route_type_slug + '/' + route.slug + '" class="js-nav-link">' + route.route_name + '</a>')
+				.css('backgroundColor', route.color)
+				.appendTo($li)
+				.hover(function() {
+					highlight_route_shapes(route, true);
+				}, function() {
+					highlight_route_shapes(route, false);
+				});
+		});
+	}
+
+	function highlight_point_shape(layer, over) {
+		layer.setStyle({ opacity:over ? 0.9 : 0.45 });	
+	}
+
+	function highlight_route_shapes(route, over) {
+		if(route && route.path_layers) {
+			route.path_layers.forEach(function(layer) {
+				highlight_point_shape(layer, over);
+			});
+		}
+	}
+
+	function simplify_stops(stop_results) {
+		var stop_points = [];
+		stop_results.forEach(function(stop) {
+			stop_points.push({ data:{ direction_id:stop.direction_id, stop_id:stop.stop_id }, shape:[stop.stop_lat, stop.stop_lon] });
+		});
+		return stop_points;
+	}
+
+	function bind_layer_events(layer, url, hover_fn, hover_data) {
+		layer.on('click', function(evt) {
+			history.push(url);
+		}).on('mouseover', function() {
+			hover_fn(hover_data, true);
+		}).on('mouseout', function() {
+			hover_fn(hover_data, false);
+		});
+	}
+
+	function render_routes(routes, show_routes_menu, show_stops) {
+		$results_list.empty();
+		map_ctrl.clear_vectors();
+
+		routes.forEach(function(route) {
+			// Render Route paths
+			if(route.paths) {
+				route.path_layers = map_ctrl.add_vector(route.paths, route.color, 0.45);
+
+				route.path_layers.forEach(function(layer) {
+					bind_layer_events(layer, '/' + route.route_type_slug + '/' + route.slug, highlight_route_shapes, route);
+				});
+			}
+
+			// Render Stop points
+			if(route.stops) {
+				route.point_layers = map_ctrl.add_vector_points(simplify_stops(route.stops), route.color, 0.45);
+
+				route.point_layers.forEach(function(layer) {
+					bind_layer_events(layer, '/' + route.route_type_slug + '/' + route.slug + '/' + layer.data.direction_id + '/' + layer.data.stop_id, highlight_point_shape, layer);
+				});
+			}
+		});
+
+		if(show_routes_menu) {
+			render_sorted_routes_menu(routes);
+
+			$results.show();
+
+			history.parse($results);
+		}
+	}
+
+	function add_viewport_routes(show_routes_menu, show_stops) {
+		var bounds = map_ctrl.map.getBounds(),
+			bbox = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].join(',');
+
+		data.get('/shapes?bbox=' + bbox + '&stops=' + !!show_stops, function(resp) {
+			if(resp && resp.routes) {
+				render_routes(resp.routes, show_routes_menu, show_stops);
+			}
+		});
+	}
+
+	function get_nearby() {
+		add_viewport_routes(true, true);
+	}
+
+	function add_all_routes() {
+		add_viewport_routes();
+	}
+
+	function add_route(route_type, route_id, fit_to_route) {
+		data.get(['', route_type, route_id, 'shape'].join('/'), function(route) {
+			render_routes([route]);
+			if(fit_to_route) {
+				map_ctrl.fit_to_last_path();
+			}
+		});
+	}
+
+	function initialize() {
+		if(!initialized) {
+			module.on('map-moveend', function() {
+				if(active) {
+					get_nearby();
+				}
+			});
+
+			$results = $('<div class="map-results-list"></div>').hide().appendTo($map);
+			$results_list = $('<ul></ul>').appendTo($results);
+
+			initialized = true;
+		}
+	}
+
+	return {
+		add: add_route,
+		add_all: add_all_routes,
+		nearby: get_nearby,
+		set_map_ctrl: function(ctrl, $map_elem) {
+			map_ctrl = ctrl;
+			$map = $map_elem;
+
+			initialize();
+		},
+		enable: function() {
+			active = true;
+		},
+		disable: function() {
+			if($results) {
+				$results.hide();	
+			}
+			active = false;
+		}
+	};
+}]);
+
+nextsepta.module('nextsepta').service('map_vectors', ['module', 'data', function(module, data) {
 	var initialized = false,
 		map_ctrl,
-		layer_group;
+		points_min_zoom_level = 15,
+		paths_layer_group,
+		points_layer_group,
+		point_layers = [],
+		points_hidden = false;
 
-	function fit_to_last() {
-		var layers = layer_group.getLayers();
+	function fit_to_last_path() {
+		var layers = paths_layer_group.getLayers();
 		if(layers.length) {
 			map_ctrl.map.fitBounds(layers[layers.length-1].getBounds());
 		}
@@ -819,40 +890,58 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 			layers.push(L.polyline(shape, {
 				color: color || '#a33', 
 				opacity: opacity || 0.65
-			}).addTo(layer_group));
+			}).addTo(paths_layer_group));
 		});
 		return layers;
 	}
 
-	function add_route(route_type, route_id, fit_to_route) {
-		data.get(['', route_type, route_id, 'shape'].join('/'), function(resp) {
-			add_shapes(resp.shapes, resp.color);
-			if(fit_to_route) {
-				fit_to_last();
+	function add_points(points, color, opacity) {
+		point_layers = [];
+		points.forEach(function(point) {
+			var marker = L.circleMarker(point.shape, {
+				color: color || '#3a3',
+				fillColor: '#fff',
+				opacity: (opacity + 0.2) || 0.85,
+				fillOpacity: opacity || 0.65,
+				radius: 7,
+				weight: 5
+			});
+			marker.data = point.data;
+			point_layers.push(marker);
+
+			if(map_ctrl.map.getZoom() >= points_min_zoom_level) {
+				marker.addTo(points_layer_group);
 			}
 		});
-	}
-
-	function add_all_routes() {
-		var bounds = map_ctrl.map.getBounds(),
-			bbox = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat].join(',');
-
-		data.get('/shapes?bbox=' + bbox, function(resp) {
-			if(resp && resp.routes) {
-				resp.routes.forEach(function(route) {
-					add_shapes(route.shapes, route.color);
-				});
-			}
-		});
+		return point_layers;
 	}
 
 	function clear_layers() {
-		layer_group.clearLayers();
+		paths_layer_group.clearLayers();
+		points_layer_group.clearLayers();
 	}
 
 	function initialize() {
 		if(!initialized) {
-			layer_group = L.layerGroup().addTo(map_ctrl.map);
+			paths_layer_group = L.layerGroup().addTo(map_ctrl.map);
+			points_layer_group = L.layerGroup().addTo(map_ctrl.map);
+
+			module.on('map-moveend', function() {
+				// Remove/add layers. Kind of a nasty workaround since Leaflet doesn't have show/hide
+				if(map_ctrl.map.getZoom() >= points_min_zoom_level) {
+					if(points_hidden) {
+						point_layers.forEach(function(layer) {
+							points_layer_group.addLayer(layer);
+						});
+						points_hidden = false;
+					}
+				} else if(!points_hidden) {
+					point_layers.forEach(function(layer) {
+						points_layer_group.removeLayer(layer);
+					});
+					points_hidden = true;
+				}
+			});
 
 			initialized = true;
 		}
@@ -860,8 +949,8 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 
 	return {
 		add: add_shapes,
-		add_route: add_route,
-		add_all_routes: add_all_routes,
+		add_points: add_points,
+		fit_to_last_path: fit_to_last_path,
 		clear: clear_layers,
 		set_map_ctrl: function(ctrl, $map_elem) {
 			map_ctrl = ctrl;
@@ -870,6 +959,7 @@ nextsepta.module('nextsepta').service('map_vectors', ['data', function(data) {
 		}
 	};
 }]);
+
 nextsepta.module('nextsepta').service('map_vehicles', ['data', 'history', function(data, history) {
 	var active = false,
 		initialized = false,
@@ -1043,8 +1133,8 @@ nextsepta.module('nextsepta').controller('feedback', ['data', '$elem', function(
 		}
 	});	
 }]);
-nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate', 'map_vehicles', 'map_markers', 'map_vectors', '$elem', 
-	function(module, data, locate, vehicles, markers, vectors, $elem) {
+nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate', 'map_routes', 'map_vehicles', 'map_markers', 'map_vectors', '$elem', 
+	function(module, data, locate, routes, vehicles, markers, vectors, $elem) {
 		var $inner = $('.js-map-inner', $elem),
 			settings = {
 				tiles_id: 'reedlauber.map-55lsrr7u',
@@ -1054,7 +1144,8 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 						lat:  39.9523350,
 						lng: -75.163789,
 						zoom: 16
-					}, trimet: {
+					}, 
+					trimet: {
 						lat:  45.5197293,
 						lng: -122.673683,
 						zoom: 15
@@ -1085,7 +1176,7 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 			if(!initialized && $elem.is(':visible')) {
 				adjust_size();
 
-				self.map = window.MAP = L.mapbox.map($inner.attr('id'), settings.tiles_id, {
+				self.map = L.mapbox.map($inner.attr('id'), settings.tiles_id, {
 					detectRetina: true,
 					retinaVersion: settings.retina_tiles_id
 				});
@@ -1097,6 +1188,7 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 				markers.set_map_ctrl(self, $elem);
 				vectors.set_map_ctrl(self, $elem);
 				locate.set_map_ctrl(self, $elem);
+				routes.set_map_ctrl(self, $elem);
 				vehicles.set_map_ctrl(self, $elem);
 
 				set_center();
@@ -1111,23 +1203,22 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 
 				markers.clear();
 				vectors.clear();
-				locate.disable();
+				routes.disable();
 				vehicles.disable();
 
 				if(settings.map_locate) {
+					routes.enable();
 					locate.locate();
-				}
-
-				if(settings.route_type && settings.route_id) {
-					vectors.add_route(settings.route_type, settings.route_id, !settings.map_vehicle);
+				} else if(settings.route_type && settings.route_id) {
+					routes.add(settings.route_type, settings.route_id, !settings.map_vehicle);
 					if(settings.has_realtime) {
 						vehicles.add_vehicles(settings.route_type, settings.route_id, settings.map_vehicle);	
 					}
 				} else {
-					vectors.add_all_routes();
+					routes.add_all();
 				}
 			} else {
-				locate.disable();
+				routes.disable();
 				vehicles.disable();
 			}
 		});
@@ -1138,6 +1229,8 @@ nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate',
 		self.remove_marker = markers.remove;
 		self.clear_markers = markers.clear;
 		self.add_vector = vectors.add;
+		self.add_vector_points = vectors.add_points;
+		self.fit_to_last_path = vectors.fit_to_last_path;
 		self.clear_vectors = vectors.clear;
 	}
 ]);

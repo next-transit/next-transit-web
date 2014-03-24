@@ -7,8 +7,8 @@ nextsepta.module('nextsepta').service('map_locate', ['module', function(module) 
 
 	function locate() {
 		active = true;
-		render_user_location(39.926312796934674, -75.16697645187378);
-		return;
+		// render_user_location(39.926312796934674, -75.16697645187378);
+		// return;
 
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(position) {

@@ -27,7 +27,6 @@ nextsepta.module('nextsepta').service('map_vectors', ['module', 'data', function
 
 	function add_points(points, color, opacity) {
 		point_layers = [];
-		console.log('add_points')
 		points.forEach(function(point) {
 			var marker = L.circleMarker(point.shape, {
 				color: color || '#3a3',

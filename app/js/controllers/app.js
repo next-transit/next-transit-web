@@ -1,4 +1,6 @@
-nextsepta.module('nextsepta', ['templates', 'history', 'content_settings']).controller('app', ['module', '$elem', function(module, $elem) {
+nextsepta.module('nextsepta', ['templates', 'history', 'persist', 'content_settings']).controller('app', ['module', 'persist', '$elem', function(module, persist, $elem) {
+	persist();
+
 	var $content = $('.js-content', $elem);
 
 	module.data('route-type', $content.attr('data-route-type'));

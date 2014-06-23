@@ -53,6 +53,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		settings.parse(content, function(settings) {
 			if(push) {
 				history.pushState(settings, '', path);
+				module.emit('history-push', [path]);
 			}
 			apply_content_settings(settings);
 

@@ -14,8 +14,8 @@ nextsepta.module('nextsepta').service('persist', ['module', 'history', function(
 	}
 
 	// Set state for current path
-	function set_state(path) {
-		var state_str = JSON.stringify({ path:path, ts:(new Date).getTime() });
+	function set_state(path, content) {
+		var state_str = JSON.stringify({ path:path, content:content, ts:(new Date).getTime() });
 		storage[storage_name] = state_str;
 	}
 
@@ -38,14 +38,17 @@ nextsepta.module('nextsepta').service('persist', ['module', 'history', function(
 			// (if you bookmark a specific page it will always go there)
 		// and we have a persisted state
 		// and it's less than 30 mins old
-		if(!window.history.state && window.location.pathname === '/' && state && age < 30) {
-			history.push(state.path);
+		if(!window.history.state 
+			&& window.location.pathname === '/' 
+			&& state 
+			&& age < 30) {
+			history.push(state.path, state.content);
 		}
 	}
 
 	function persist_changes() {
-		module.on('history-push', function(evt, path) {
-			set_state(path);
+		module.on('history-push', function(evt, path, content) {
+			set_state(path, content);
 		});
 	}
 

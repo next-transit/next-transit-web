@@ -53,7 +53,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		settings.parse(content, function(settings) {
 			if(push) {
 				history.pushState(settings, '', path);
-				module.emit('history-push', [path]);
+				module.emit('history-push', [path, content]);
 			}
 			apply_content_settings(settings);
 
@@ -77,11 +77,16 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		});
 	}
 
-	function push_path(path) {
+	function push_path(path, content) {
 		$back_btn.attr('href', window.location.pathname);
-		get_content(path, function(content, path) {
+
+		if(content) {
 			render_content(content, path, true);
-		});
+		} else {
+			get_content(path, function(content, path) {
+				render_content(content, path, true);
+			});
+		}
 	}
 
 	// Looks for ".js-nav-link" elements and binds an override to History

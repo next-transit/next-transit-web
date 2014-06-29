@@ -143,9 +143,39 @@ function build_menu(req) {
 	req.locals.footer_menu_items = menu_items;
 }
 
+function persist_state(req, res, next) {
+	if(req.locals.is_html && req.locals.native_webapp) {
+		var state = req.cookies.state || {},
+			history = state.history || [],
+			last_path = history[history.length - 1];
+
+		if(last_path 
+			&& req.locals.native_webapp 
+			&& req.path === '/' 
+			&& last_path !== '/'
+			&& !req.get('referer')) {
+				if(history.length > 1) {
+					req.session.last_path = history[history.length - 2];
+				}
+				res.redirect(last_path);
+				return;
+		} else {
+			var push_path = req.url.replace(/(\?|&)layout=false$/i, '').replace(/layout=false&/i, ''),
+				cookie_settings = { maxAge:(1000 * 60 * 30) }; // 30 mins
+
+			if(last_path !== push_path) {
+				history.push(push_path);
+				res.cookie('state', { history:history }, cookie_settings);
+			}
+		}
+	}
+
+	next();
+}
+
 function before(req, res, next) {
 	if(config.verbose) {
-		console.log('request path', req.path)	
+		console.log('request path', req.url)	
 	}
 
 	res.error = function(message, status_code) {
@@ -172,10 +202,12 @@ function before(req, res, next) {
 		google_ua_url: config.agency_settings.google_ua_url,
 		last_path: req.session.last_path,
 		last_trip: req.session.last_trip,
-		show_footer: req.originalUrl !== '/'
+		show_footer: req.originalUrl !== '/',
+		native_webapp: /iphone/i.test(req.headers['user-agent'] || ''),
+		is_html: /text\/html/i.test(req.headers.accept)
 	};
 
-	if(req.method === 'GET' && /text\/html/i.test(req.headers.accept) && req.params.layout !== 'false') {
+	if(req.method === 'GET' && req.locals.is_html && req.params.layout !== 'false') {
 		req.locals.back_path = '';
 		if(req.session.last_path !== req.originalUrl) {
 			if(req.originalUrl !== '/') {
@@ -191,11 +223,13 @@ function before(req, res, next) {
 		req.locals.layout = 'layout_debug';
 	}
 
-	get_agency(req, next, function(msg) {
-		res.send(404, msg || '404');
-	}, function(err) {
-		console.log('Internal server error:', err);
-		res.send(500, 'Sorry, an error occurred.');
+	persist_state(req, res, function() {
+		get_agency(req, next, function(msg) {
+			res.send(404, msg || '404');
+		}, function(err) {
+			console.log('Internal server error:', err);
+			res.send(500, 'Sorry, an error occurred.');
+		});
 	});
 }
 

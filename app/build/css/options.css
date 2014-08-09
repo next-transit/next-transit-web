@@ -11,20 +11,6 @@
   margin-right: 1em;
 }
 
-.options .simple-nav .btn-right {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  margin-top: -0.9em;
-  -webkit-text-size-adjust: 100%;
-}
-
-.options .simple-nav .btn-right.icon-angle-right {
-  margin-top: -0.5em;
-  margin-right: 0.5em;
-  font-size: 1.4em;
-}
-
 .simple-nav a.options-trip {
   padding-right: 3.6em;
 }

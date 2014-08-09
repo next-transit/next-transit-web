@@ -1,4 +1,4 @@
-<!-- title: {{title}}; route_type: {{route_type_slug}}; route_id: {{route_id}}; has_realtime: {{route_type.has_realtime}} -->
+<!-- title: {{title}}; route_type: {{route_type_slug}}; route_id: {{route_id}}; has_realtime: {{show_realtime}}; all_trips: {{all_trips}} -->
 <div class="trips{{#if to_stop}} has-to{{/if}}" ctrl="trips">
 	<div class="content-inner trips-header">
 		<span class="trips-header-from-stop">
@@ -26,8 +26,37 @@
 			</ul>
 		</nav>
 	</div>
+	{{#if all_trips}}
+	<div class="content-inner content-section trips-full-nav">
+		<nav class="simple-nav">
+			<ul>
+				<li>
+					{{#if to_stop}}
+					<a href="/{{route_type_slug}}/{{route_id}}/{{direction_id}}/{{from_stop.stop_id}}/{{to_stop.stop_id}}" class="js-nav-link">Upcoming Arrivals<i class="btn-right icon-angle-right"></i></a>
+					{{else}}
+					<a href="/{{route_type_slug}}/{{route_id}}/{{direction_id}}/{{from_stop.stop_id}}" class="js-nav-link">Upcoming Arrivals<i class="btn-right icon-angle-right"></i></a>
+					{{/if}}
+				</li>
+			</ul>
+		</nav>
+	</div>
+	{{else}}
 	<div class="trips-paging">
 		<a href="?offset={{offset_prev}}" class="trips-paging-btn trips-paging-prev js-trips-prev"><i class="icon-long-arrow-left"></i></a>
 		<a href="?offset={{offset_next}}" class="trips-paging-btn trips-paging-next js-trips-next"><i class="icon-long-arrow-right"></i></a>
 	</div>
+	<div class="content-inner content-section trips-full-nav">
+		<nav class="simple-nav">
+			<ul>
+				<li>
+					{{#if to_stop}}
+					<a href="/{{route_type_slug}}/{{route_id}}/{{direction_id}}/{{from_stop.stop_id}}/{{to_stop.stop_id}}/all" class="js-nav-link">Full Schedule<i class="btn-right icon-angle-right"></i></a>
+					{{else}}
+					<a href="/{{route_type_slug}}/{{route_id}}/{{direction_id}}/{{from_stop.stop_id}}/all" class="js-nav-link">Full Schedule<i class="btn-right icon-angle-right"></i></a>
+					{{/if}}
+				</li>
+			</ul>
+		</nav>
+	</div>
+	{{/if}}
 </div>

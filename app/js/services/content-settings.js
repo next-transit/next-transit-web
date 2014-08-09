@@ -10,7 +10,8 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 				map_vehicle: null,
 				route_type: null,
 				route_id: null,
-				has_realtime: false
+				has_realtime: false,
+				all_trips: false
 			},
 			comment_matches = content.match(/<!-- (.+) -->/i),
 			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))?;? ?(footer: ?([\w]+))?;? -->/i);

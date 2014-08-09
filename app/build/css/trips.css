@@ -205,7 +205,7 @@
 
 .trips-paging {
   *zoom: 1;
-  margin-top: 0.4em;
+  margin-top: 0.4rem;
 }
 .trips-paging:before, .trips-paging:after {
   display: table;
@@ -238,4 +238,9 @@
 
 .trips-paging-next {
   float: right;
+}
+
+.trips-full-nav {
+  margin-top: 0.4rem;
+  font-size: 0.7em;
 }

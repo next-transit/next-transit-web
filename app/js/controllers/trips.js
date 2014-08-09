@@ -133,7 +133,9 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 		if(settings.has_realtime) {
 			get_realtime_data(settings.route_type, settings.route_id);
 		}
-	});
 
-	timer();
+		if(!settings.all_trips) {
+			timer();
+		}
+	});
 }]);

@@ -73,6 +73,20 @@
   border-bottom: 0;
 }
 
+.simple-nav .btn-right {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: -0.9em;
+  -webkit-text-size-adjust: 100%;
+}
+
+.simple-nav .btn-right.icon-angle-right {
+  margin-top: -0.5em;
+  margin-right: 0.5em;
+  font-size: 1.4em;
+}
+
 .simple-nav li:last-child a {
   border-radius: 0 0 4px 4px;
 }

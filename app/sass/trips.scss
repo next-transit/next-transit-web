@@ -162,7 +162,7 @@
 
 .trips-paging {
 	@include clearfix;
-	margin-top: 0.4em;
+	margin-top: 0.4rem;
 }
 	.trips-paging-btn {
 		display: inline-block;
@@ -184,3 +184,8 @@
 	.trips-paging-next {
 		float: right;
 	}
+
+.trips-full-nav {
+	margin-top: 0.4rem;
+	font-size: 0.7em;
+}

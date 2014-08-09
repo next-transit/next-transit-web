@@ -1,10 +1,12 @@
 {{#trips}}
-<li class="simple-nav-item trip{{#if gone}} gone{{/if}}{{#if ../route.has_realtime}} has-realtime{{/if}}" data-block-id="{{block_id}}" data-departure-time="{{departure_datetime}}">
+<li class="simple-nav-item trip{{#if show_gone}} gone{{/if}}{{#if ../show_realtime}} has-realtime{{/if}}" data-block-id="{{block_id}}" data-departure-time="{{departure_datetime}}">
 	<div class="trip-stop trip-from">
 		<i class="icon-time"></i> 
 		<div class="trip-label">
 			{{departure_time_formatted}} 
+			{{#if show_gone}}
 			<span class="trip-from-now">({{from_now}})</span>
+			{{/if}}
 		</div>
 	</div>
 	<div class="trip-stop trip-to">

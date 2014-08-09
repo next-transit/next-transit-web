@@ -1,12 +1,13 @@
 var ctrl = require('./controller').create('trips'),
 	display_trips = require('../models/display_trips');
 
-ctrl.action('index', function(req, res, callback) {
+function get_trips(req, res, callback) {
 	var route = req.route, 
 		direction = req.direction, 
 		offset = 0,
 		params = {},
-		view = 'trips';
+		view = 'trips',
+		all_trips = req.params.all === 'true';
 
 	if(req.query.offset) {
 		offset = parseInt(req.query.offset, 10) || 0;
@@ -27,15 +28,33 @@ ctrl.action('index', function(req, res, callback) {
 		stop_ids += '...' + req.to_stop.stop_id;
 	}
 
-	display_trips.api_query('/routes/' + req.route_id + '/directions/' + req.direction_id + '/stops/' + stop_ids + '/trips', params).then(function(trips) {
+	var api_path = '/routes/' + req.route_id + '/directions/' + req.direction_id + '/stops/' + stop_ids;
+
+	api_path += all_trips ? '/all_trips' : '/trips';
+
+	display_trips.api_query(api_path, params).then(function(trips) {
+		trips.forEach(function(trip) {
+			trip.show_gone = trip.gone && !all_trips;
+		});
+
 		callback(view, {
+			route: route,
+			show_realtime: route.has_realtime && !all_trips,
 			title: route.route_short_name + ' - ' + direction.direction_name, 
 			trips: trips, 
 			direction_id_rev: req.direction_id === '0' ? '1' : '0',
 			offset_prev: offset_prev, 
-			offset_next: offset_next
+			offset_next: offset_next,
+			all_trips: all_trips
 		});
 	}, res.internal_error);
+}
+
+ctrl.action('index', get_trips);
+
+ctrl.action('all', function(req, res, callback) {
+	req.params.all = 'true';
+	get_trips(req, res, callback);
 });
 
 module.exports = ctrl;

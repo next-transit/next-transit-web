@@ -159,6 +159,7 @@
 		return _modules[name];
 	};
 })(window);
+
 (function(global) {
 	var nextsepta = global.nextsepta;
 
@@ -277,7 +278,8 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 				map_vehicle: null,
 				route_type: null,
 				route_id: null,
-				has_realtime: false
+				has_realtime: false,
+				all_trips: false
 			},
 			comment_matches = content.match(/<!-- (.+) -->/i),
 			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))?;? ?(footer: ?([\w]+))?;? -->/i);
@@ -313,6 +315,7 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 
 	return { parse:parse_settings };
 }]);
+
 nextsepta.module('nextsepta').service('cookie', [function() {
 	function _set(name, value, options) {
 		options = options || {};
@@ -380,6 +383,7 @@ nextsepta.module('nextsepta').service('data', [function() {
 		}
 	};
 }]);
+
 nextsepta.module('nextsepta').service('geo_utils', [function() {
 	function number_to_radius(n) {
 		return n * Math.PI / 180;
@@ -460,6 +464,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		settings.parse(content, function(settings) {
 			if(push) {
 				history.pushState(settings, '', path);
+				module.emit('history-push', [path, content]);
 			}
 			apply_content_settings(settings);
 
@@ -483,11 +488,16 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		});
 	}
 
-	function push_path(path) {
+	function push_path(path, content) {
 		$back_btn.attr('href', window.location.pathname);
-		get_content(path, function(content, path) {
+
+		if(content) {
 			render_content(content, path, true);
-		});
+		} else {
+			get_content(path, function(content, path) {
+				render_content(content, path, true);
+			});
+		}
 	}
 
 	// Looks for ".js-nav-link" elements and binds an override to History
@@ -533,7 +543,9 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		attach_events();
 
 		// Event listener for browser back button clicks
+		var first_pop = true;
 		$(window).bind('popstate', function(evt) {
+			if(first_pop) { first_pop = false; return; }
 			get_content(window.location.pathname, render_content);
 		});
 	});
@@ -548,6 +560,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		}
 	};
 }]);
+
 nextsepta.module('nextsepta').service('map_locate', ['module', function(module) {
 	var map_ctrl;
 
@@ -1115,6 +1128,7 @@ nextsepta.module('nextsepta', ['templates', 'history', 'content_settings']).cont
 	module.data('route-id', $content.attr('data-route-id'));
 	module.data('agency-slug', $elem.attr('data-agency-slug'));
 }]).run();
+
 nextsepta.module('nextsepta').controller('feedback', ['data', '$elem', function(data, $elem) {
 	$('#feedback-submit-btn', $elem).click(function() {
 		$('.error', $elem).removeClass('error');
@@ -1431,7 +1445,9 @@ nextsepta.module('nextsepta').controller('trips', ['module', 'templates', 'data'
 		if(settings.has_realtime) {
 			get_realtime_data(settings.route_type, settings.route_id);
 		}
-	});
 
-	timer();
+		if(!settings.all_trips) {
+			timer();
+		}
+	});
 }]);

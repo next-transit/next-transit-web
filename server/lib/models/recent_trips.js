@@ -9,11 +9,35 @@ function trim_trips(trips, callback) {
 	return trips;
 }
 
+function stop_point(stop) {
+	var point = null;
+
+	if(stop && stop.stop_lat && stop.stop_lon) {
+		var lat = stop.stop_lat,
+			lon = stop.stop_lon;
+
+		if(typeof lat === 'string') {
+			lat = parseFloat(lat);
+		}
+
+		if(typeof lon === 'string') {
+			lon = parseFloat(lon);
+		}
+
+		point = [lat, lon];
+	}
+
+	return point;
+}
+
 function before(req, res, next) {
 	var cookie_settings = { maxAge:(1000 * 60 * 60 * 24 * 365.4) },
 		recent_trips = req.cookies.recent_trips || [],
 		saved_trips = req.cookies.saved_trips || [],
 		last_trip;
+
+	if(typeof recent_trips === 'string') recent_trips = [];
+	if(typeof saved_trips === 'string') saved_trips = [];
 
 	if(req.route_type && req.direction && req.from_stop) {
 		var pieces = [req.route_type.slug, req.route.slug, req.direction.direction_id, req.from_stop.stop_id];
@@ -33,7 +57,9 @@ function before(req, res, next) {
 			route_name: req.route.route_name,
 			direction_name: req.direction.direction_name,
 			from_stop_name: req.from_stop.stop_name,
+			from_stop_point: stop_point(req.from_stop),
 			to_stop_name: (req.to_stop || {}).stop_name,
+			to_stop_point: null,
 			count: 1
 		};
 
@@ -60,7 +86,7 @@ function before(req, res, next) {
 
 	var top_trips = [];
 	recent_trips.forEach(function(recent_trip, idx) {
-		if(idx < 5) {
+		if(idx < 5 && saved_trips) {
 			saved_trips.forEach(function(saved_trip) {
 				if(saved_trip.key === recent_trip.key) {
 					recent_trip.saved = true;

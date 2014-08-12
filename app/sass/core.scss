@@ -7,3 +7,7 @@ html, body {
 .row {
 	@include clearfix;
 }
+
+.right {
+	float: right;
+}

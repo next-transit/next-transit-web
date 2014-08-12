@@ -12,3 +12,7 @@ html, body {
 .row:after {
   clear: both;
 }
+
+.right {
+  float: right;
+}

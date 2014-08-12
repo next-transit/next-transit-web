@@ -317,6 +317,10 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 }]);
 
 nextsepta.module('nextsepta').service('cookie', [function() {
+	function _startsWith(s, match) {
+		return s.indexOf(match) === 0;
+	}
+
 	function _set(name, value, options) {
 		options = options || {};
 		if(value === null) { value = ''; }
@@ -347,7 +351,7 @@ nextsepta.module('nextsepta').service('cookie', [function() {
 			var cookies = document.cookie.split(';');
 			for(var i = 0, len = cookies.length; i < len; i++) {
 				var cookie = $.trim(cookies[i]);
-				if(cookie.startsWith(name+'=')) {
+				if(_startsWith(cookie, name + '=')) {
 					val = decodeURIComponent(cookie.substring(name.length + 1));
 					break;
 				}
@@ -357,10 +361,10 @@ nextsepta.module('nextsepta').service('cookie', [function() {
 	}
 
 	return function cookie(name, value, options) {
-		if(typeof valid === 'undefined') {
-			_set(name, value, options);
-		} else {
+		if(typeof value === 'undefined') {
 			return _get(name);
+		} else {
+			_set(name, value, options);
 		}
 	};
 }]);
@@ -380,6 +384,25 @@ nextsepta.module('nextsepta').service('data', [function() {
 		},
 		post: function(url, data, success, error) {
 			request({ url:url, method:'POST', data:data, success:success, error:error });
+		}
+	};
+}]);
+
+nextsepta.module('nextsepta').service('geo_locate', [function() {
+	return function(callback, nope) {
+		callback = callback || nextsepta.noop;
+		nope = nope || nextsepta.noop;
+
+		if(navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				if(position) {
+					callback(position);
+				} else {
+					nope()
+				}
+			});
+		} else {
+			nope();
 		}
 	};
 }]);
@@ -405,10 +428,47 @@ nextsepta.module('nextsepta').service('geo_utils', [function() {
 		return (6371 * b) * 1000;
 	}
 
+	function get_closest(closest_to, points) {
+		var min_distance, distance, closest_point;
+
+		points.forEach(function(point) {
+			distance = point_distance(closest_to, point);
+
+			console.log(point[2].key, distance);
+
+			if(typeof min_distance === 'undefined' || distance < min_distance) {
+				min_distance = distance;
+				closest_point = point;
+			}
+		});
+
+		return closest_point;
+	}
+
+	function get_closest_trip(closest_to, trips) {
+		var min_distance, distance, closest_trip;
+
+		trips.forEach(function(trip) {
+			if(trip.from_stop_point) {
+				distance = point_distance(closest_to, trip.from_stop_point);
+
+				if(typeof min_distance === 'undefined' || distance < min_distance) {
+					min_distance = distance;
+					closest_trip = trip;
+				}
+			}
+		});
+
+		return closest_trip;
+	}
+
 	return {
-		point_distance: point_distance
+		point_distance: point_distance,
+		get_closest: get_closest,
+		get_closest_trip: get_closest_trip
 	};
 }]);
+
 nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'content_settings', function(module, data, resize, settings) {
 	if(!window.history) {
 		return {};
@@ -561,7 +621,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 	};
 }]);
 
-nextsepta.module('nextsepta').service('map_locate', ['module', function(module) {
+nextsepta.module('nextsepta').service('map_locate', ['module', 'geo_locate', function(module, geo_locate) {
 	var map_ctrl;
 
 	function render_user_location(lat, lng) {
@@ -573,13 +633,9 @@ nextsepta.module('nextsepta').service('map_locate', ['module', function(module) 
 		// render_user_location(39.926312796934674, -75.16697645187378);
 		// return;
 
-		if(navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(function(position) {
-				if(position) {
-					render_user_location(position.coords.latitude, position.coords.longitude);
-				}
-			});
-		}
+		geo_locate(function(position) {
+			render_user_location(position.coords.latitude, position.coords.longitude);
+		});
 	}
 
 	return {
@@ -1145,6 +1201,63 @@ nextsepta.module('nextsepta').controller('feedback', ['data', '$elem', function(
 		}
 	});	
 }]);
+nextsepta.module('nextsepta').controller('home', ['module', 'cookie', 'geo_locate', 'geo_utils', '$elem', 
+	function(module, cookie, geo_locate, geo_utils, $elem) {
+		function _cookie_val(name) {
+			var raw = cookie(name),
+				val;
+
+			if(raw) {
+				if(raw.indexOf('j:') === 0) {
+					raw = raw.replace(/^j:/, '')
+				}
+				try {
+					val = JSON.parse(raw);
+				}
+				catch(e) {}
+			}
+
+			return val;
+		}
+
+		function _find_nearest_trip(trips, callback) {
+			geo_locate(function(position) {
+				var user_point = [position.coords.latitude, position.coords.longitude],
+					closest_trip = geo_utils.get_closest_trip(user_point, trips);
+
+				if(closest_trip) {
+					callback(closest_trip);
+				}
+			}, callback);
+		}
+
+		function _render(trip) {
+			console.log('render', trip);
+			$('a', $recent).attr('href', trip.path);
+			$('strong', $recent).addClass(trip.route_type + ' ' + trip.slug).text(trip.route_name);
+			$('span', $recent).text(trip.direction_name);
+			$recent.addClass('show');
+		}
+
+		var trips = _cookie_val('saved_trips') || [],
+			recent_trips = _cookie_val('recent_trips') || [],
+			$recent = $('.js-home-recent', $elem);
+
+		if(!trips.length) {
+			trips = recent_trips;
+		}
+
+		if(trips.length) {
+			_find_nearest_trip(trips, function(closest_trip) {
+				if(closest_trip) {
+					_render(closest_trip);
+				} else {
+					_render(trips[0]);
+				}
+			});
+		}
+	}]);
+
 nextsepta.module('nextsepta').controller('map', ['module', 'data', 'map_locate', 'map_routes', 'map_vehicles', 'map_markers', 'map_vectors', '$elem', 
 	function(module, data, locate, routes, vehicles, markers, vectors, $elem) {
 		var $inner = $('.js-map-inner', $elem),

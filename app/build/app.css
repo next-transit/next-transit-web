@@ -533,6 +533,10 @@ html, body {
   clear: both;
 }
 
+.right {
+  float: right;
+}
+
 .btn {
   display: inline-block;
   padding: 0.5em 1.2em;
@@ -792,10 +796,6 @@ input[type=button].btn {
   text-overflow: ellipsis;
 }
 
-.simple-nav-small a, .simple-nav-small .simple-nav-item {
-  font-size: 1.2em;
-}
-
 .simple-nav a:hover, .simple-nav a:focus {
   background-color: rgba(255, 255, 255, 0.075);
   -webkit-transition: background-color 0.15s linear;
@@ -827,15 +827,22 @@ input[type=button].btn {
 }
 
 .simple-nav strong {
-  display: inline-block;
   margin-right: 0.4em;
-  padding: 0 0.4em;
+  padding: 0.1em 0.4em 0.2em;
   min-width: 2em;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.1);
   font-size: 1.4em;
   font-weight: normal;
   border-radius: 3px;
+}
+
+.simple-nav.small a, .simple-nav.small .simple-nav-item, .simple-nav.small strong {
+  font-size: 1.2em;
+}
+
+.simple-nav.smaller a, .simple-nav.smaller .simple-nav-item, .simple-nav.smaller strong {
+  font-size: 1.0em;
 }
 
 .feedback {
@@ -984,6 +991,10 @@ textarea::-webkit-input-placeholder {
   background-color: #fff;
   border-radius: 4px;
   box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.9);
+}
+
+.home-recent .simple-nav strong {
+  padding: 0.2em 0.8em;
 }
 
 .app-header {

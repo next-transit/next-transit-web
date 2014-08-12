@@ -1,4 +1,8 @@
 nextsepta.module('nextsepta').service('cookie', [function() {
+	function _startsWith(s, match) {
+		return s.indexOf(match) === 0;
+	}
+
 	function _set(name, value, options) {
 		options = options || {};
 		if(value === null) { value = ''; }
@@ -29,7 +33,7 @@ nextsepta.module('nextsepta').service('cookie', [function() {
 			var cookies = document.cookie.split(';');
 			for(var i = 0, len = cookies.length; i < len; i++) {
 				var cookie = $.trim(cookies[i]);
-				if(cookie.startsWith(name+'=')) {
+				if(_startsWith(cookie, name + '=')) {
 					val = decodeURIComponent(cookie.substring(name.length + 1));
 					break;
 				}
@@ -39,10 +43,10 @@ nextsepta.module('nextsepta').service('cookie', [function() {
 	}
 
 	return function cookie(name, value, options) {
-		if(typeof valid === 'undefined') {
-			_set(name, value, options);
-		} else {
+		if(typeof value === 'undefined') {
 			return _get(name);
+		} else {
+			_set(name, value, options);
 		}
 	};
 }]);

@@ -2,6 +2,15 @@
 <div class="home" ctrl="home">
 	<form class="home-search" action="/search" method="GET">
 		<input type="text" name="term" placeholder="{{search_text}}" /> <button class="btn">Go</button>
+
+		<div class="right content-inner home-recent js-home-recent">
+			<div class="simple-nav smaller">
+				<a href="" class="js-nav-link">
+					<strong class=""></strong>
+					<span title=""></span>
+				</a>
+			</div>
+		</div>
 	</form>
 
 	<div class="content-inner content-section">
@@ -15,13 +24,12 @@
 	</div>
 
 	<div class="content-inner content-section">
-		<nav class="simple-nav simple-nav-small">
+		<nav class="simple-nav small">
 			<a href="/locate" class="js-nav-link"><i class="icon-compass"></i> Find nearby routes</a>
 		</nav>
 	</div>
 
 	<div class="content-text content-subtle">
-
 		{{#if twitter_acct}}
 		<p>Follow <a href="http://twitter.com/{{twitter_acct}}">@{{twitter_acct}}</a> for info and updates.</p>
 		{{/if}}

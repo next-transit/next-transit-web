@@ -86,9 +86,6 @@
 			font-weight: 100;
 			@include ellipsis;
 		}
-		.simple-nav-small a, .simple-nav-small .simple-nav-item {
-			font-size: 1.2em;
-		}
 		.simple-nav a:hover, .simple-nav a:focus {
 			background-color: rgba(255, 255, 255, 0.075);
 			@include transition(background-color, 0.15s);
@@ -111,9 +108,8 @@
 				margin-right: 0.6em;
 			}
 			.simple-nav strong {
-				display: inline-block;
 				margin-right: 0.4em;
-				padding: 0 0.4em;
+				padding: 0.1em 0.4em 0.2em;
 				min-width: 2em;
 				text-align: center;
 				background-color: rgba(255, 255, 255, 0.1);
@@ -121,3 +117,15 @@
 				font-weight: normal;
 				border-radius: 3px;
 			}
+
+.simple-nav.small {
+	a, .simple-nav-item, strong {
+		font-size: 1.2em;	
+	}
+}
+
+.simple-nav.smaller {
+	a, .simple-nav-item, strong {
+		font-size: 1.0em;	
+	}
+}

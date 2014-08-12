@@ -1,4 +1,4 @@
-nextsepta.module('nextsepta').service('map_locate', ['module', function(module) {
+nextsepta.module('nextsepta').service('map_locate', ['module', 'geo_locate', function(module, geo_locate) {
 	var map_ctrl;
 
 	function render_user_location(lat, lng) {
@@ -10,13 +10,9 @@ nextsepta.module('nextsepta').service('map_locate', ['module', function(module) 
 		// render_user_location(39.926312796934674, -75.16697645187378);
 		// return;
 
-		if(navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(function(position) {
-				if(position) {
-					render_user_location(position.coords.latitude, position.coords.longitude);
-				}
-			});
-		}
+		geo_locate(function(position) {
+			render_user_location(position.coords.latitude, position.coords.longitude);
+		});
 	}
 
 	return {

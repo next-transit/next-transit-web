@@ -974,7 +974,6 @@ textarea::-webkit-input-placeholder {
 .home-search {
   margin-bottom: 1em;
 }
-
 .home-search input {
   width: 16em;
 }
@@ -995,12 +994,24 @@ textarea::-webkit-input-placeholder {
 
 .home-recent {
   display: none;
+  margin-bottom: 1em;
 }
 .home-recent.show {
   display: block;
 }
 .home-recent .simple-nav strong {
   padding: 0.2em 0.8em;
+}
+
+@media (min-width: 480px) {
+  .home-search {
+    float: left;
+  }
+
+  .home-recent {
+    float: right;
+    margin-top: 0;
+  }
 }
 
 .app-header {

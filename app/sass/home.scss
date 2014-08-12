@@ -3,10 +3,11 @@
 .home {}
 	.home-search {
 		margin-bottom: 1em;
-	}
-		.home-search input {
+
+		input {
 			width: 16em;
 		}
+	}
 		.home-route-type a:before {
 			content: "";
 			position: relative;
@@ -23,6 +24,7 @@
 
 	.home-recent {
 		display: none;
+		margin-bottom: 1em;
 
 		&.show {
 			display: block;
@@ -32,3 +34,14 @@
 			padding: 0.2em 0.8em;
 		}
 	}
+
+@media (min-width: 480px) {
+	.home-search {
+		float: left;
+	}
+
+	.home-recent {
+		float: right;
+		margin-top: 0;
+	}
+}

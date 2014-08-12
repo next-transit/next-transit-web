@@ -1,9 +1,11 @@
 <!-- title: {{title}}; back: false; options: true; footer: false; -->
 <div class="home" ctrl="home">
-	<form class="home-search" action="/search" method="GET">
-		<input type="text" name="term" placeholder="{{search_text}}" /> <button class="btn">Go</button>
+	<div class="row">
+		<form class="home-search" action="/search" method="GET">
+			<input type="text" name="term" placeholder="{{search_text}}" /> <button class="btn">Go</button>
+		</form>
 
-		<div class="right content-inner home-recent js-home-recent">
+		<div class="content-inner home-recent js-home-recent">
 			<div class="simple-nav smaller">
 				<a href="" class="js-nav-link">
 					<strong class=""></strong>
@@ -11,7 +13,7 @@
 				</a>
 			</div>
 		</div>
-	</form>
+	</div>
 
 	<div class="content-inner content-section">
 		<nav class="simple-nav">

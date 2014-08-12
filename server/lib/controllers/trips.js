@@ -33,10 +33,6 @@ function get_trips(req, res, callback) {
 	api_path += all_trips ? '/all_trips' : '/trips';
 
 	display_trips.api_query(api_path, params).then(function(trips) {
-		trips.forEach(function(trip) {
-			trip.show_gone = trip.gone && !all_trips;
-		});
-
 		callback(view, {
 			route: route,
 			show_realtime: route.has_realtime && !all_trips,

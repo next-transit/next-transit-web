@@ -4,9 +4,9 @@
 		<i class="icon-time"></i> 
 		<div class="trip-label">
 			{{departure_time_formatted}} 
-			{{#if show_gone}}
+			{{#unless ../all_trips}}
 			<span class="trip-from-now">({{from_now}})</span>
-			{{/if}}
+			{{/unless}}
 		</div>
 	</div>
 	<div class="trip-stop trip-to">

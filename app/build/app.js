@@ -398,7 +398,7 @@ nextsepta.module('nextsepta').service('geo_locate', [function() {
 				if(position) {
 					callback(position);
 				} else {
-					nope()
+					nope();
 				}
 			});
 		} else {
@@ -428,23 +428,6 @@ nextsepta.module('nextsepta').service('geo_utils', [function() {
 		return (6371 * b) * 1000;
 	}
 
-	function get_closest(closest_to, points) {
-		var min_distance, distance, closest_point;
-
-		points.forEach(function(point) {
-			distance = point_distance(closest_to, point);
-
-			console.log(point[2].key, distance);
-
-			if(typeof min_distance === 'undefined' || distance < min_distance) {
-				min_distance = distance;
-				closest_point = point;
-			}
-		});
-
-		return closest_point;
-	}
-
 	function get_closest_trip(closest_to, trips) {
 		var min_distance, distance, closest_trip;
 
@@ -464,7 +447,6 @@ nextsepta.module('nextsepta').service('geo_utils', [function() {
 
 	return {
 		point_distance: point_distance,
-		get_closest: get_closest,
 		get_closest_trip: get_closest_trip
 	};
 }]);
@@ -1209,7 +1191,7 @@ nextsepta.module('nextsepta').controller('home', ['module', 'cookie', 'geo_locat
 
 			if(raw) {
 				if(raw.indexOf('j:') === 0) {
-					raw = raw.replace(/^j:/, '')
+					raw = raw.replace(/^j:/, '');
 				}
 				try {
 					val = JSON.parse(raw);
@@ -1232,7 +1214,6 @@ nextsepta.module('nextsepta').controller('home', ['module', 'cookie', 'geo_locat
 		}
 
 		function _render(trip) {
-			console.log('render', trip);
 			$('a', $recent).attr('href', trip.path);
 			$('strong', $recent).addClass(trip.route_type + ' ' + trip.slug).text(trip.route_name);
 			$('span', $recent).text(trip.direction_name);

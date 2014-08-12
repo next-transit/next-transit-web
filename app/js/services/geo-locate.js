@@ -8,7 +8,7 @@ nextsepta.module('nextsepta').service('geo_locate', [function() {
 				if(position) {
 					callback(position);
 				} else {
-					nope()
+					nope();
 				}
 			});
 		} else {

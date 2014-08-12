@@ -19,21 +19,6 @@ nextsepta.module('nextsepta').service('geo_utils', [function() {
 		return (6371 * b) * 1000;
 	}
 
-	function get_closest(closest_to, points) {
-		var min_distance, distance, closest_point;
-
-		points.forEach(function(point) {
-			distance = point_distance(closest_to, point);
-
-			if(typeof min_distance === 'undefined' || distance < min_distance) {
-				min_distance = distance;
-				closest_point = point;
-			}
-		});
-
-		return closest_point;
-	}
-
 	function get_closest_trip(closest_to, trips) {
 		var min_distance, distance, closest_trip;
 
@@ -53,7 +38,6 @@ nextsepta.module('nextsepta').service('geo_utils', [function() {
 
 	return {
 		point_distance: point_distance,
-		get_closest: get_closest,
 		get_closest_trip: get_closest_trip
 	};
 }]);

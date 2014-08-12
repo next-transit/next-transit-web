@@ -6,7 +6,7 @@ nextsepta.module('nextsepta').controller('home', ['module', 'cookie', 'geo_locat
 
 			if(raw) {
 				if(raw.indexOf('j:') === 0) {
-					raw = raw.replace(/^j:/, '')
+					raw = raw.replace(/^j:/, '');
 				}
 				try {
 					val = JSON.parse(raw);

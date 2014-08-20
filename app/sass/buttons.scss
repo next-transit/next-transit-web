@@ -69,6 +69,19 @@ input[type=button].btn {
 	text-align: center;
 }
 
+.btn-primary {
+	background-color: $background_blue;
+}
+.btn-primary, a.btn-primary, a.btn-primary:hover, a.btn-primary:active {
+	color: $color_blue;
+}
+.btn-primary:hover {
+	background-color: $background_blue_hover;
+}
+.btn-primary:active {
+	background-color: $background_blue_active;
+}
+
 .btn-add {
 	background-color: $background_add;
 }

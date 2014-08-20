@@ -15,6 +15,13 @@
 			{{/if}}
 		</span>
 	</div>
+	{{#if all_trips}}
+	<div class="align-center">
+		<a href="?day=weekdays" class="btn">Weekdays</a>
+		<a href="?day=saturdays" class="btn">Saturdays</a>
+		<a href="?day=sundays" class="btn">Sundays</a>
+	</div>
+	{{/if}}
 	<div class="trips-subheader">
 		<div class="trips-subheader-stop trips-subheader-from">Departs</div>
 		<div class="trips-subheader-stop trips-subheader-to">Arrives</div>

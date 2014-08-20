@@ -1,19 +1,34 @@
 var ctrl = require('./controller').create('trips'),
 	display_trips = require('../models/display_trips');
 
+function get_day_of_week_num(day) {
+	if(day) {
+		if(day === 'saturdays') {
+			return 6;
+		} else if(day === 'sundays') {
+			return 0;
+		}
+		return 1;
+	}
+}
+
 function get_trips(req, res, callback) {
 	var route = req.route, 
 		direction = req.direction, 
 		offset = 0,
 		params = {},
 		view = 'trips',
-		all_trips = req.params.all === 'true';
+		all_trips = req.params.all === 'true',
+		day_of_week = get_day_of_week_num(req.query.day);
 
 	if(req.query.offset) {
 		offset = parseInt(req.query.offset, 10) || 0;
 	}
 	if(offset) {
 		params.offset = offset;
+	}
+	if(typeof day_of_week === 'number') {
+		params.day = day_of_week;
 	}
 
 	if(req.query.itemsonly === 'true') {

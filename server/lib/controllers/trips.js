@@ -12,6 +12,16 @@ function get_day_of_week_num(day) {
 	}
 }
 
+function get_all_trips_days(day_param) {
+	return ['weekdays', 'saturdays', 'sundays'].map(function(day) {
+		return {
+			val: day,
+			label: day[0].toUpperCase() + day.substr(1),
+			selected: day === day_param
+		};
+	});
+}
+
 function get_trips(req, res, callback) {
 	var route = req.route, 
 		direction = req.direction, 
@@ -19,7 +29,8 @@ function get_trips(req, res, callback) {
 		params = {},
 		view = 'trips',
 		all_trips = req.params.all === 'true',
-		day_of_week = get_day_of_week_num(req.query.day);
+		day_of_week = get_day_of_week_num(req.query.day),
+		all_trips_days = get_all_trips_days(req.query.day);
 
 	if(req.query.offset) {
 		offset = parseInt(req.query.offset, 10) || 0;
@@ -56,7 +67,8 @@ function get_trips(req, res, callback) {
 			direction_id_rev: req.direction_id === '0' ? '1' : '0',
 			offset_prev: offset_prev, 
 			offset_next: offset_next,
-			all_trips: all_trips
+			all_trips: all_trips,
+			all_trips_days: all_trips_days
 		});
 	}, res.internal_error);
 }

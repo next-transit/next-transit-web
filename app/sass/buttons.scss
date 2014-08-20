@@ -4,7 +4,15 @@
    Buttons
    ========================================================================== */
 
-$btn_color: #333;
+$btn_color: #f0f0f0;
+$btn_bg_color: rgba(255, 255, 255, 0.1);
+$btn_bg_color_hover: rgba(255, 255, 255, 0.15);
+$btn_bg_color_active: rgba(255, 255, 255, 0.05);
+
+$secondary_color: #aaa;
+$secondary_bg_color: rgba(255, 255, 255, 0.05);
+$secondary_bg_color_hover: rgba(255, 255, 255, 0.1);
+$secondary_bg_color_active: rgba(255, 255, 255, 0.025);
 
 .btn {
 	display: inline-block;
@@ -12,14 +20,14 @@ $btn_color: #333;
 	vertical-align: middle;
 	line-height: normal;
 	border: 0;
-	background-color: rgba(255, 255, 255, 0.1);
+	background-color: $btn_bg_color;
 	background-repeat: no-repeat;
 	font-size: 0.8rem;
 	cursor: pointer;
 	text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.3);
 	box-shadow:0 1px 3px rgba(0, 0, 0, 0.5), 0 0 1.5px rgba(255, 255, 255, 0.2) inset;
 	border-radius: 3px;
-	color: #f0f0f0;
+	color: $btn_color;
 	@inclide transition(background, .15s);
 }
 a.btn {
@@ -29,10 +37,10 @@ input[type=button].btn {
 	-webkit-appearance: none;
 }
 .btn:hover {
-	background-color: rgba(255, 255, 255, 0.15);
+	background-color: $btn_bg_color_hover;
 }
 .btn:active {
-	background-color: rgba(255, 255, 255, 0.05);
+	background-color: $btn_bg_color_active;
 	box-shadow:0 1px 3px rgba(0, 0, 0, 0.6), 0 0 1.5px rgba(255, 255, 255, 0.1) inset;
 }
 .btn.disabled, .btn[disabled] {
@@ -80,6 +88,19 @@ input[type=button].btn {
 }
 .btn-primary:active {
 	background-color: $background_blue_active;
+}
+
+.btn-secondary {
+	background-color: $secondary_bg_color;
+}
+.btn-secondary, a.btn-secondary, a.btn-secondary:hover, a.btn-secondary:active {
+	color: $secondary_color;
+}
+.btn-secondary:hover {
+	background-color: $secondary_bg_color_hover;
+}
+.btn-secondary:active {
+	background-color: $secondary_bg_color_active;
 }
 
 .btn-add {

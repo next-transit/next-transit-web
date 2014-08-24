@@ -157,6 +157,17 @@
 				@include gradient-range(lighten($background_color, 4%), lighten($background_color, 8%));
 			}
 
+
+@media (max-width: 480px) {
+	.content {
+		padding-right: 0;
+		padding-left: 0;
+	}
+	.content-inner {
+		border-radius: 0;
+	}
+}
+
 @media (min-width: 480px) {
 	.app-footer-btn {
 		padding: 0.8em 1.2em;

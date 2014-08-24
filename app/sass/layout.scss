@@ -24,6 +24,12 @@
 		color: darken($green, 14%);
 	}
 	.app-title {
+		display: block;
+		margin: 0 auto;
+		padding: 0 2rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 		font-size: 1.1em;
 	}
 	.app-header-btn {

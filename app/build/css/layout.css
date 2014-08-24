@@ -32,6 +32,12 @@
 }
 
 .app-title {
+  display: block;
+  margin: 0 auto;
+  padding: 0 2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 1.1em;
 }
 
@@ -210,6 +216,16 @@
   /* IE6-9 */
 }
 
+@media (max-width: 480px) {
+  .content {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .content-inner {
+    border-radius: 0;
+  }
+}
 @media (min-width: 480px) {
   .app-footer-btn {
     padding: 0.8em 1.2em;

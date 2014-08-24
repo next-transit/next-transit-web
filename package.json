@@ -1,7 +1,7 @@
 {
   "name": "next-transit",
   "description": "NEXT-Transit",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "private": true,
   "engines": {
     "node": "0.10.x",

@@ -1084,6 +1084,12 @@ textarea::-webkit-input-placeholder {
 }
 
 .app-title {
+  display: block;
+  margin: 0 auto;
+  padding: 0 2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 1.1em;
 }
 
@@ -1262,6 +1268,16 @@ textarea::-webkit-input-placeholder {
   /* IE6-9 */
 }
 
+@media (max-width: 480px) {
+  .content {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .content-inner {
+    border-radius: 0;
+  }
+}
 @media (min-width: 480px) {
   .app-footer-btn {
     padding: 0.8em 1.2em;
@@ -1773,4 +1789,11 @@ textarea::-webkit-input-placeholder {
 .trips-full-nav {
   margin-top: 0.4rem;
   font-size: 0.7em;
+}
+
+@media (max-width: 480px) {
+  .trips-paging {
+    margin-right: 0.8rem;
+    margin-left: 0.8rem;
+  }
 }

@@ -585,9 +585,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 		attach_events();
 
 		// Event listener for browser back button clicks
-		var first_pop = true;
 		$(window).bind('popstate', function(evt) {
-			if(first_pop) { first_pop = false; return; }
 			get_content(window.location.pathname, render_content);
 		});
 	});

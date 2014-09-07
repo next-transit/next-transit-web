@@ -59,7 +59,7 @@ function before(req, res, next) {
 			from_stop_name: req.from_stop.stop_name,
 			from_stop_point: stop_point(req.from_stop),
 			to_stop_name: (req.to_stop || {}).stop_name,
-			to_stop_point: null,
+			to_stop_point: stop_point(req.to_stop),
 			count: 1
 		};
 
@@ -98,7 +98,13 @@ function before(req, res, next) {
 	req.recent_trips = top_trips;
 
 	next();
-};
+}
+
+function get_by_slug(req, slug) {
+	return (req.cookies.recent_trips || []).filter(function(recent_trip) {
+		return recent_trip.slug === slug;
+	})[0];
+}
 
 function remove(req, res, callback) {
 	if(req.params.key) {
@@ -126,5 +132,6 @@ function remove(req, res, callback) {
 
 module.exports = {
 	before: before,
+	get_by_slug: get_by_slug,
 	remove: remove
 };

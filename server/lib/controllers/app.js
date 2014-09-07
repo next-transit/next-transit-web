@@ -4,7 +4,8 @@ var package = require(__dirname + '/../../../package.json'),
 	route_types = require('../models/route_types'),
 	routes = require('../models/routes'),
 	directions = require('../models/directions'),
-	simplified_stops = require('../models/simplified_stops');
+	simplified_stops = require('../models/simplified_stops'),
+	saved_trips = require('../models/saved_trips');
 
 function get_to_stop(req, success, not_found, error) {
 	if(req.params.to_id) {
@@ -222,6 +223,8 @@ function before(req, res, next) {
 	} else if(config.debug_assets) {
 		req.locals.layout = 'layout_debug';
 	}
+
+	saved_trips.fix(req, res);
 
 	persist_state(req, res, function() {
 		get_agency(req, next, function(msg) {

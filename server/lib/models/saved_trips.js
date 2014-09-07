@@ -1,4 +1,23 @@
-var cookie_settings = { maxAge:(1000 * 60 * 60 * 24 * 365.4) };
+var recent_trips = require('./recent_trips'),
+	cookie_settings = { maxAge:(1000 * 60 * 60 * 24 * 365.4) };
+
+function fix(req, res, callback) {
+	var saved_trips = req.cookies.saved_trips || [],
+		recent_trip;
+
+	saved_trips = saved_trips.map(function(saved_trip) {
+		if(!saved_trip.from_stop_point) {
+			recent_trip = recent_trips.get_by_slug(req, saved_trip.slug);
+			if(recent_trip) {
+				return recent_trip;
+			}
+		}
+
+		return saved_trip;
+	});
+
+	res.cookie('saved_trips', saved_trips, cookie_settings);
+}
 
 function save(req, res, callback) {
 	if(req.params.key) {
@@ -60,6 +79,7 @@ function remove(req, res, callback) {
 }
 
 module.exports = {
+	fix: fix,
 	save: save,
 	query: query,
 	remove: remove

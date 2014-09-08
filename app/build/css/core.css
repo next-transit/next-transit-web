@@ -20,3 +20,8 @@ html, body {
 .align-center {
   text-align: center;
 }
+
+.ul {
+  padding-left: 1rem;
+  list-style: disc;
+}

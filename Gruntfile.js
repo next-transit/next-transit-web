@@ -27,6 +27,7 @@ module.exports = function(grunt) {
 					'<%=dirs.css_build %>/stops.css': ['<%=dirs.sass_src %>/stops.scss'],
 					'<%=dirs.css_build %>/trips.css': ['<%=dirs.sass_src %>/trips.scss'],
 					'<%=dirs.css_build %>/options.css': ['<%=dirs.sass_src %>/options.scss'],
+					'<%=dirs.css_build %>/about.css': ['<%=dirs.sass_src %>/about.scss'],
 					'<%=dirs.css_build %>/feedback.css': ['<%=dirs.sass_src %>/feedback.scss'],
 					'<%=dirs.css_build %>/stats.css': ['<%=dirs.sass_src %>/stats.scss'],
 					'<%=dirs.css_build %>/patterns.css': ['<%=dirs.sass_src %>/patterns.scss'],

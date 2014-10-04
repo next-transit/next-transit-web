@@ -1,8 +1,12 @@
 @import "_utils/utils";
 
+html {
+	font-size: 14px;
+}
+
 body {
 	color: $default_color;
-	font:14px $default_font;
+	font: 1rem $default_font;
 	-webkit-text-size-adjust: 100%;
 }
 
@@ -61,4 +65,10 @@ a:hover {
 	/* background-color: $yellow; */
 	color: #fff;
 	text-shadow: none;
+}
+
+@media (max-width: 480px) {
+	html {
+		font-size: 16px;	
+	}
 }

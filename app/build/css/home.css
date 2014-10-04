@@ -1,6 +1,7 @@
-.home-search {
-  margin-bottom: 1em;
+.home-search, .home-recent {
+  margin-bottom: 0.5em;
 }
+
 .home-search input {
   width: 16em;
 }
@@ -21,7 +22,6 @@
 
 .home-recent {
   display: none;
-  margin-bottom: 1em;
 }
 .home-recent.show {
   display: block;
@@ -31,6 +31,10 @@
 }
 
 @media (min-width: 480px) {
+  .home-search, .home-recent {
+    margin-bottom: 1em;
+  }
+
   .home-search {
     float: left;
   }

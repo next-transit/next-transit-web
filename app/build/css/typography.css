@@ -1,6 +1,10 @@
+html {
+  font-size: 14px;
+}
+
 body {
   color: #f9f9f9;
-  font: 14px "Helvetica Neue", Helvetica, Arial, Verdana, Sans-serif;
+  font: 1rem "Helvetica Neue", Helvetica, Arial, Verdana, Sans-serif;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -64,4 +68,10 @@ a:hover {
   /* background-color: $yellow; */
   color: #fff;
   text-shadow: none;
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 16px;
+  }
 }

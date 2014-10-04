@@ -149,3 +149,9 @@
 .simple-nav.smaller a, .simple-nav.smaller .simple-nav-item, .simple-nav.smaller strong {
   font-size: 1.0em;
 }
+
+@media (max-width: 480px) {
+  .simple-nav a, .simple-nav-item {
+    font-weight: 300;
+  }
+}

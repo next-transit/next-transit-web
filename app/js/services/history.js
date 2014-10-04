@@ -12,7 +12,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 
 	function apply_content_settings(settings) {
 		$('.js-app-title').text(settings.title || app_title);
-		$('.js-title').text(settings.title ? (settings.title + ' - ' + app_title) : app_title);
+		$('.js-title').text(settings.title || app_title);
 		$back_btn[settings.back ? 'addClass' : 'removeClass']('active');
 		$options_btn[settings.options ? 'addClass' : 'removeClass']('active');
 		$footer[settings.footer ? 'addClass' : 'removeClass']('active').removeClass('subways buses trolleys trains').addClass(settings.route_type || '');

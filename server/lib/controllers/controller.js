@@ -25,10 +25,12 @@ function Controller(name) {
 						view_data = extend({}, req.locals, data || {});
 
 					if(view_data.title) {
-						view_data.app_title = view_data.title + ' - ' + app_title;
+						view_data.page_title = view_data.title;
+						view_data.title += ' - ' + app_title;
 					} else {
-						view_data.title = view_data.app_title;
+						view_data.title = view_data.page_title = view_data.app_title;
 					}
+
 					res.render(view || _self.name, view_data, function(err, html) {
 						res.send(html);
 					});

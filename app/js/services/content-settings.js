@@ -13,8 +13,7 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 				has_realtime: false,
 				all_trips: false
 			},
-			comment_matches = content.match(/<!-- (.+) -->/i),
-			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))?;? ?(footer: ?([\w]+))?;? -->/i);
+			comment_matches = content.match(/<!-- (.+) -->/i);
 
 		if(comment_matches) {
 			var settings_matches = comment_matches[1].match(/((\w)+: ?([^;]+))/ig);

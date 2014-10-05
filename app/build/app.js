@@ -281,8 +281,7 @@ nextsepta.module('nextsepta').service('content_settings', ['module', function(mo
 				has_realtime: false,
 				all_trips: false
 			},
-			comment_matches = content.match(/<!-- (.+) -->/i),
-			matches = content.match(/<!-- (title: ([\w\|\- ]+));? ?(back: ?([\w]+))?;? ?(options: ?([\w]+))?;? ?(footer: ?([\w]+))?;? -->/i);
+			comment_matches = content.match(/<!-- (.+) -->/i);
 
 		if(comment_matches) {
 			var settings_matches = comment_matches[1].match(/((\w)+: ?([^;]+))/ig);
@@ -465,7 +464,7 @@ nextsepta.module('nextsepta').service('history', ['module', 'data', 'resize', 'c
 
 	function apply_content_settings(settings) {
 		$('.js-app-title').text(settings.title || app_title);
-		$('.js-title').text(settings.title ? (settings.title + ' - ' + app_title) : app_title);
+		$('.js-title').text(settings.title || app_title);
 		$back_btn[settings.back ? 'addClass' : 'removeClass']('active');
 		$options_btn[settings.options ? 'addClass' : 'removeClass']('active');
 		$footer[settings.footer ? 'addClass' : 'removeClass']('active').removeClass('subways buses trolleys trains').addClass(settings.route_type || '');

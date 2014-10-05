@@ -450,9 +450,13 @@ footer, header, hgroup, menu, nav, section {
 time {
     display: inline;
 }
+html {
+  font-size: 14px;
+}
+
 body {
   color: #f9f9f9;
-  font: 14px "Helvetica Neue", Helvetica, Arial, Verdana, Sans-serif;
+  font: 1rem "Helvetica Neue", Helvetica, Arial, Verdana, Sans-serif;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -518,6 +522,12 @@ a:hover {
   text-shadow: none;
 }
 
+@media (max-width: 480px) {
+  html {
+    font-size: 16px;
+  }
+}
+
 html, body {
   background-color: #222222;
 }
@@ -539,6 +549,15 @@ html, body {
 
 .align-center {
   text-align: center;
+}
+
+.ul {
+  padding-left: 1rem;
+  list-style: disc;
+}
+
+.about .ul li {
+  margin: 0.4rem 0;
 }
 
 .btn {
@@ -881,6 +900,12 @@ input[type=button].btn {
   font-size: 1.0em;
 }
 
+@media (max-width: 480px) {
+  .simple-nav a, .simple-nav-item {
+    font-weight: 300;
+  }
+}
+
 .feedback {
   margin: 0 auto;
   max-width: 40rem;
@@ -1007,9 +1032,10 @@ textarea::-webkit-input-placeholder {
   margin-right: 0.6em;
 }
 
-.home-search {
-  margin-bottom: 1em;
+.home-search, .home-recent {
+  margin-bottom: 0.5em;
 }
+
 .home-search input {
   width: 16em;
 }
@@ -1030,7 +1056,6 @@ textarea::-webkit-input-placeholder {
 
 .home-recent {
   display: none;
-  margin-bottom: 1em;
 }
 .home-recent.show {
   display: block;
@@ -1040,6 +1065,10 @@ textarea::-webkit-input-placeholder {
 }
 
 @media (min-width: 480px) {
+  .home-search, .home-recent {
+    margin-bottom: 1em;
+  }
+
   .home-search {
     float: left;
   }
@@ -1135,7 +1164,7 @@ textarea::-webkit-input-placeholder {
   background-color: #2f2f2f;
   font-weight: 200;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 1.5px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 0 1.5px rgba(255, 255, 255, 0.05);
 }
 
 .content-panel.current, .content-panel.incoming {
@@ -1274,8 +1303,13 @@ textarea::-webkit-input-placeholder {
     padding-left: 0;
   }
 
+  .content-inset {
+    padding: 0 0.4em;
+  }
+
   .content-inner {
     border-radius: 0;
+    font-weight: 300;
   }
 }
 @media (min-width: 480px) {

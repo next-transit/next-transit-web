@@ -1,6 +1,7 @@
 .sass-cache
 .DS_Store
 config/*.json
+!config/routes.json
 assets/gtfs
 backups
 db-deploy-instructions.md

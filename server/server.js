@@ -5,23 +5,27 @@ if(process.env.NODETIME_ACCOUNT_KEY) {
 require('date-utils');
 
 var express = require('express'),
+	shack = require('shack'),
 	hbs = require('hbs'),
-	router = require('./lib/router'),
+	app_ctrl = require('./lib/controllers/app'),
 	port = process.env.PORT || 5000;
 
 hbs.registerPartials('./app/templates/partials', function() {});
 
-var app = express();
+var app = shack();
 
 app.set('view engine', 'hbs');
 app.set('views', './app/templates');
+app.set('routes', __dirname + '/../config/routes');
+app.set('controllers', __dirname + '/lib/controllers');
+
 app.use(express.static('./app'));
 app.use(express.compress());
 app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.cookieSession({ secret:'bsl-mfl' }));
-
-router.routes(app);
+app.before(app_ctrl());
+app.after(shack.request_logger());
 
 app.listen(port);
 console.log('Server started on port', port);

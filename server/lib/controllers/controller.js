@@ -1,57 +1,20 @@
-var extend = require('extend');
+var shack = require('shack');
 
-function Controller(name) {
-	var _actions = {}, _self = this;
+function prerender(req, view_data) {
+	var app_title = req.locals.app_title || 'NEXT|Transit';
 
-	_self.name = name;
+	if(view_data.title) {
+		view_data.page_title = view_data.title;
+		view_data.title += ' - ' + app_title;
+	} else {
+		view_data.title = view_data.page_title = view_data.app_title;
+	}
+}
 
-	_self.action = function(name, options, callback) {
-		if(typeof options === 'function') {
-			callback = options;
-			options = {};
-		}
-		
-		_actions[name] = function(req, res) {
-			callback(req, res, function(view, data) {
-				if(typeof view === 'object') {
-					data = view;
-					view = null;
-				}
-
-				if(options.json) {
-					res.send(data);
-				} else {
-					var app_title = req.locals.app_title || 'NEXT|Transit',
-						view_data = extend({}, req.locals, data || {});
-
-					if(view_data.title) {
-						view_data.page_title = view_data.title;
-						view_data.title += ' - ' + app_title;
-					} else {
-						view_data.title = view_data.page_title = view_data.app_title;
-					}
-
-					res.render(view || _self.name, view_data, function(err, html) {
-						res.send(html);
-					});
-				}
-			});
-		};
-
-		return _self;
-	};
-
-	_self.get_action = function(name) {
-		return _actions[name] || _actions.index;
-	};
-
-	_self.action('index', function(req, res, callback) {
-		callback();
-	});
+function next_transit_controller(name) {
+	return shack.controller(name, { prerender:prerender });
 }
 
 module.exports = {
-	create: function(name) {
-		return new Controller(name);
-	}
+	create: next_transit_controller
 };

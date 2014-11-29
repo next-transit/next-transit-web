@@ -27,8 +27,8 @@ function get_trips(req, res, callback) {
 		direction = req.direction, 
 		offset = 0,
 		params = {},
-		view = 'trips',
 		all_trips = req.params.all === 'true',
+		view = 'trips/index',
 		day_of_week = get_day_of_week_num(req.query.day),
 		all_trips_days = get_all_trips_days(req.query.day);
 

@@ -5,11 +5,11 @@ ctrl.action('index', function(req, res, callback) {
 });
 
 ctrl.action('route', function(req, res, callback) {
-	callback({ show_map:true, locate:'false', title:'Route Map', vehicle:req.query.vehicle });
+	callback('map/index', { show_map:true, locate:'false', title:'Route Map', vehicle:req.query.vehicle });
 });
 
 ctrl.action('locate', function(req, res, callback) {
-	callback({ show_map:true, locate:'true', title:'Locate', back_path:'/' });
+	callback('map/index', { show_map:true, locate:'true', title:'Locate', back_path:'/' });
 });
 
 module.exports = ctrl;

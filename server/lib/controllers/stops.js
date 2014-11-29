@@ -10,7 +10,7 @@ ctrl.action('from', function(req, res, callback) {
 		results.forEach(function(stop) {
 			stop.path = stop.stop_id;
 		});
-		callback({
+		callback('stops/index', {
 			title: route.route_short_name + ' - ' + direction.direction_name,
 			stops: results
 		});
@@ -27,7 +27,7 @@ ctrl.action('to', function(req, res, callback) {
 		results.forEach(function(stop) {
 			stop.path = from.stop_id + '/' + stop.stop_id;
 		});
-		callback({
+		callback('stops/index', {
 			title: route.route_short_name + ' - ' + direction.direction_name,
 			stops: results
 		});

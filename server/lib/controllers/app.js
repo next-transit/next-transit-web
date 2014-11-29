@@ -174,10 +174,9 @@ function persist_state(req, res, next) {
 	next();
 }
 
-function before(req, res, next) {
-	if(config.verbose) {
-		console.log('request path', req.url)	
-	}
+function before(req, res, next, settings) {
+	settings = settings || {};
+	req.locals = req.locals || {};
 
 	res.error = function(message, status_code) {
 		status_code = status_code || 500;
@@ -228,7 +227,9 @@ function before(req, res, next) {
 
 	persist_state(req, res, function() {
 		get_agency(req, next, function(msg) {
-			res.send(404, msg || '404');
+			res.render('errors/404', { title:'Page Not Found' }, function(err, html) {
+				res.send(html);
+			});
 		}, function(err) {
 			console.log('Internal server error:', err);
 			res.send(500, 'Sorry, an error occurred.');
@@ -236,6 +237,6 @@ function before(req, res, next) {
 	});
 }
 
-module.exports = {
-	before: before
+module.exports = function() {
+	return before;
 };

@@ -20,3 +20,10 @@ html, body {
 	padding-left: 1rem;
 	list-style: disc;
 }
+
+@import "core/typography";
+
+@import "core/buttons";
+@import "core/forms";
+
+@import "core/components";

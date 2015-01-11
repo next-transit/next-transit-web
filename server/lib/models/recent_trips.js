@@ -131,7 +131,9 @@ function remove(req, res, callback) {
 }
 
 module.exports = {
-	before: before,
+	before: function() {
+		return before;
+	},
 	get_by_slug: get_by_slug,
 	remove: remove
 };

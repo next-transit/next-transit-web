@@ -1,6 +1,6 @@
 {
-  "name": "next-transit",
-  "description": "NEXT-Transit",
+  "name": "next-transit-web",
+  "description": "NEXT-Transit Web App",
   "version": "1.0.1",
   "private": true,
   "engines": {

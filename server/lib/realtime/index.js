@@ -11,7 +11,12 @@ realtime.request = function request(url) {
 			res.on('data', function(chunk) {
 				data += chunk;
 			}).on('end', function() {
-				var data_obj = JSON.parse(data);
+				var data_obj = null;
+				try {
+					data_obj = JSON.parse(data);
+				} catch(e) {
+					return reject('Could not parse realtime response from', url);
+				}
 				
 				resolve(data_obj);
 			});

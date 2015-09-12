@@ -15,7 +15,7 @@ realtime.request = function request(url) {
 				try {
 					data_obj = JSON.parse(data);
 				} catch(e) {
-					return reject('Could not parse realtime response from', url);
+					return reject('Could not parse realtime response from ' + url);
 				}
 				
 				resolve(data_obj);

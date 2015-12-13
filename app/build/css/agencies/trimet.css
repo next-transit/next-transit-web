@@ -22,6 +22,14 @@
   background-color: rgba(14, 140, 80, 0.5);
 }
 
+.home-route-type-maxorange a:before {
+  background-color: #d45d00;
+}
+
+.simple-nav strong.maxorange {
+  background-color: rgba(212, 93, 0, 0.5);
+}
+
 .home-route-type-maxred a:before {
   background-color: #d82b3b;
 }

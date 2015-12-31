@@ -1,7 +1,7 @@
 {
   "name": "next-transit-web",
   "description": "NEXT-Transit Web App",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "engines": {
     "node": "0.10.x",
